@@ -1,0 +1,132 @@
+///////////////////////////////////////////////////////////////////////////////
+//  Includes
+///////////////////////////////////////////////////////////////////////////////
+#include "bi_internal.h" /* bi_t, digit, ABS() */
+
+#include <stdlib.h>      /* malloc(), calloc(), realloc(), free(), exit,
+                          * EXIT_FAILURE */
+#include <stdio.h>       /* stderr, fprintf */
+#include <limits.h>      /* ULONG_MAX */
+#include <string.h>      /* memset() */
+
+
+///////////////////////////////////////////////////////////////////////////////
+//  Root Memory Allocation/Deallocation Functions
+//
+//  These are simply wrappers for malloc(), calloc, realloc(), and free(). They
+//  have the same interface, except that, if allocation/reallocation fails, the
+//  program terminates.
+///////////////////////////////////////////////////////////////////////////////
+void *
+_malloc(size_t size)
+{
+    void *r = malloc(size);
+    if (r == NULL)
+    {
+        fprintf(stderr, "bi_malloc(): failed allocating memory.\n");
+        exit(EXIT_FAILURE);
+    }
+    return r;
+}
+
+void *
+_calloc(size_t nmemb, size_t size)
+{
+    void *r = calloc(nmemb, size);
+    if (r == NULL)
+    {
+        fprintf(stderr, "bi_calloc(): failed allocating memory.\n");
+        exit(EXIT_FAILURE);
+    }
+    return r;
+}
+
+void *
+_realloc(void *ptr, size_t size)
+{
+    void *r = realloc(ptr, size);
+    if (r == NULL)
+    {
+        fprintf(stderr, "bi_realloc(): failed reallocating memory.\n");
+        exit(EXIT_FAILURE);
+    }
+    return r;
+}
+
+void
+_free(void *ptr)
+{
+    free(ptr);
+}
+
+void *
+_recalloc(void *ptr, size_t new_size, size_t old_size)
+{
+    void *r = realloc(ptr, new_size);
+
+    if (r == NULL)
+    {
+        fprintf(stderr, "bi_recalloc(): failed reallocating memory.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (new_size > old_size)
+    {
+        /* C Standard (C11, §7.22.4.1): "[a]ny bytes in the new object beyond
+         * the size of the old object have indeterminate values."
+         */
+
+        /* Clear any extra memory that was allocated.  */
+        memset((char *)r + old_size, 0, new_size - old_size);
+    }
+
+    return r;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+//  Allocator/Reallocator
+//
+//  The data type chosen to represent counts of bits is unsigned long.
+//  ULONG_MAX will represent the maximum number of bits of a big integer type.
+//  There are BI_SHIFT bits in a digit so we cap the number of digits at
+//  ULONG_MAX / BI_SHIFT.
+///////////////////////////////////////////////////////////////////////////////
+/******************************************************************************
+ *  bi_realloc: sets the number of allocated digits to `size`. Returns a
+ *              pointer to the new digits array (which may have the same value
+ *              as the pointer to the old digits array).
+ *
+ *              May modify the digits array and the n_alloc field but never
+ *              modifies n_digits.
+ ******************************************************************************/
+void *
+bi_realloc(bi_t ptr, int size)
+{
+    digit *digits;
+    static const unsigned long max_digits = ULONG_MAX / BI_SHIFT;
+
+    if (size < 1)
+    {
+        size = 1;
+    }
+
+    if (size > max_digits)
+    {
+        fprintf(stderr, "bi_realloc(): failure.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (ptr->n_alloc == 0)
+    {
+        digits = _malloc(size * sizeof(digit));
+    }
+    else
+    {
+        digits = _realloc(ptr->digits, size * sizeof(digit));
+    }
+
+    ptr->digits = digits;
+    ptr->n_alloc = size;
+    return (void *)digits;
+}

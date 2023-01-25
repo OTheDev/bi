@@ -1,0 +1,95 @@
+///////////////////////////////////////////////////////////////////////////////
+//  Includes
+///////////////////////////////////////////////////////////////////////////////
+#include "bi_internal.h"
+
+
+///////////////////////////////////////////////////////////////////////////////
+//  Routines
+///////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************
+ *  bi_lshift: result = (a << shift) if a >= 0;
+ *             result = (-1) * (|a| << shift), if a < 0.
+ *
+ *             bi_lshift(a, a, shift) is also valid.
+ *****************************************************************************/
+void
+bi_lshift(bi_t result, const bi_t a, unsigned long shift)
+{
+    int i, j;
+    int a_size, result_size;
+    unsigned long shift_digits;
+    int shift_bits;
+    twodigits sum;
+    digit *p;
+
+    if (shift == 0 || a->n_digits == 0)
+    {
+        if (result->digits != a->digits)
+        {
+            bi_set(result, a);
+        }
+        return;
+    }
+
+    shift_digits = shift / BI_SHIFT;
+    shift_bits = shift % BI_SHIFT;
+    a_size = ABS(a->n_digits);
+
+    if (shift_bits)
+    {
+        result_size = a_size + shift_digits + 1;
+    }
+    else
+    {
+        result_size = a_size + shift_digits;
+    }
+
+    /* Memory Management */
+    if (result->digits == a->digits)
+    {
+        /* Overlapping memory, need temporary array. */
+        p = _malloc(result_size * sizeof(digit));
+    }
+    else
+    {
+        if (result_size > result->n_alloc)
+        {
+            result->digits = _realloc(result->digits,
+                                      result_size * sizeof(digit));
+            result->n_alloc = result_size;
+        }
+
+        p = result->digits;
+    }
+
+    /* FIXME: cmp of integers of different size. */
+    for (i = 0; i < shift_digits; i++)
+    {
+        p[i] = 0;
+    }
+
+    sum = 0;
+    for (j = 0; j < a_size; i++, j++)
+    {
+        sum |= (twodigits)a->digits[j] << shift_bits;
+        p[i] = (digit)(sum & BI_MASK);
+        sum >>= BI_SHIFT;
+    }
+
+    if (shift_bits)
+    {
+        p[result_size - 1] = (digit)sum;
+    }
+
+    if (result->digits == a->digits)
+    {
+        /* Memory overlaps so need to assign temporary array to result and free
+         * current digits array */
+        _free(result->digits);
+        result->digits = p;
+        result->n_alloc = result_size;
+    }
+
+    BI_NORMALIZE(result, result_size);
+}
