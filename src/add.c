@@ -15,13 +15,17 @@
 //      the number that is one greater than the largest value that can be
 //      represented by the resulting type."
 //
-//      Consider adding two unsigned integers with width `w`. Let UADD(a, b)
-//      denote the sum. Then
+//      Consider adding/subtracting two unsigned integers with width `w`. Let
+//      UADD(a, b) denote the (computational) sum and USUB(a, b) the difference
+//      between a and b. Then
 //          UADD(a, b) = a + b,       if a + b < 2^w
-//                       a + b - 2^w, if a + b >= 2^w
+//                       a + b - 2^w, if a + b >= 2^w,
+//
+//          USUB(a, b) = a - b        if a - b >= 0
+//                       a - b + 2^w  if a - b < 0.
 //
 //      Theorem: UADD(a, b) < a iff there is overflow.
-//
+//      Proof:
 //      (1) Assume there is overflow (i.e. a + b >= 2^w). Then by definition
 //          UADD(a, b) = a + b - 2^w < a + 0 = a (since b < 2^w).
 //          Thus,
@@ -29,9 +33,12 @@
 //      (2) Assume there is no overflow. Then UADD(a, b) = a + b >= a (since
 //          b >= 0). By logical equivalence of the contrapositive, we have
 //          that
-//              (UADD(a, b) < a) ==> overflow is true.
+//              (UADD(a, b) < a) ==> overflow is true. QED.
 //
 //      By symmetry, there is overflow iff UADD(a, b) < b.
+//
+//      Theorem: (a < b) <==> overflow caused by the subtraction of a from b.
+//      Proof: By definition, there is overflow iff a - b < 0 <==> a < b. QED.
 ///////////////////////////////////////////////////////////////////////////////
 /* Sets `to` to |a| + |b|. |a->n_digits| >= |b->n_digits| is assumed.
  * Fact: if a (m digits), b (n digits) are nonnegative integers, a + b has
