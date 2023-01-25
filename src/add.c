@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 //  Addition/Subtraction
-//      The algorithm employed here makes use of one important fact guaranteed
+//      The algorithms employed here makes use of one important fact guaranteed
 //      by the C Standard.
 //
 //      From the C11 Standard (§6.2.5), "[a] computation involving unsigned
@@ -40,7 +40,7 @@
 //      Theorem: (a < b) <==> overflow caused by the subtraction of a from b.
 //      Proof: By definition, there is overflow iff a - b < 0 <==> a < b. QED.
 ///////////////////////////////////////////////////////////////////////////////
-/* Sets `to` to |a| + |b|. |a->n_digits| >= |b->n_digits| is assumed.
+/* Sets c to |a| + |b|. |a->n_digits| >= |b->n_digits| is assumed.
  * Fact: if a (m digits), b (n digits) are nonnegative integers, a + b has
  *       at most max(m, n) + 1 digits.
  */
