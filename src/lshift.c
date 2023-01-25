@@ -10,8 +10,6 @@
 /*****************************************************************************
  *  bi_lshift: result = (a << shift) if a >= 0;
  *             result = (-1) * (|a| << shift), if a < 0.
- *
- *             bi_lshift(a, a, shift) is also valid.
  *****************************************************************************/
 void
 bi_lshift(bi_t result, const bi_t a, unsigned long shift)
@@ -45,10 +43,10 @@ bi_lshift(bi_t result, const bi_t a, unsigned long shift)
         result_size = a_size + shift_digits;
     }
 
-    /* Memory Management */
+    /* Memory Management. */
     if (result->digits == a->digits)
     {
-        /* Overlapping memory, need temporary array. */
+        /* Overlapping memory. Create temporary array. */
         p = _malloc(result_size * sizeof(digit));
     }
     else
@@ -84,8 +82,6 @@ bi_lshift(bi_t result, const bi_t a, unsigned long shift)
 
     if (result->digits == a->digits)
     {
-        /* Memory overlaps so need to assign temporary array to result and free
-         * current digits array */
         _free(result->digits);
         result->digits = p;
         result->n_alloc = result_size;
