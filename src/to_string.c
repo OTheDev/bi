@@ -11,7 +11,7 @@
 /******************************************************************************
  *  bi_idiv10: divides the integer in-place by 10, returning the remainder.
  *
- *             TODO: implement a more efficient approach.
+ *             TODO: use twodigits instead.
  ******************************************************************************/
 uint8_t
 bi_idiv10(bi_t a)
@@ -31,7 +31,7 @@ bi_idiv10(bi_t a)
         carry = R.lo;
     }
 
-    /* Decrement the number of digits if the most significant digit is 0 */
+    /* Decrement the number of digits if the most significant digit is 0. */
     if (n_digits > 1 && a->digits[n_digits - 1] == 0) n_digits--;
 
     a->n_digits = (a->n_digits >= 0) ? n_digits : -n_digits;
@@ -70,7 +70,8 @@ bi_to_str(const bi_t a)
      * underestimate is provided, no problem, this function detects this and
      * reallocates. */
     n_base10_estimate = _bi_decimal_length(a);
-    /* Current position in buffer */
+
+    /* Current position in the buffer. */
     idx = 0;
 
     if (a->n_digits < 0)
@@ -108,7 +109,6 @@ bi_to_str(const bi_t a)
     } while (copy->digits[ABS(copy->n_digits) - 1]);
 
     buf[idx] = '\0';
-
 
     half_len = n_base10_included / 2;
     for (int i = 0; i < half_len; i++)
