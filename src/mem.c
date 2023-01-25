@@ -23,7 +23,7 @@ _malloc(size_t size)
     void *r = malloc(size);
     if (r == NULL)
     {
-        fprintf(stderr, "bi_malloc(): failed allocating memory.\n");
+        fprintf(stderr, "_malloc(): failed allocating memory.\n");
         exit(EXIT_FAILURE);
     }
     return r;
@@ -35,7 +35,7 @@ _calloc(size_t nmemb, size_t size)
     void *r = calloc(nmemb, size);
     if (r == NULL)
     {
-        fprintf(stderr, "bi_calloc(): failed allocating memory.\n");
+        fprintf(stderr, "_calloc(): failed allocating memory.\n");
         exit(EXIT_FAILURE);
     }
     return r;
@@ -47,7 +47,7 @@ _realloc(void *ptr, size_t size)
     void *r = realloc(ptr, size);
     if (r == NULL)
     {
-        fprintf(stderr, "bi_realloc(): failed reallocating memory.\n");
+        fprintf(stderr, "_realloc(): failed reallocating memory.\n");
         exit(EXIT_FAILURE);
     }
     return r;
@@ -66,7 +66,7 @@ _recalloc(void *ptr, size_t new_size, size_t old_size)
 
     if (r == NULL)
     {
-        fprintf(stderr, "bi_recalloc(): failed reallocating memory.\n");
+        fprintf(stderr, "_recalloc(): failed reallocating memory.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -97,8 +97,7 @@ _recalloc(void *ptr, size_t new_size, size_t old_size)
  *              pointer to the new digits array (which may have the same value
  *              as the pointer to the old digits array).
  *
- *              May modify the digits array and the n_alloc field but never
- *              modifies n_digits.
+ *              May modify `->digits` and `->n_alloc` but never `->n_digits`.
  ******************************************************************************/
 void *
 bi_realloc(bi_t ptr, int size)
@@ -111,7 +110,7 @@ bi_realloc(bi_t ptr, int size)
         size = 1;
     }
 
-    if (size > max_digits)
+    if ((unsigned long)size > max_digits)
     {
         fprintf(stderr, "bi_realloc(): failure.\n");
         exit(EXIT_FAILURE);
