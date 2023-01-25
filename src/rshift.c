@@ -5,7 +5,7 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-//  More General Helpers
+//  Routines
 ///////////////////////////////////////////////////////////////////////////////
 /*****************************************************************************
  *  Shifts digit vector `to_shift[0:size]` `shift_by` bits to the right,
@@ -25,6 +25,7 @@ bi__rshift(digit *result, digit *to_shift, unsigned size, unsigned long shift_by
 
     size_result = size - shift_digits;
 
+    /* FIXME: this will never be negative. */
     if (size_result <= 0)
     {
         return 0;
@@ -36,7 +37,8 @@ bi__rshift(digit *result, digit *to_shift, unsigned size, unsigned long shift_by
 
     sum = to_shift[shift_digits];
     sum >>= shift_bits;
-    /* FIXME: cmp of integers of different size */
+
+    /* FIXME: cmp of integers of different size. */
     for (int i = 0, j = shift_digits + 1; j < size; i++, j++)
     {
         sum += (twodigits)to_shift[j] << hi;
@@ -46,15 +48,14 @@ bi__rshift(digit *result, digit *to_shift, unsigned size, unsigned long shift_by
 
     result[size_result - 1] = (digit)sum;
 
-    /* Note, even if size_result is only 1 here*/
     return (sum != 0) ? size_result : --size_result;
 }
 
 
-///////////////////////////////////////////////////////////////////////////////
-//  If a >= 0, equivalent to (a >>= shift_by).
-//  Otherwise, equivalent to (-1) * (|a| >>= shift_by).
-///////////////////////////////////////////////////////////////////////////////
+/******************************************************************************
+ *  If a >= 0, equivalent to (a >>= shift_by).
+ *  Otherwise, equivalent to (-1) * (|a| >>= shift_by).
+ ******************************************************************************/
 void
 bi_irshift(bi_t a, unsigned long shift_by)
 {
