@@ -11,7 +11,7 @@
 //  Lookup Table for "From String" Function
 ///////////////////////////////////////////////////////////////////////////////
 /* BI_DECSHIFT == max{e in N ∪ {0}: 10^e fits in a digit}.
- * _POWERS_OF_TEN[i] == 10^i.
+ * POWERS_OF_TEN[i] == 10^i.
  */
 #if BI_DECSHIFT == 9
     static digit POWERS_OF_TEN[10] = {
@@ -90,7 +90,7 @@ bi_prep_str(bi_t z, const char *str)
     static const double conversion_ratio = 0.104;
   #endif
 
-    /* Allow leading whitespace */
+    /* Allow leading whitespace. */
     while (isspace(*str))
     {
         str++;
@@ -118,6 +118,7 @@ bi_prep_str(bi_t z, const char *str)
     if (scan == str)
     {
         fprintf(stderr, "bi_prep_str(): error parsing string.\n");
+
         z->n_alloc = 0;
         z->n_digits = 0;
         z->digits = NULL;
