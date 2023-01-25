@@ -2,9 +2,9 @@
 //  Includes
 ///////////////////////////////////////////////////////////////////////////////
 #include "bi_internal.h"
-#include "mul.h"    /* MULT_2DIGITS_x_ADD_2DIGITS() */
+#include "mul.h"
 
-#include <string.h> /* memset() */
+#include <string.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,7 +39,7 @@ bi_mul(bi_t c, const bi_t a, const bi_t b)
     digit x, y, carry, k;
     digit *p;
 
-    /* Fast path for zero product. */
+    /* Product is zero. */
     if (a->n_digits == 0 || b->n_digits == 0)
     {
         c->n_digits = 0;
@@ -49,7 +49,7 @@ bi_mul(bi_t c, const bi_t a, const bi_t b)
     m = ABS(a->n_digits);
     n = ABS(b->n_digits);
 
-    /* Maximum number of digits in the result. */
+    /* Maximum number of digits in the result. TRUE: n_c_digits >= 2. */
     n_c_digits = m + n;
 
     /* Memory management plus ensuring result array is cleared. */
@@ -68,7 +68,10 @@ bi_mul(bi_t c, const bi_t a, const bi_t b)
         }
         else
         {
-            /* Could realloc but would need to clear anyways. */
+            /* On my system, realloc() + memset() is faster for builds with
+             * optimizations disabled. However, for any nonzero optimization
+             * level (with gcc), free() + calloc() is a lot faster. Here, we
+             * code for builds that enable optimizations. */
             p = _calloc(n_c_digits, sizeof(digit));
 
             _free(c->digits);
@@ -77,7 +80,7 @@ bi_mul(bi_t c, const bi_t a, const bi_t b)
         }
     }
 
-    /* Grade-School Multiplication Algorithm */
+    /* Grade-School Multiplication Algorithm. */
     for (int i = 0; i < n; i++)
     {
         carry = 0;
@@ -92,7 +95,7 @@ bi_mul(bi_t c, const bi_t a, const bi_t b)
         p[i + m] = x;
     }
 
-    /* Normalize */
+    /* Normalize. */
     while (n_c_digits > 1 && c->digits[n_c_digits - 1] == 0)
     {
         --n_c_digits;
@@ -100,9 +103,9 @@ bi_mul(bi_t c, const bi_t a, const bi_t b)
 
     c->n_digits = (a->n_digits ^ b->n_digits) < 0 ? -n_c_digits : n_c_digits;
 
-    /* Can finally free the memory if they were overlapping */
     if (c->digits == a->digits || c->digits == b->digits)
     {
+        /* Free destination memory and replace it with the temporary array. */
         _free(c->digits);
         c->digits = p;
         c->n_alloc = n_c_digits;
