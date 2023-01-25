@@ -31,21 +31,28 @@ bi_print(const bi_t a)
  *                     plus a newline, to standard output. Useful for debugging
  *                     and understanding the internal representation of the
  *                     integer.
- *
- *                     Does not take into account the sign of the integer.
  ******************************************************************************/
 void
 bi_print_internal(const bi_t a)
 {
-    int i = ABS(a->n_digits) - 1;
+    int i;
 
-    if (a->n_digits < 0)
+    if (a->n_digits == 0) {
+        printf("0 * 2**(%d * 0)\n", BI_SHIFT);
+        return;
+    }
+
+    i = ABS(a->n_digits) - 1;
+
+    if (a->n_digits < 0) {
         putchar('-');
+    }
 
     printf("(%" BI_FSPEC " * 2**(%d * %d)", a->digits[i], BI_SHIFT, i);
+
     while (--i >= 0) {
         printf(" + %" BI_FSPEC " * 2**(%d * %d)", a->digits[i], BI_SHIFT, i);
     }
 
-    putchar(')'); putchar('\n');
+    printf(")\n");
 }
