@@ -389,12 +389,13 @@ bi_uint128_t_div(bi_uint128_t N, bi_uint128_t D, bi_uint128_t *Q,
     /* (1) */
     if (D.lo == 0 && D.hi == 0)
     {
-        /* TODO: set global error indicator instead? */
+        /* Avoid division by zero warning by GCC. */
+        int x = 0;
         fprintf(stderr, "bi_uint128_t_div(): integer division by zero attempt "
-                        "detected. Manually raising SIGFPE. \n");
-        /* SIGFPE: "an erroneaous arithmetic operation, such as zero divide or
-         * an operation resulting in overflow" (C11, §7.14). */
-        raise(SIGFPE);
+                        "detected. Manually dividing by zero.\n");
+        x = 1 / x;
+
+        return;
     }
 
     /* (2) */
@@ -450,4 +451,4 @@ bi_uint128_t_mul64(bi_uint128_t a, uint64_t b)
     }
 #endif
 
-#endif /* MUL_H */
+#endif /* BI_UINT128_T_H */
