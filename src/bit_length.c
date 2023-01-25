@@ -10,51 +10,16 @@
 /******************************************************************************
  *  bit_length_digit: Given a digit, return the number of bits required to
  *                    represent it.
+ *
+ *                    Caution: notice the preprocessor directives. One
+ *                             function for bit_length_digit() is defined
+ *                             from a selection of three depending on the
+ *                             maximum number of bits that a digit needs.
  ******************************************************************************/
-static uint8_t
-_bit_length_digit(digit number)
-{
-    uint8_t n_bits = 1;
-    while (number >>= 1)
-    {
-        n_bits++;
-    }
-    return n_bits;
-}
+#if BI_DIGIT_BITS == 64
 
-static uint8_t
-_bit_length_u32(uint32_t number)
-{
-    uint8_t n_bits = 1;
-    if ((number & 0xffff0000) != 0)
-    {
-        number >>= 16;
-        n_bits += 16;
-    }
-    if ((number & 0xff00) != 0)
-    {
-        number >>= 8;
-        n_bits += 8;
-    }
-    if ((number & 0xf0) != 0)
-    {
-        number >>= 4;
-        n_bits += 4;
-    }
-    if ((number & 0xc) != 0)
-    {
-        number >>= 2;
-        n_bits += 2;
-    }
-    if ((number & 0x2) != 0)
-    {
-        n_bits += 1;
-    }
-    return n_bits;
-}
-
-static uint8_t
-_bit_length_u64(uint64_t number)
+uint8_t
+bit_length_digit(uint64_t number)
 {
     uint8_t n_bits = 1;
     if ((number & 0xffffffff00000000) != 0)
@@ -89,17 +54,53 @@ _bit_length_u64(uint64_t number)
     return n_bits;
 }
 
+#elif BI_DIGIT_BITS == 32
+
+uint8_t
+bit_length_digit(uint32_t number)
+{
+    uint8_t n_bits = 1;
+    if ((number & 0xffff0000) != 0)
+    {
+        number >>= 16;
+        n_bits += 16;
+    }
+    if ((number & 0xff00) != 0)
+    {
+        number >>= 8;
+        n_bits += 8;
+    }
+    if ((number & 0xf0) != 0)
+    {
+        number >>= 4;
+        n_bits += 4;
+    }
+    if ((number & 0xc) != 0)
+    {
+        number >>= 2;
+        n_bits += 2;
+    }
+    if ((number & 0x2) != 0)
+    {
+        n_bits += 1;
+    }
+    return n_bits;
+}
+
+#else
+
 uint8_t
 bit_length_digit(digit number)
 {
-  #if BI_DIGIT_BITS == 64
-    return _bit_length_u64(number);
-  #elif BI_DIGIT_BITS == 32
-    return _bit_length_u32(number);
-  #else
-    return _bit_length_digit(number);
-  #endif
+    uint8_t n_bits = 1;
+    while (number >>= 1)
+    {
+        n_bits++;
+    }
+    return n_bits;
 }
+
+#endif
 
 
 /******************************************************************************
