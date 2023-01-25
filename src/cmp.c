@@ -5,13 +5,13 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-//  Comparison Functions
+//  Comparisons
 ///////////////////////////////////////////////////////////////////////////////
-/* If a < b, return a negative number.
- * If a == b, return 0.
- * If a > b, return a positive number.
- *
- */
+/******************************************************************************
+ *  bi_cmp: if a < b, return a negative number;
+ *          if a == b, return zero;
+ *          if a > b, return a positive number.
+ ******************************************************************************/
 int
 bi_cmp(const bi_t a, const bi_t b)
 {
