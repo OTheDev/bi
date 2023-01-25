@@ -34,7 +34,7 @@ _n_decimal_digits(unsigned long n_bits)
  *                      length, such as by repeatedly dividing the integer
  *                      by 10. However, the goal is to obtain an efficient
  *                      estimate of the number of digits required for
- *                      Ap_to_string() that almost always returns a count
+ *                      bi_to_str() that almost always returns a count
  *                      sufficient to represent its decimal version.
  *
  *                      TODO: adjust after resolving TODO in _n_decimal_digits.
@@ -43,11 +43,6 @@ size_t
 _bi_decimal_length(const bi_t a)
 {
     unsigned long bit_length = bi_bit_length(a);
-
-    if (bit_length == ULONG_MAX)
-    {
-        return 0;
-    }
 
     return (bit_length == ULONG_MAX) ? 0 : _n_decimal_digits(bit_length);
 }
