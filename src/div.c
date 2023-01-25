@@ -3,10 +3,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "bi_internal.h"
 
-#include <limits.h>
-#include <signal.h>
-#include <string.h>
-
 
 ///////////////////////////////////////////////////////////////////////////////
 //  Division Routines
@@ -87,8 +83,8 @@ bi_divide_qr(bi_t Q, bi_t R, bi_t N, bi_t D)
     {
         /* Avoid division by zero warning by GCC. */
         int x = 0;
-        fprintf(stderr, "bi_divide(): integer division by zero attempt "
-                        "detected. Manually dividing by zero. \n");
+        fprintf(stderr, "bi_divide_qr(): integer division by zero attempt "
+                        "detected. Manually dividing by zero.\n");
         x = 1 / x;
 
         return;
