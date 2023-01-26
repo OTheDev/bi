@@ -1,21 +1,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Includes
 ///////////////////////////////////////////////////////////////////////////////
-#include "bi_internal.h" /* bi_t, digit, ABS() */
+#include "bi_internal.h"
 
-#include <stdlib.h>      /* malloc(), calloc(), realloc(), free(), exit,
-                          * EXIT_FAILURE */
-#include <stdio.h>       /* stderr, fprintf */
-#include <limits.h>      /* ULONG_MAX */
-#include <string.h>      /* memset() */
+#include <stdlib.h>
+#include <string.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 //  Root Memory Allocation/Deallocation Functions
 //
-//  These are simply wrappers for malloc(), calloc, realloc(), and free(). They
-//  have the same interface, except that, if allocation/reallocation fails, the
-//  program terminates.
+//  These are simply wrappers for malloc(), calloc(), realloc(), and free().
+//  They have the same interface, except that, if allocation/reallocation
+//  fails, the program terminates.
 ///////////////////////////////////////////////////////////////////////////////
 void *
 _malloc(size_t size)
@@ -86,11 +83,6 @@ _recalloc(void *ptr, size_t new_size, size_t old_size)
 
 ///////////////////////////////////////////////////////////////////////////////
 //  Allocator/Reallocator
-//
-//  The data type chosen to represent counts of bits is unsigned long.
-//  ULONG_MAX will represent the maximum number of bits of a big integer type.
-//  There are BI_SHIFT bits in a digit so we cap the number of digits at
-//  ULONG_MAX / BI_SHIFT.
 ///////////////////////////////////////////////////////////////////////////////
 /******************************************************************************
  *  bi_realloc: sets the number of allocated digits to `size`. Returns a
@@ -100,22 +92,22 @@ _recalloc(void *ptr, size_t new_size, size_t old_size)
  *              May modify `->digits` and `->n_alloc` but never `->n_digits`.
  ******************************************************************************/
 void *
-bi_realloc(bi_t ptr, int size)
+bi_realloc(bi_t ptr, bi_ssize_t size)
 {
     digit *digits;
-    static const unsigned long max_digits = ULONG_MAX / BI_SHIFT;
 
     if (size < 1)
     {
         size = 1;
     }
 
-    if ((unsigned long)size > max_digits)
+    if (size > BI_MAX_DIGITS)
     {
         fprintf(stderr, "bi_realloc(): failure.\n");
         exit(EXIT_FAILURE);
     }
 
+    /* FIXME: the multiplication can overflow. */
     if (ptr->n_alloc == 0)
     {
         digits = _malloc(size * sizeof(digit));
