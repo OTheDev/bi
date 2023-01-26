@@ -17,7 +17,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <inttypes.h>
-#include <assert.h>
 #include <limits.h>
 
 
@@ -81,7 +80,7 @@ typedef unsigned long bi_bitcount_t;
 
 /* Maximum number of digits.
  * The minimum of INT_MAX, (ULONG_MAX / BI_DIGIT_BITS), SIZE_MAX.
- * In all three cases, should have LONG_MAX > BI_MAX_DIGITS >= SIZE_MAX. */
+ * In all three cases, should have LONG_MAX > BI_MAX_DIGITS. */
 #if INT_MAX <= (ULONG_MAX / BI_DIGIT_BITS) && INT_MAX <= SIZE_MAX
     /* ==> sizeof(long) > sizeof(int) */
     #define BI_MAX_DIGITS INT_MAX
