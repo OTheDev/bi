@@ -17,6 +17,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <inttypes.h>
+#include <assert.h>
+#include <limits.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,15 +61,36 @@
 
 typedef struct
 {
-    /* Length of the digits array. */
+    /* Number of allocated members in the array of `digit`s. */
     int n_alloc;
-    /* Number of used digits in the digits array. Encodes the sign of the int. */
+    /* Number of used members in the array of `digit`s. Also encodes the sign
+     * of the integer. negative <==> ->n_digits < 0, zero <==> ->n_digits == 0,
+     * positive <==> ->n_digits > 0. */
     int n_digits;
-    /* The digits array, representing the magnitude of the integer. */
+    /* The digits array, representing the absolute value of the integer.
+     * Least significant digit is the element with index 0. */
     digit *digits;
 } _bi_struct;
 
 typedef _bi_struct bi_t[1];
+
+/* Counts of digits. */
+typedef long bi_ssize_t;
+/* Counts of bits. */
+typedef unsigned long bi_bitcount_t;
+
+/* Maximum number of digits.
+ * The minimum of INT_MAX, (ULONG_MAX / BI_DIGIT_BITS), SIZE_MAX.
+ * In all three cases, should have LONG_MAX > BI_MAX_DIGITS >= SIZE_MAX. */
+#if INT_MAX <= (ULONG_MAX / BI_DIGIT_BITS) && INT_MAX <= SIZE_MAX
+    /* ==> sizeof(long) > sizeof(int) */
+    #define BI_MAX_DIGITS INT_MAX
+#elif (ULONG_MAX / BI_DIGIT_BITS) <= SIZE_MAX
+    /* True: INT_MAX > (ULONG_MAX / BI_DIGIT_BITS) or INT_MAX > SIZE_MAX. */
+    #define BI_MAX_DIGITS (ULONG_MAX / BI_DIGIT_BITS)
+#else
+    #define BI_MAX_DIGITS SIZE_MAX
+#endif
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -76,40 +99,36 @@ typedef _bi_struct bi_t[1];
 /* Root memory allocation/deallocation functions - same as C standard library
  * functions but if memory allocation/reallocation fails, the program
  * terminates. _recalloc() is custom; same as _realloc() but clears any extra
- * memory allocated.
- */
+ * memory allocated. */
 void *_malloc(size_t size);
 void *_calloc(size_t nmemb, size_t size);
 void *_realloc(void *ptr, size_t size);
 void _free(void *ptr);
 void *_recalloc(void *ptr, size_t new_size, size_t old_size);
 
-/* Ensures `ptr` has `size` digits allocated. May modify both ptr->digits
- * and ptr->n_alloc but does not change ptr->n_digits.
- */
-void *bi_realloc(bi_t ptr, int size);
+/*  Make `ptr->digits` have space for `size` `digit`s. This may modify both
+ * `ptr->digits` and/or `ptr->n_alloc` but does not change `ptr->n_digits`. */
+void *bi_realloc(bi_t ptr, bi_ssize_t size);
 
-/* Prints the integer in its base (BI_MASK + 1) representation. */
+/* Prints the integer in its base 2^(BI_SHIFT) representation. */
 void bi_print_internal(const bi_t a);
 
-/* Make sure ABS(b->n_digits) actually refers to the number of digits needed
- * to represent the integer. Starts by checking b->digits[ABS(b->n_digits)-1]
- * is zero until it finds the highest order nonzero digit.
- */
+/* Make sure ABS(b->n_digits) refers to the number of digits needed to
+ * represent the integer. */
 void bi_normalize(bi_t b);
 
 /* Return the number of bits required to represent the digit. */
 uint8_t bit_length_digit(digit number);
+
 /* Return an estimate of the number of decimal digits required to represent
- * the integer or 0 if the bit length of the integer is ULONG_MAX.
- */
+ * the integer or 0 if the bit length of the integer is ULONG_MAX. */
 size_t _bi_decimal_length(const bi_t a);
 
-/* a %= 10: divide `a` in-place by 10, returning the remainder. */
+/* a %= 10: divide a in-place by 10, returning the remainder. */
 uint8_t bi_idiv10(bi_t a);
-/* Divide N by digit D, storing the quotient in Q and remainder in object
- * pointed to by R.
- */
+
+/* Divide N by digit D, storing the quotient in Q and remainder in the object
+ * pointed to by R. */
 void bi_divide_by_digit(bi_t Q, digit *R, bi_t N, digit D);
 
 /* to = |a| + |b| */
@@ -317,22 +336,23 @@ char *bi_to_str(const bi_t a);
  *  BITS
  *****************************************************************************/
 /* Return the number of bits required to represent its absolute value. */
-unsigned long bi_bit_length(const bi_t a);
+bi_bitcount_t bi_bit_length(const bi_t a);
 
 /* If a >= 0, result = a << shift_by.
- * Otherwise, result = (-1) * (|a| >> shift_by).
- */
-void bi_lshift(bi_t result, const bi_t a, unsigned long shift_by);
+ * Otherwise, result = (-1) * (|a| << shift_by). */
+void bi_lshift(bi_t result, const bi_t a, bi_bitcount_t shift_by);
+
 /* If a >= 0, a >>= shift_by.
  * Otherwise, (-1) * (|a| >>= shift_by). */
-void bi_irshift(bi_t a, unsigned long shift_by);
+void bi_irshift(bi_t a, bi_bitcount_t shift_by);
 
 /** Zero-based indexing applies. i >= bi_bit_length(a) permitted. These
  ** functions act as if a is nonnegative; a's sign is preserved. **/
+
 /* Get/Test bit `i` of `a`. */
-bool bi_get_bit(bi_t a, unsigned long i);
+bool bi_get_bit(bi_t a, bi_bitcount_t i);
 /* Set bit `i` of `a`. */
-void bi_set_bit(bi_t a, unsigned long i);
+void bi_set_bit(bi_t a, bi_bitcount_t i);
 
 
 /*****************************************************************************
