@@ -3,6 +3,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "bi_internal.h"
 
+#include <stdlib.h>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //  Routines
@@ -12,16 +14,20 @@
  *             result = (-1) * (|a| << shift), if a < 0.
  *****************************************************************************/
 void
-bi_lshift(bi_t result, const bi_t a, unsigned long shift)
+bi_lshift(bi_t result, const bi_t a, bi_bitcount_t shift)
 {
-    int i, j;
-    int a_size, result_size;
-    unsigned long shift_digits;
-    int shift_bits;
+    unsigned i, j, a_size, shift_bits;
+    unsigned long result_size, shift_digits;
     twodigits sum;
     digit *p;
 
-    if (shift == 0 || a->n_digits == 0)
+    if (a->n_digits == 0)
+    {
+        result->n_digits = 0;
+        return;
+    }
+
+    if (shift == 0)
     {
         if (result->digits != a->digits)
         {
@@ -36,12 +42,22 @@ bi_lshift(bi_t result, const bi_t a, unsigned long shift)
 
     if (shift_bits)
     {
-        result_size = a_size + shift_digits + 1;
+        /* shift_digits + 1 will never overflow */
+        result_size = a_size + (shift_digits + 1);
     }
     else
     {
         result_size = a_size + shift_digits;
     }
+
+    if (result_size < a_size || result_size > BI_MAX_DIGITS)
+    {
+        fprintf(stderr, "bi_lshift(): overflow! \n");
+        exit(EXIT_FAILURE);
+    }
+
+    /* True: result_size <= BI_MAX_DIGITS where BI_MAX_DIGITS :=
+     * min(INT_MAX, (ULONG_MAX/BI_SHIFT), (SIZE_MAX/sizeof(digit)). */
 
     /* Memory Management. */
     if (result->digits == a->digits)
@@ -51,7 +67,7 @@ bi_lshift(bi_t result, const bi_t a, unsigned long shift)
     }
     else
     {
-        if (result_size > result->n_alloc)
+        if (result_size > (unsigned)result->n_alloc)
         {
             result->digits = _realloc(result->digits,
                                       result_size * sizeof(digit));
@@ -61,7 +77,6 @@ bi_lshift(bi_t result, const bi_t a, unsigned long shift)
         p = result->digits;
     }
 
-    /* FIXME: cmp of integers of different size. */
     for (i = 0; i < shift_digits; i++)
     {
         p[i] = 0;
