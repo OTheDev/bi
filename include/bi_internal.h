@@ -38,6 +38,7 @@
     #define BI_SHIFT 64
     #define BI_MASK UINT64_C(0xffffffffffffffff)
     #define BI_FSPEC PRIu64
+    #define BI_SIZEOF_DIGIT 8
     #define DIGIT_C(v) UINT64_C(v)
 
      /* max{e in N ∪ {0}: 10^e fits in a digit} */
@@ -52,6 +53,7 @@
     #define BI_SHIFT 32
     #define BI_MASK UINT32_C(0xffffffff)
     #define BI_FSPEC PRIu32
+    #define BI_SIZEOF_DIGIT 4
     #define DIGIT_C(v) UINT32_C(v)
 
     /* max{e in N ∪ {0}: 10^e fits in a digit} */
