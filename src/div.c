@@ -42,7 +42,7 @@ bi_divide_by_digit(bi_t Q, digit *R, bi_t N, digit D)
         *R = tmp % D;
     }
 
-    BI_NORMALIZE_POSITIVE(Q, size, true);
+    BI_NORMALIZE_NONNEG(Q, size);
 }
 
 

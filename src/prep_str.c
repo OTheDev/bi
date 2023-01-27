@@ -186,7 +186,7 @@ bi_prep_str(bi_t z, const char *str)
         }
     }
 
-    BI_NORMALIZE_POSITIVE(z, z->n_digits, true);
+    BI_NORMALIZE_NONNEG(z, z->n_digits);
 
     if (negative)
     {

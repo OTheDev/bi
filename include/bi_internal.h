@@ -164,22 +164,31 @@ void bi_sub_abs(bi_t to, const bi_t a, const bi_t b);
  *                need to compute ABS(b->n_digits), which is normally already
  *                computed by routines prior to normalization.
  ******************************************************************************/
-#define BI_NORMALIZE(b, abs_n_digits)                                       \
-    do {                                                                    \
-        while ((abs_n_digits) > 0 && (b)->digits[(abs_n_digits) - 1] == 0)  \
-        {                                                                   \
-            (abs_n_digits)--;                                               \
-        }                                                                   \
-        (b)->n_digits = ((b)->n_digits) ? (abs_n_digits) : -(abs_n_digits); \
+#define BI_NORMALIZE(b, asize)                                    \
+    do {                                                          \
+        while ((asize) > 0 && (b)->digits[(asize) - 1] == 0)      \
+        {                                                         \
+            (asize)--;                                            \
+        }                                                         \
+        (b)->n_digits = ((b)->n_digits < 0) ? -(asize) : (asize); \
     } while (0)
 
-#define BI_NORMALIZE_POSITIVE(b, abs_n_digits, positive)                    \
-    do {                                                                    \
-        while ((abs_n_digits) > 0 && (b)->digits[(abs_n_digits) - 1] == 0)  \
-        {                                                                   \
-            (abs_n_digits)--;                                               \
-        }                                                                   \
-        (b)->n_digits = (positive) ? (abs_n_digits) : -(abs_n_digits);      \
+#define BI_NORMALIZE_NEG(b, asize)                            \
+    do {                                                      \
+        while ((asize) > 0 && (b)->digits[(asize) - 1] == 0)  \
+        {                                                     \
+            (asize)--;                                        \
+        }                                                     \
+        (b)->n_digits = -(asize);                             \
+    } while (0)
+
+#define BI_NORMALIZE_NONNEG(b, asize)                         \
+    do {                                                      \
+        while ((asize) > 0 && (b)->digits[(asize) - 1] == 0)  \
+        {                                                     \
+            (asize)--;                                        \
+        }                                                     \
+        (b)->n_digits = (asize);                              \
     } while (0)
 
 

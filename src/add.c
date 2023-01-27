@@ -73,7 +73,7 @@
         }                                                       \
         else                                                    \
         {                                                       \
-            BI_NORMALIZE_POSITIVE(c, abs_size_a, true);         \
+            BI_NORMALIZE_NONNEG(c, abs_size_a);                 \
         }                                                       \
     } while (0)
 
@@ -158,26 +158,26 @@ bi_sub_abs(bi_t to, const bi_t a, const bi_t b)
         if (a->digits[j] < b->digits[j])
         {
             SUB(to, b, a, b_n, a_n);
-            BI_NORMALIZE_POSITIVE(to, b_n, false);
+            BI_NORMALIZE_NEG(to, b_n);
         }
         else
         {
             SUB(to, a, b, a_n, b_n);
-            BI_NORMALIZE_POSITIVE(to, a_n, true);
+            BI_NORMALIZE_NONNEG(to, a_n);
         }
     }
     else if (a_n > b_n)
     {
         /* a_n > b_n ==> |a| - |b| > 0 */
         SUB(to, a, b, a_n, b_n);
-        BI_NORMALIZE_POSITIVE(to, a_n, true);
+        BI_NORMALIZE_NONNEG(to, a_n);
 
     }
     else
     {
         /* a_n < b_n ==> |a| - |b| < 0. Note |a| - |b| = -(|b| - |a|) always. */
         SUB(to, b, a, b_n, a_n);
-        BI_NORMALIZE_POSITIVE(to, b_n, false);
+        BI_NORMALIZE_NEG(to, b_n);
     }
 }
 
