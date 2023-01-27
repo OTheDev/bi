@@ -34,7 +34,7 @@
     typedef int64_t sdigit;
     typedef __int128 stwodigits;
 
-    #define BI_DIGIT_BITS 64UL
+    #define BI_DIGIT_BITS 64
     #define BI_SHIFT 64
     #define BI_MASK UINT64_C(0xffffffffffffffff)
     #define BI_FSPEC PRIu64
@@ -49,7 +49,7 @@
     typedef int32_t sdigit;
     typedef int64_t stwodigits;
 
-    #define BI_DIGIT_BITS 32UL
+    #define BI_DIGIT_BITS 32
     #define BI_SHIFT 32
     #define BI_MASK UINT32_C(0xffffffff)
     #define BI_FSPEC PRIu32
