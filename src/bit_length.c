@@ -112,6 +112,6 @@ bi_bit_length(const bi_t a)
 {
     unsigned abs_ndigits = ABS(a->n_digits);
 
-    return (abs_ndigits - 1) * BI_DIGIT_BITS +                              \
+    return (abs_ndigits - 1) * (bi_bitcount_t)BI_DIGIT_BITS +                 \
            bit_length_digit(a->digits[abs_ndigits - 1]);
 }
