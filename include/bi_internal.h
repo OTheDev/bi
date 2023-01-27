@@ -81,16 +81,30 @@ typedef long bi_ssize_t;
 typedef unsigned long bi_bitcount_t;
 
 /* Maximum number of digits.
- * The minimum of INT_MAX, (ULONG_MAX / BI_DIGIT_BITS), SIZE_MAX.
- * In all three cases, should have LONG_MAX > BI_MAX_DIGITS. */
-#if INT_MAX <= (ULONG_MAX / BI_DIGIT_BITS) && INT_MAX <= SIZE_MAX
-    /* ==> sizeof(long) > sizeof(int) */
+ * Consider allocating n_digits digits for an integer using malloc().
+ * The number of bytes needed for n_digits digits is n_digits * sizeof(digit).
+ * Since malloc() accepts a size_t argument, need n_digits * sizeof(digit) to
+ * be less than or equal to SIZE_MAX. We also need n_digits to be representable
+ * by an int ==> n_digits <= INT_MAX required. Lastly, as the bit-level
+ * functions accept an unsigned long as the bit index, we will require
+ * n_digits <= ULONG_MAX / BI_DIGIT_BITS. In summary, we want n_digits s.t.
+ * (1) n_digits <= (SIZE_MAX / BI_SIZEOF_DIGIT) := A
+ * (2) n_digits <= INT_MAX := B
+ * (3) n_digits <= (ULONG_MAX / BI_DIGIT_BITS) := C
+ * Set BI_MAX_DIGITS to min(A, B, C).
+ */
+#if INT_MAX <= (ULONG_MAX / BI_DIGIT_BITS) &&                     \
+    INT_MAX <= (SIZE_MAX / BI_SIZEOF_DIGIT)
+    /* B <= C and B <= A ==> min(A, B, C) == B. */
     #define BI_MAX_DIGITS INT_MAX
-#elif (ULONG_MAX / BI_DIGIT_BITS) <= SIZE_MAX
-    /* True: INT_MAX > (ULONG_MAX / BI_DIGIT_BITS) or INT_MAX > SIZE_MAX. */
+#elif (ULONG_MAX / BI_DIGIT_BITS) <= (SIZE_MAX / BI_SIZEOF_DIGIT)
+    /* TRUE: B > C or B > A. Case 1: B > C and C <= A ==> min(A, B, C) == C.
+     * Case 2: B > A and C <= A ==> min(A, B, C) == C. In either case,
+     * min(A, B, C) == C. */
     #define BI_MAX_DIGITS (ULONG_MAX / BI_DIGIT_BITS)
 #else
-    #define BI_MAX_DIGITS SIZE_MAX
+    /* min(A, B, C) != B and min(A, B, C) != C ==> min(A, B, C) == A. */
+    #define BI_MAX_DIGITS (SIZE_MAX / BI_SIZEOF_DIGIT)
 #endif
 
 
