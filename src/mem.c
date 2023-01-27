@@ -107,7 +107,6 @@ bi_realloc(bi_t ptr, bi_ssize_t size)
         exit(EXIT_FAILURE);
     }
 
-    /* FIXME: the multiplication can overflow. */
     if (ptr->n_alloc == 0)
     {
         digits = _malloc(size * sizeof(digit));
