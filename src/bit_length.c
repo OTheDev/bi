@@ -106,23 +106,11 @@ bit_length_digit(digit number)
 /******************************************************************************
  *  bi_bit_length: return the number of bits required to represent its absolute
  *                 value.
- *
- *                 In the event that an unsigned long (ULONG_MAX >= 2**32 - 1)
- *                 is not wide enough to count the number of bits, returns
- *                 ULONG_MAX.
- *
- *                 TODO: this check may not be needed. Allocator should detect
- *                       this in advance.
  ******************************************************************************/
-unsigned long
+bi_bitcount_t
 bi_bit_length(const bi_t a)
 {
     unsigned long abs_ndigits = ABS(a->n_digits);
-
-    if (abs_ndigits > ULONG_MAX / BI_SHIFT)
-    {
-        return ULONG_MAX;
-    }
 
     return (abs_ndigits - 1) * BI_DIGIT_BITS +                                \
            bit_length_digit(a->digits[abs_ndigits - 1]);
