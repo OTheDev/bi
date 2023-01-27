@@ -110,8 +110,8 @@ bit_length_digit(digit number)
 bi_bitcount_t
 bi_bit_length(const bi_t a)
 {
-    unsigned long abs_ndigits = ABS(a->n_digits);
+    unsigned abs_ndigits = ABS(a->n_digits);
 
-    return (abs_ndigits - 1) * BI_DIGIT_BITS +                                \
+    return (abs_ndigits - 1) * BI_DIGIT_BITS +                              \
            bit_length_digit(a->digits[abs_ndigits - 1]);
 }
