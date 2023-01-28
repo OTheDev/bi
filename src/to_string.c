@@ -51,7 +51,7 @@ char *
 bi_to_str(const bi_t a)
 {
     uint8_t carry;
-    int half_len, n_base10_estimate, n_base10_included, buf_size, idx;
+    size_t half_len, n_base10_estimate, n_base10_included, buf_size, idx;
     char *buf, *str;
     bi_t copy;
 
@@ -111,7 +111,7 @@ bi_to_str(const bi_t a)
     buf[idx] = '\0';
 
     half_len = n_base10_included / 2;
-    for (int i = 0; i < half_len; i++)
+    for (size_t i = 0; i < half_len; i++)
     {
         char temp = str[i];
         str[i] = str[n_base10_included - 1 - i];
