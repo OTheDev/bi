@@ -96,6 +96,25 @@ bi_realloc(bi_t ptr, bi_ssize_t size)
 {
     digit *digits;
 
+    if (ptr->n_alloc == 0)
+    {
+        digits = _malloc(size * sizeof(digit));
+    }
+    else
+    {
+        digits = _realloc(ptr->digits, size * sizeof(digit));
+    }
+
+    ptr->digits = digits;
+    ptr->n_alloc = size;
+    return (void *)digits;
+}
+
+void *
+bi_realloc_maybe_overflow(bi_t ptr, bi_ssize_t size)
+{
+    digit *digits;
+
     if (size < 1)
     {
         size = 1;
