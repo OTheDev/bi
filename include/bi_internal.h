@@ -18,6 +18,7 @@
 #include <stdbool.h>
 #include <inttypes.h>
 #include <limits.h>
+#include <stdlib.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -96,15 +97,15 @@ typedef unsigned long bi_bitcount_t;
 #if INT_MAX <= (ULONG_MAX / BI_DIGIT_BITS) &&                     \
     INT_MAX <= (SIZE_MAX / BI_SIZEOF_DIGIT)
     /* B <= C and B <= A ==> min(A, B, C) == B. */
-    #define BI_MAX_DIGITS INT_MAX
+    #define BI_MAX_DIGITS ( (unsigned) INT_MAX)
 #elif (ULONG_MAX / BI_DIGIT_BITS) <= (SIZE_MAX / BI_SIZEOF_DIGIT)
     /* TRUE: B > C or B > A. Case 1: B > C and C <= A ==> min(A, B, C) == C.
      * Case 2: B > A and C <= A ==> min(A, B, C) == C. In either case,
      * min(A, B, C) == C. */
-    #define BI_MAX_DIGITS (ULONG_MAX / BI_DIGIT_BITS)
+    #define BI_MAX_DIGITS ( (unsigned long) (ULONG_MAX / BI_DIGIT_BITS) )
 #else
     /* min(A, B, C) != B and min(A, B, C) != C ==> min(A, B, C) == A. */
-    #define BI_MAX_DIGITS (SIZE_MAX / BI_SIZEOF_DIGIT)
+    #define BI_MAX_DIGITS ( (size_t) (SIZE_MAX / BI_SIZEOF_DIGIT) )
 #endif
 
 
@@ -157,6 +158,18 @@ void bi_sub_abs(bi_t to, const bi_t a, const bi_t b);
 ///////////////////////////////////////////////////////////////////////////////
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+
+/******************************************************************************
+ *  BI_ON_OVERFLOW: called before an attempt is made to allocate more digits
+ *                  than BI_MAX_DIGITS. The default behavior is to print an
+ *                  error message to stderr and terminate the program.
+ ******************************************************************************/
+#define BI_ON_OVERFLOW()                                        \
+    do {                                                        \
+        fprintf(stderr, "%s(): overflow error!\n", __func__);   \
+        exit(EXIT_FAILURE);                                     \
+    } while (0)
 
 
 /******************************************************************************
