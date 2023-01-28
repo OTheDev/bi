@@ -52,8 +52,8 @@ bi_lshift(bi_t result, const bi_t a, bi_bitcount_t shift)
 
     if (result_size < a_size || result_size > BI_MAX_DIGITS)
     {
-        fprintf(stderr, "bi_lshift(): overflow! \n");
-        exit(EXIT_FAILURE);
+        BI_ON_OVERFLOW();
+        return;
     }
 
     /* True: result_size <= BI_MAX_DIGITS where BI_MAX_DIGITS :=
