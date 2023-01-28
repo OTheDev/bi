@@ -44,37 +44,47 @@
  * Fact: if a (m digits), b (n digits) are nonnegative integers, a + b has
  *       at most max(m, n) + 1 digits.
  */
-#define ADD(c, a, b, abs_size_a, abs_size_b)                    \
-    do {                                                        \
-        /* Temporary variable in case c overlaps with a or b */ \
-        digit tmp;                                              \
-        int i, max_digits = abs_size_a + 1;                     \
-        uint8_t carry = 0;                                      \
-        if (c->n_alloc < max_digits)                            \
-        {                                                       \
-            bi_realloc(c, max_digits);                          \
-        }                                                       \
-        for (i = 0; i < abs_size_b; i++)                        \
-        {                                                       \
-            tmp = a->digits[i] + b->digits[i] + carry;          \
-            carry = tmp < a->digits[i];                         \
-            c->digits[i] = tmp;                                 \
-        }                                                       \
-        while (i < abs_size_a)                                  \
-        {                                                       \
-            tmp = a->digits[i] + carry;                         \
-            carry = tmp < carry;                                \
-            c->digits[i++] = tmp;                               \
-        }                                                       \
-        if (carry)                                              \
-        {                                                       \
-            c->digits[i] = carry;                               \
-            c->n_digits = max_digits;                           \
-        }                                                       \
-        else                                                    \
-        {                                                       \
-            BI_NORMALIZE_NONNEG(c, abs_size_a);                 \
-        }                                                       \
+#define ADD(c, a, b, abs_size_a, abs_size_b)                                  \
+    do {                                                                      \
+        /* Temporary variable in case c overlaps with a or b */               \
+        digit tmp;                                                            \
+        uint8_t carry;                                                        \
+        /* This sum should never overflow as reasonable to assume INT_MAX <   \
+           UINT_MAX. */                                                       \
+        unsigned i, max_digits = (unsigned)abs_size_a + 1;                    \
+        if (max_digits > BI_MAX_DIGITS)                                       \
+        {                                                                     \
+            /* Terminates the program. Add a return as in the future, plans   \
+               to allow recovery from overflow. */                            \
+            BI_ON_OVERFLOW();                                                 \
+            return;                                                           \
+        }                                                                     \
+        if ((unsigned)c->n_alloc < max_digits)                                \
+        {                                                                     \
+            bi_realloc(c, max_digits);                                        \
+        }                                                                     \
+        carry = 0;                                                            \
+        for (i = 0; i < abs_size_b; i++)                                      \
+        {                                                                     \
+            tmp = a->digits[i] + b->digits[i] + carry;                        \
+            carry = tmp < a->digits[i];                                       \
+            c->digits[i] = tmp;                                               \
+        }                                                                     \
+        while (i < abs_size_a)                                                \
+        {                                                                     \
+            tmp = a->digits[i] + carry;                                       \
+            carry = tmp < carry;                                              \
+            c->digits[i++] = tmp;                                             \
+        }                                                                     \
+        if (carry)                                                            \
+        {                                                                     \
+            c->digits[i] = carry;                                             \
+            c->n_digits = max_digits;                                         \
+        }                                                                     \
+        else                                                                  \
+        {                                                                     \
+            BI_NORMALIZE_NONNEG(c, abs_size_a);                               \
+        }                                                                     \
     } while (0)
 
 /* Performs |a| - |b|, storing the result into c, which may overlap with either
@@ -112,7 +122,7 @@
 void
 bi_add_abs(bi_t to, const bi_t a, const bi_t b)
 {
-    int a_n, b_n;
+    unsigned a_n, b_n;
 
     a_n = ABS(a->n_digits);
     b_n = ABS(b->n_digits);
