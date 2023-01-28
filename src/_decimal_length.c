@@ -42,7 +42,5 @@ _n_decimal_digits(unsigned long n_bits)
 size_t
 _bi_decimal_length(const bi_t a)
 {
-    unsigned long bit_length = bi_bit_length(a);
-
-    return (bit_length == ULONG_MAX) ? 0 : _n_decimal_digits(bit_length);
+    return _n_decimal_digits(bi_bit_length(a));
 }
