@@ -35,7 +35,8 @@
 void
 bi_mul(bi_t c, const bi_t a, const bi_t b)
 {
-    int n_c_digits, m, n;
+    int m, n;
+    unsigned n_c_digits;
     digit x, y, carry, k;
     digit *p;
 
@@ -50,7 +51,13 @@ bi_mul(bi_t c, const bi_t a, const bi_t b)
     n = ABS(b->n_digits);
 
     /* Maximum number of digits in the result. TRUE: n_c_digits >= 2. */
-    n_c_digits = m + n;
+    n_c_digits = (unsigned)m + (unsigned)n;
+
+    if (n_c_digits < (unsigned)m || n_c_digits > BI_MAX_DIGITS)
+    {
+        BI_ON_OVERFLOW();
+        return;
+    }
 
     /* Memory management plus ensuring result array is cleared. */
     if (c->digits == a->digits || c->digits == b->digits)
@@ -60,7 +67,7 @@ bi_mul(bi_t c, const bi_t a, const bi_t b)
     }
     else
     {
-        if (c->n_alloc >= n_c_digits)
+        if ((unsigned)c->n_alloc >= n_c_digits)
         {
             /* Just clear the array. */
             p = c->digits;
