@@ -129,10 +129,6 @@ void *bi_realloc(bi_t ptr, bi_ssize_t size);
 /* Prints the integer in its base 2^(BI_SHIFT) representation. */
 void bi_print_internal(const bi_t a);
 
-/* Make sure ABS(b->n_digits) refers to the number of digits needed to
- * represent the integer. */
-void bi_normalize(bi_t b);
-
 /* Return the number of bits required to represent the digit. */
 uint8_t bit_length_digit(digit number);
 
@@ -173,9 +169,9 @@ void bi_sub_abs(bi_t to, const bi_t a, const bi_t b);
 
 
 /******************************************************************************
- *  BI_NORMALIZE: see bi_normalize(). This macro is more flexible as it doesn't
- *                need to compute ABS(b->n_digits), which is normally already
- *                computed by routines prior to normalization.
+ *  BI_NORMALIZE: given a bi_t variable `b` and int `asize` (representing an
+ *                estimate of the number of digits needed for the integer),
+ *                set `b->n_digits` to the actual number of digits needed.
  ******************************************************************************/
 #define BI_NORMALIZE(b, asize)                                    \
     do {                                                          \
