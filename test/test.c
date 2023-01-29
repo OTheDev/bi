@@ -273,7 +273,7 @@ test_bi_irshift(void)
     bi_add_abs(a, a, b);
     s = bi_to_str(a);
     ASSERT_M(!strcmp(s, "36893488147419103230"), a->n_digits == 2); free(s);
-    bi_irshift(a, 64);
+    bi_rshift(a, a, 64);
     ASSERT_M(a->digits[0] == 1, a->n_digits == 1);
     bi_frees(a, b, NULL);
 
@@ -285,23 +285,23 @@ test_bi_irshift(void)
      * when it is rerun. Something off is going on. */
     ASSERT(!strcmp(s, "3619132862646584885328"));
     ASSERT(a->n_digits >= 2);
-    bi_irshift(a, 1);
+    bi_rshift(a, a, 1);
     free(s);
     s = bi_to_str(a);
     ASSERT_M(!strcmp(s, "1809566431323292442664"), a->n_digits == 2);
     free(s);
-    bi_irshift(a, 21);
+    bi_rshift(a, a, 21);
     s = bi_to_str(a);
     ASSERT_M(!strcmp(s, "862868514691969"), a->n_digits == 1);
     free(s);
-    bi_irshift(a, 50);
+    bi_rshift(a, a, 50);
     ASSERT_M(a->digits[0] == 0, a->n_digits == 0);
     s = bi_to_str(a);
     ASSERT_M(!strcmp(s, "0"), a->n_digits == 0);
     bi_frees(a, b, NULL); free(s);
 
     bi_prep(a);
-    bi_irshift(a, 1);
+    bi_rshift(a, a, 1);
     ASSERT(a->n_digits == 0);
     bi_free(a);
 

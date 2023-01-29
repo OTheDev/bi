@@ -379,13 +379,12 @@ bi_bitcount_t bi_bit_length(const bi_t a);
  * Otherwise, result = (-1) * (|a| << shift_by). */
 void bi_lshift(bi_t result, const bi_t a, bi_bitcount_t shift_by);
 
-/* If a >= 0, a >>= shift_by.
- * Otherwise, (-1) * (|a| >>= shift_by). */
-void bi_irshift(bi_t a, bi_bitcount_t shift_by);
+/* If a >= 0, result = a >> shift_by.
+ * Otherwise, result = (-1) * (|a| >> shift_by). */
+void bi_rshift(bi_t result, const bi_t a, bi_bitcount_t shift_by);
 
 /** Zero-based indexing applies. i >= bi_bit_length(a) permitted. These
  ** functions act as if a is nonnegative; a's sign is preserved. **/
-
 /* Get/Test bit `i` of `a`. */
 bool bi_get_bit(bi_t a, bi_bitcount_t i);
 /* Set bit `i` of `a`. */
