@@ -134,7 +134,7 @@ uint8_t bit_length_digit(digit number);
 
 /* Return an estimate of the number of decimal digits required to represent
  * the integer or 0 if the bit length of the integer is ULONG_MAX. */
-size_t _bi_decimal_length(const bi_t a);
+size_t _bi_decimal_length(const bi_t a, size_t *lower_bound);
 
 /* a %= 10: divide a in-place by 10, returning the remainder. */
 uint8_t bi_idiv10(bi_t a);
