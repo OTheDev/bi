@@ -133,7 +133,11 @@ void bi_print_internal(const bi_t a);
 uint8_t bit_length_digit(digit number);
 
 /* Return an estimate of the number of decimal digits required to represent
- * the integer or 0 if the bit length of the integer is ULONG_MAX. */
+ * the integer or 0 if it could not be determined. If 0 is returned and if
+ * the object pointed to by lower_bound is also 0, the number of base10
+ * digits required would exceed SIZE_MAX - 2; if this object has a value
+ * other than 0, this value can be used as a large lower bound for the
+ * base10 length. */
 size_t _bi_decimal_length(const bi_t a, size_t *lower_bound);
 
 /* a %= 10: divide a in-place by 10, returning the remainder. */
