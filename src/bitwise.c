@@ -49,8 +49,14 @@ bi_set_bit(bi_t a, unsigned long i)
     }
     else
     {
-        a->digits = bi_realloc(a, digit_idx + 1);
-        a->n_digits = (a->n_digits < 0) ? -(digit_idx + 1) : digit_idx + 1;
+        unsigned long new_n_alloc = digit_idx + 1;
+        if (new_n_alloc > BI_MAX_DIGITS)
+        {
+            BI_ON_OVERFLOW();
+            return;
+        }
+        a->digits = bi_realloc(a, new_n_alloc);
+        a->n_digits = (a->n_digits < 0) ? -new_n_alloc : new_n_alloc;
 
         BI_MEMSET(a->digits + asize, digit_idx - asize, 0);
 
