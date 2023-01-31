@@ -21,7 +21,9 @@ a one-element array of a thin structure that defines the integer.
 bi_t a;
 ```
 
-## Initialization/Preparation
+## Initializing/Finalizing
+
+### Initialization/Preparation
 
 Before using a `bi_t` variable, it must be **prepared** or **initialized**.
 The following functions are available for this purpose:
@@ -50,7 +52,7 @@ Once prepared, one may use any of the functions below on it. Note that if you
 free an already-prepared variable, it must be prepared again if you would like
 to re-use it.
 
-## Free
+### Free
 
 One of these functions should be called on an already-prepared `bi_t` variable
 once it is no longer needed:
@@ -63,7 +65,8 @@ void bi_free(bi_t a);
 void bi_frees(bi_t a, ...);
 ```
 
-## Set
+## Using the Integers 
+### Set
 
 Internally `bi_set()` makes `to` a deepcopy of `from` such that they represent
 the same integer (if `to == from`, this is a no-op).
@@ -72,13 +75,13 @@ the same integer (if `to == from`, this is a no-op).
 void bi_set(bi_t to, const bi_t from);
 ```
 
-## Comparisons
+### Comparisons
 ```C
 /* Return value negative, zero, positive, depending if a < b, a == b, a > b */
 int bi_cmp(const bi_t a, const bi_t b);
 ```
 
-## Arithmetic
+### Arithmetic
 ```C
 /* to = a + b */
 void bi_add(bi_t to, const bi_t a, const bi_t b);
@@ -93,7 +96,7 @@ void bi_abs(bi_t to, const bi_t a);
 void bi_negate(bi_t to, const bi_t a);
 ```
 
-## Division
+### Division
 ```C
 /* quotient  = a / b (integer division -- truncation towards zero)
  * remainder = a % b.
@@ -101,7 +104,7 @@ void bi_negate(bi_t to, const bi_t a);
 void bi_divide_qr(bi_t quotient, bi_t remainder, bi_t a, bi_t b);
 ```
 
-## Integer to String
+### Integer to String
 
 This function returns a string representing the base-10 representation of the
 integer. The caller is responsible for freeing the object the pointer refers
@@ -110,7 +113,7 @@ to once the caller is done with it.
 char *bi_to_str(const bi_t a);
 ```
 
-## Bits
+### Bits
 Counts of bits are represented by the `bi_bitcount_t` type, which is just an
 alias for `unsigned long`. For `bi_get_bit()` and `bi_set_bit()`, zero-based
 indexing applies and `i >= bi_bit_length(a)` is permitted. These functions
@@ -134,7 +137,7 @@ bool bi_get_bit(bi_t a, bi_bitcount_t i);
 void bi_set_bit(bi_t a, bi_bitcount_t i);
 ```
 
-## Printing
+### Printing
 Print the base-10 representation of the integer plus a newline to standard
 output.
 ```C
