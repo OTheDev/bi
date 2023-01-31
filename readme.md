@@ -24,12 +24,13 @@ bi_t a;
 ## Initialization/Preparation
 
 Before using a `bi_t` variable, it must be **prepared** or **initialized**.
-The following functions are currently available for this purpose:
+The following functions are available for this purpose:
 
 ```C
 /* Prepare and set the integer to 0 */
 void bi_prep(bi_t a);
-/* Prepare a NULL-terminated list of integers and set their value to 0 */
+/* Prepare a NULL-terminated, comma-separated list of integers and set their
+ * value to 0 */
 void bi_preps(bi_t a, ...);
 
 /* Prepare 'a', setting its value to 'val' */
@@ -54,10 +55,11 @@ to re-use it.
 One of these functions should be called on an already-prepared `bi_t` variable
 once it is no longer needed:
 ```C
-/* Free the memory occupied by 'a' */
+/* Free the dynamically-allocated memory 'a' uses */
 void bi_free(bi_t a);
 
-/* Free the memory occupied by a NULL-terminated list of bi_t variables */
+/* Free the dynamically-allocated memory used by a NULL-terminated,
+ * comma-separated list of bi_t variables */
 void bi_frees(bi_t a, ...);
 ```
 
