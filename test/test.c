@@ -197,6 +197,8 @@ test_bi_mul(void)
     /* Need to check "in-place" multiplication too */
     bi_mul(a, a, b);
     s = bi_to_str(a);
+    /* FIXME: Something werid is going on here. Sometimes this succeeds
+     * sometimes fails. */
     ASSERT_M(!strcmp(s, "3619132862646584885328"), a->n_digits == 2);
     bi_frees(a, b, c, NULL); free(s);
 
@@ -950,6 +952,176 @@ test_uint128_div(void)
 }
 
 
+/******************************************************************************
+ *  Test Preparing/Initializing Integers
+ ******************************************************************************/
+bool
+test_prep(void)
+{
+    INIT_TEST();
+
+    bi_t a;
+    bi_prep(a);
+    ASSERT_M(a->n_digits == 0, a->n_alloc == 0, a->digits == NULL);
+    bi_free(a);
+
+    return 1;
+}
+
+bool
+test_prep_u32(void)
+{
+    INIT_TEST();
+
+    bi_t a;
+
+    /* Test zero */
+    bi_prep_u32(a, 0);
+    ASSERT_M(a->n_digits == 0, a->n_alloc == 0, a->digits == NULL);
+    bi_free(a);
+
+    /* Test small values */
+    for (uint32_t i = 1; i < UINT16_MAX; i++) {
+        bi_prep_u32(a, i);
+        ASSERT_M(a->digits[0] == i, a->n_digits == 1, a->n_alloc == 1);
+        bi_free(a);
+    }
+
+    /* Test large values */
+    for (uint32_t i = 0; i < UINT16_MAX; i++) {
+        bi_prep_u32(a, UINT32_MAX - i);
+        ASSERT_M(a->digits[0] == (UINT32_MAX - i), a->n_digits == 1,
+                 a->n_alloc == 1);
+        bi_free(a);
+    }
+
+    return 1;
+}
+
+bool
+test_prep_i32(void)
+{
+    INIT_TEST();
+
+    bi_t a;
+
+    /* Test zero */
+    bi_prep_i32(a, 0);
+    ASSERT_M(a->n_digits == 0, a->n_alloc == 0, a->digits == NULL);
+    bi_free(a);
+
+    /* Test small absolute values */
+    for (int32_t i = INT16_MIN; i < 0; i++) {
+        bi_prep_i32(a, i);
+        ASSERT_M(a->digits[0] == (uint32_t)-i, a->n_digits == -1);
+        bi_free(a);
+    }
+
+    for (int32_t i = 1; i <= INT16_MAX; i++) {
+        bi_prep_i32(a, i);
+        ASSERT_M(a->digits[0] == (uint32_t)i, a->n_digits == 1);
+        bi_free(a);
+    }
+
+    /* Test large absolute values */
+    for (uint16_t i = 0; i < UINT16_MAX; i++) {
+        bi_prep_i32(a, INT32_MAX - i);
+        ASSERT_M(a->digits[0] == (digit)(INT32_MAX - i), a->n_digits == 1,
+                 a->n_alloc == 1);
+        bi_free(a);
+    }
+
+    for (uint16_t i = 0; i < UINT16_MAX; i++) {
+        bi_prep_i32(a, INT32_MIN + i);
+        ASSERT_M(a->digits[0] == (digit)-(stwodigits)(INT32_MIN + i),
+                 a->n_digits == -1, a->n_alloc == 1);
+        bi_free(a);
+    }
+
+    return 1;
+}
+
+bool
+test_prep_u64(void)
+{
+    INIT_TEST();
+
+    bi_t a;
+
+    /* Test zero */
+    bi_prep_u64(a, 0);
+    ASSERT_M(a->n_digits == 0, a->n_alloc == 0, a->digits == NULL);
+    bi_free(a);
+
+    /* Test small values */
+    for (uint16_t i = 1; i < UINT16_MAX; i++) {
+        bi_prep_u64(a, i);
+        ASSERT_M(a->n_digits == 1, a->n_alloc == 1, a->digits[0] == i);
+        bi_free(a);
+    }
+
+    /* Test large values */
+  #if BI_SHIFT == 64
+    for (uint16_t i = 0; i < UINT16_MAX; i++) {
+        bi_prep_u64(a, UINT64_MAX - i);
+        ASSERT_M(a->n_digits == 1, a->n_alloc == 1,
+                 a->digits[0] == UINT64_MAX - i);
+        bi_free(a);
+    }
+  #elif BI_SHIFT == 32
+    /* TODO. */
+  #endif
+
+    return 1;
+}
+
+bool
+test_prep_i64(void)
+{
+    INIT_TEST();
+
+    bi_t a;
+
+    /* Test zero */
+    bi_prep_i64(a, 0);
+    ASSERT_M(a->n_digits == 0, a->n_alloc == 0, a->digits == NULL);
+    bi_free(a);
+
+    /* Test small absolute values */
+    for (int32_t i = INT16_MIN; i < 0; i++) {
+        bi_prep_i64(a, i);
+        ASSERT_M(a->digits[0] == (uint32_t)-i, a->n_digits == -1);
+        bi_free(a);
+    }
+    for (int32_t i = 1; i <= INT16_MAX; i++) {
+        bi_prep_i64(a, i);
+        ASSERT_M(a->digits[0] == (uint32_t)i, a->n_digits == 1);
+        bi_free(a);
+    }
+
+    /* Test large absolute values */
+  #if BI_SHIFT == 64
+    for (uint16_t i = 0; i < UINT16_MAX; i++) {
+        bi_prep_i64(a, INT64_MAX - i);
+        ASSERT_M(a->digits[0] == (digit)(INT64_MAX - (int64_t)i),
+                 a->n_digits == 1, a->n_alloc == 1);
+        bi_free(a);
+    }
+
+    for (uint16_t i = 0; i < UINT16_MAX; i++) {
+        bi_prep_i64(a, INT64_MIN + i);
+        ASSERT_M(a->digits[0] == (digit)-(stwodigits)(INT64_MIN + i),
+                 a->n_digits == -1, a->n_alloc == 1);
+        bi_free(a);
+    }
+  #elif BI_SHIFT == 32
+    /* TODO. */
+  #endif
+
+    return 1;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Register the Test Functions
 ///////////////////////////////////////////////////////////////////////////////
@@ -968,7 +1140,12 @@ bool (*test_functions[])(void) = {
     test_bi_divide_by_digit,
     test_bi_prep_str,
     test_bi_get_bit,
-    test_bi_set_bit
+    test_bi_set_bit,
+    test_prep,
+    test_prep_u32,
+    test_prep_i32,
+    test_prep_u64,
+    test_prep_i64,
 };
 
 void
