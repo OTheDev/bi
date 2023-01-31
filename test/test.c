@@ -1122,6 +1122,76 @@ test_prep_i64(void)
 }
 
 
+/******************************************************************************
+ *  Test void bi_abs(bi_t to, const bi_t a): implements to = |a|.
+ ******************************************************************************/
+bool
+test_bi_abs(void)
+{
+    INIT_TEST();
+
+    bi_t a, b;
+    int asize;
+    char *s;
+
+    /** Single-digit integer **/
+    /* Prepare integers */
+    bi_prep_i32(a, -320923);
+    bi_prep(b);
+
+    ASSERT_M(a->digits[0] == 320923, a->n_digits == -1, a->n_alloc == 1);
+    ASSERT_M(b->digits == NULL, b->n_digits == 0, b->n_alloc == 0);
+
+    /* Test b = |a| when b->digits != a->digits */
+    bi_abs(b, a);
+    ASSERT_M(b->digits[0] == 320923, b->n_digits == 1, b->n_alloc == 1);
+
+    /* Test a = |a|. */
+    bi_abs(a, a);
+    ASSERT_M(a->digits[0] == 320923, a->n_digits == 1, a->n_alloc == 1);
+
+    /* Free integers */
+    bi_frees(a, b, NULL);
+
+    /** Multi-digit integer **/
+    /* Prepare integers */
+    bi_prep_i64(a, -93029322093223);
+    bi_lshift(a, a, 92);
+    bi_prep(b);
+    asize = ABS(a->n_digits);
+
+    /* Ensure a as expected */
+    s = bi_to_str(a);
+    ASSERT(!strcmp(s, "-460658890587107103073360601277668742135808")); free(s);
+    ASSERT(a->n_digits <= -2);
+
+    /* Test b = |a| */
+    bi_abs(b, a);
+    s = bi_to_str(b);
+    ASSERT(!strcmp(s, "460658890587107103073360601277668742135808")); free(s);
+    ASSERT(b->n_digits >= 2);
+
+    for (int i = 0; i < asize; i++) {
+        ASSERT(a->digits[i] == b->digits[i]);
+    }
+
+    /* Test a = |a| */
+    bi_abs(a, a);
+    s = bi_to_str(a);
+    ASSERT(!strcmp(s, "460658890587107103073360601277668742135808")); free(s);
+    ASSERT(a->n_digits >= 2);
+
+    for (int i = 0; i < asize; i++) {
+        ASSERT(a->digits[i] == b->digits[i]);
+    }
+
+    /* Free integers */
+    bi_frees(a, b, NULL);
+
+    return 1;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Register the Test Functions
 ///////////////////////////////////////////////////////////////////////////////
@@ -1146,6 +1216,7 @@ bool (*test_functions[])(void) = {
     test_prep_i32,
     test_prep_u64,
     test_prep_i64,
+    test_bi_abs
 };
 
 void
