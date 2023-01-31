@@ -259,7 +259,7 @@ test_bi_mul(void)
         bi_frees(a, mult, res_1, res_2, NULL);
     }
 
-    return 1;
+    return true;
 }
 
 bool
@@ -307,7 +307,7 @@ test_bi_irshift(void)
     ASSERT(a->n_digits == 0);
     bi_free(a);
 
-    return 1;
+    return true;
 }
 
 bool
@@ -337,7 +337,7 @@ test_bi_lshift(void)
     }
     bi_free(a);
 
-    return 1;
+    return true;
 }
 
 bool
@@ -392,7 +392,7 @@ test_bi_divide_qr(void)
     // bi_preps(q, r, a, b, NULL);
     // bi_divide(q, r, a, b);
 
-    return 1;
+    return true;
 }
 
 bool
@@ -411,7 +411,7 @@ test_bi_divide_by_digit(void)
     ASSERT_M(Q->digits[0] == 2, Q->n_digits == 1, R == 1);
     bi_frees(Q, N, NULL);
 
-    return 1;
+    return true;
 }
 
 bool
@@ -544,7 +544,7 @@ test_bi_sub_abs(void)
         bi_frees(a, b, res_1, res_2, NULL);
     }
 
-    return 1;
+    return true;
 }
 
 
@@ -638,7 +638,7 @@ test_bi_prep_str(void)
     }
   #endif
 
-    return 1;
+    return true;
 }
 
 bool
@@ -775,7 +775,7 @@ test_bi_get_bit(void)
     bit_set = bi_get_bit(a, 53042);
     ASSERT(!bit_set);
 
-    return 1;
+    return true;
 }
 
 bool
@@ -794,7 +794,7 @@ test_bi_set_bit(void)
         bi_set(a, zero);
     }
 
-    return 1;
+    return true;
 }
 
 
@@ -833,7 +833,7 @@ test_uint128_add(void)
 
     ASSERT_M(c.lo == 0xfffffffffffffffe, c.hi == 0xffffffffffffffff);
 
-    return 1;
+    return true;
 }
 
 bool
@@ -902,7 +902,7 @@ test_uint128_mul(void)
     /* 0xffffffff * 4294967297 = (2 ** 64 - 1) ==> with increment j is: */
     ASSERT(j == 4294967298);
 
-    return 1;
+    return true;
 }
 
 bool
@@ -948,7 +948,7 @@ test_uint128_div(void)
     // d.hi = 0;
     // bi_uint128_t_div(n, d, &q, &r);
 
-    return 1;
+    return true;
 }
 
 
@@ -965,7 +965,7 @@ test_prep(void)
     ASSERT_M(a->n_digits == 0, a->n_alloc == 0, a->digits == NULL);
     bi_free(a);
 
-    return 1;
+    return true;
 }
 
 bool
@@ -995,7 +995,7 @@ test_prep_u32(void)
         bi_free(a);
     }
 
-    return 1;
+    return true;
 }
 
 bool
@@ -1038,7 +1038,7 @@ test_prep_i32(void)
         bi_free(a);
     }
 
-    return 1;
+    return true;
 }
 
 bool
@@ -1072,7 +1072,7 @@ test_prep_u64(void)
     /* TODO. */
   #endif
 
-    return 1;
+    return true;
 }
 
 bool
@@ -1118,7 +1118,7 @@ test_prep_i64(void)
     /* TODO. */
   #endif
 
-    return 1;
+    return true;
 }
 
 
@@ -1142,7 +1142,7 @@ test_bi_abs(void)
     ASSERT_M(a->digits[0] == 320923, a->n_digits == -1, a->n_alloc == 1);
     ASSERT_M(b->digits == NULL, b->n_digits == 0, b->n_alloc == 0);
 
-    /* Test b = |a| when b->digits != a->digits */
+    /* Test b = |a| when b != a */
     bi_abs(b, a);
     ASSERT_M(b->digits[0] == 320923, b->n_digits == 1, b->n_alloc == 1);
 
@@ -1188,7 +1188,106 @@ test_bi_abs(void)
     /* Free integers */
     bi_frees(a, b, NULL);
 
-    return 1;
+    return true;
+}
+
+
+/******************************************************************************
+ *  Test void bi_negate(bi_t to, const bi_t a): implements to = -a.
+ ******************************************************************************/
+bool
+test_bi_negate(void)
+{
+    INIT_TEST();
+
+    bi_t a, b;
+    int asize;
+    char *s;
+
+    /** Zero **/
+    /* Prepare integers */
+    bi_preps(a, b, NULL);
+    ASSERT_M(a->n_digits == 0, a->n_alloc == 0, a->digits == NULL);
+
+    /* b = -a */
+    bi_negate(b, a);
+    ASSERT_M(b->n_digits == 0, b->n_alloc == 0, b->digits == NULL);
+
+    /* a = -a */
+    bi_negate(a, a);
+    ASSERT_M(a->n_digits == 0, a->n_alloc == 0, a->digits == NULL);
+
+    /* Free integers */
+    bi_frees(a, b, NULL);
+
+    /** Single-digit integer **/
+    /* Prepare integers */
+    bi_prep_i32(a, -98092030);
+    bi_prep(b);
+    ASSERT_M(a->n_digits == -1, a->n_alloc == 1, a->digits[0] == 98092030);
+
+    /* b = -a */
+    bi_negate(b, a);
+    ASSERT_M(b->n_digits == 1, b->n_alloc == 1, b->digits[0] == 98092030);
+
+    /* a = -a */
+    bi_negate(a, a);
+    ASSERT_M(a->n_digits == 1, a->n_alloc == 1, a->digits[0] == 98092030);
+    s = bi_to_str(a);
+    ASSERT(!strcmp(s, "98092030")); free(s);
+
+    /* a = -a */
+    bi_negate(a, a);
+    ASSERT_M(a->n_digits == -1, a->n_alloc == 1, a->digits[0] == 98092030);
+    s = bi_to_str(a);
+    ASSERT(!strcmp(s, "-98092030")); free(s);
+
+    bi_frees(a, b, NULL);
+
+    /** Multi-digit integer **/
+    /* Prepare integers */
+    bi_prep_i64(a, -9223372036854775807 - 1);
+    bi_lshift(a, a, 101);
+    bi_prep(b);
+    asize = ABS(a->n_digits);
+    s = bi_to_str(a);
+    ASSERT(!strcmp(s, "-23384026197294446691258957323460528314494920687616"));
+    ASSERT(a->n_digits <= -2);
+    free(s);
+
+    /* b = -a */
+    bi_negate(b, a);
+    s = bi_to_str(b);
+    ASSERT(!strcmp(s, "23384026197294446691258957323460528314494920687616"));
+    ASSERT_M(b->n_digits >= 2, b->n_digits == asize);
+    free(s);
+
+    for (int i = 0; i < asize; i++) {
+        ASSERT(a->digits[i] == b->digits[i]);
+    }
+
+    /* a = -a */
+    bi_negate(a, a);
+    s = bi_to_str(a);
+    ASSERT(!strcmp(s, "23384026197294446691258957323460528314494920687616"));
+    ASSERT_M(a->n_digits >= 2, a->n_digits == asize);
+    free(s);
+
+    for (int i = 0; i < asize; i++) {
+        ASSERT(a->digits[i] == b->digits[i]);
+    }
+
+    /* a = -a */
+    bi_negate(a, a);
+    s = bi_to_str(a);
+    ASSERT(!strcmp(s, "-23384026197294446691258957323460528314494920687616"));
+    ASSERT(a->n_digits <= -2);
+    free(s);
+
+    /* Free integers */
+    bi_frees(a, b, NULL);
+
+    return true;
 }
 
 
@@ -1216,7 +1315,8 @@ bool (*test_functions[])(void) = {
     test_prep_i32,
     test_prep_u64,
     test_prep_i64,
-    test_bi_abs
+    test_bi_abs,
+    test_bi_negate
 };
 
 void
