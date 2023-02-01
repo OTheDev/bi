@@ -67,8 +67,8 @@ void bi_frees(bi_t a, ...);
 
 ## Using the Integers
 Once a `bi_t` variable has been **prepared**, it can be included as an argument
-to any one of the functions below. Once **freed**, it must be **prepared**
-again if one would like to reuse the `bi_t` variable.
+to any one of the functions below. As stated above, once **freed**, it must be
+**prepared** again if one would like to reuse the `bi_t` variable.
 
 Unless stated otherwise, the same `bi_t`
 variable can appear both on the left-hand-side (LHS) or right-hand-side (RHS) of
