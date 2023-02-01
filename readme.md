@@ -65,7 +65,15 @@ void bi_free(bi_t a);
 void bi_frees(bi_t a, ...);
 ```
 
-## Using the Integers 
+## Using the Integers
+Once a `bi_t` variable has been **prepared**, it can be included as an argument
+to any one of the functions below. Once **freed**, it must be **prepared**
+again if one would like to reuse the `bi_t` variable.
+
+Unless stated otherwise, the same `bi_t`
+variable can appear both on the left-hand-side (LHS) or right-hand-side (RHS) of
+a binary operation. For example, `bi_add(a, a, a)` performs `a = a + a`.
+
 ### Set
 
 Internally `bi_set()` makes `to` a deepcopy of `from` such that they represent
