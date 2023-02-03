@@ -54,8 +54,6 @@
         unsigned i, max_digits = (unsigned)abs_size_a + 1;                    \
         if (max_digits > BI_MAX_DIGITS)                                       \
         {                                                                     \
-            /* Terminates the program. Add a return as in the future, plans   \
-               to allow recovery from overflow. */                            \
             BI_ON_OVERFLOW();                                                 \
             return;                                                           \
         }                                                                     \
