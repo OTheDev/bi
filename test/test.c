@@ -197,7 +197,7 @@ test_bi_mul(void)
     /* Need to check "in-place" multiplication too */
     bi_mul(a, a, b);
     s = bi_to_str(a);
-    /* FIXME: Something werid is going on here. Sometimes this succeeds
+    /* FIXME: Something weird is going on here. Sometimes this succeeds
      * sometimes fails. */
     ASSERT_M(!strcmp(s, "3619132862646584885328"), a->n_digits == 2);
     bi_frees(a, b, c, NULL); free(s);
@@ -263,49 +263,55 @@ test_bi_mul(void)
 }
 
 bool
-test_bi_irshift(void)
+test_bi_rshift(void)
 {
     INIT_TEST();
 
     bi_t a, b;
     char *s;
 
-    bi_prep_umax(a, BI_MASK);
-    bi_prep_umax(b, BI_MASK);
-    bi_add_abs(a, a, b);
-    s = bi_to_str(a);
-    ASSERT_M(!strcmp(s, "36893488147419103230"), a->n_digits == 2); free(s);
-    bi_rshift(a, a, 64);
-    ASSERT_M(a->digits[0] == 1, a->n_digits == 1);
+    /** Test 1: test zero **/
+    bi_preps(a, b, NULL);
+    bi_rshift(b, a, 1);
+    ASSERT(b->n_digits == 0);
     bi_frees(a, b, NULL);
-
-    bi_prep_umax(a, 923048209329);
-    bi_prep_umax(b, 3920849232);
-    bi_mul(a, a, b);
-    s = bi_to_str(a);
-    /* For the same compiled files, sometimes this test fails but then succeeds
-     * when it is rerun. Something off is going on. */
-    ASSERT(!strcmp(s, "3619132862646584885328"));
-    ASSERT(a->n_digits >= 2);
-    bi_rshift(a, a, 1);
-    free(s);
-    s = bi_to_str(a);
-    ASSERT_M(!strcmp(s, "1809566431323292442664"), a->n_digits == 2);
-    free(s);
-    bi_rshift(a, a, 21);
-    s = bi_to_str(a);
-    ASSERT_M(!strcmp(s, "862868514691969"), a->n_digits == 1);
-    free(s);
-    bi_rshift(a, a, 50);
-    ASSERT_M(a->digits[0] == 0, a->n_digits == 0);
-    s = bi_to_str(a);
-    ASSERT_M(!strcmp(s, "0"), a->n_digits == 0);
-    bi_frees(a, b, NULL); free(s);
 
     bi_prep(a);
     bi_rshift(a, a, 1);
     ASSERT(a->n_digits == 0);
     bi_free(a);
+
+    /** Test 2 **/
+    bi_prep_umax(a, BI_MASK);
+    bi_prep_umax(b, BI_MASK);
+    bi_add_abs(a, a, b);
+    s = bi_to_str(a);
+  #if BI_SHIFT == 64
+    ASSERT_M(!strcmp(s, "36893488147419103230"), a->n_digits == 2); free(s);
+  #elif BI_SHIFT == 32
+    ASSERT_M(!strcmp(s, "8589934590"), a->n_digits == 2); free(s);
+  #endif
+    bi_rshift(a, a, BI_SHIFT);
+    ASSERT_M(a->digits[0] == 1, a->n_digits == 1);
+    bi_frees(a, b, NULL);
+
+    /** Test 3 **/
+    bi_prep_umax(a, 923048209329);
+    bi_prep_umax(b, 3920849232);
+    bi_mul(a, a, b);
+
+    s = bi_to_str(a);
+    ASSERT_M(!strcmp(s, "3619132862646584885328"), a->n_digits >= 2); free(s);
+    bi_rshift(a, a, 1);
+    s = bi_to_str(a);
+    ASSERT_M(!strcmp(s, "1809566431323292442664"), a->n_digits >= 2); free(s);
+    bi_rshift(a, a, 21);
+    s = bi_to_str(a);
+    ASSERT(!strcmp(s, "862868514691969")); free(s);
+    bi_rshift(a, a, 50);
+    ASSERT_M(a->digits[0] == 0, a->n_digits == 0);
+
+    bi_frees(a, b, NULL);
 
     return true;
 }
@@ -735,7 +741,7 @@ test_bit_length_digit(void)
     ASSERT(bit_length_digit(BI_MASK) == 32);
   #endif
 
-    /* Need to watch for overflow here. Didn't bother storing BI_MASK / 2. */
+    /* Need to watch for overflow here. */
     for (uint64_t x = 1; x < BI_MASK / 2; x *= 2)
     {
         uint8_t len = bit_length_digit(x);
@@ -1302,7 +1308,7 @@ bool (*test_functions[])(void) = {
     test_bi_set,
     test_bit_length_digit,
     test_bi_to_str,
-    test_bi_irshift,
+    test_bi_rshift,
     test_bi_lshift,
     test_bi_divide_qr,
     test_bi_sub_abs,
