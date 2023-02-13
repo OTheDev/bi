@@ -65,6 +65,8 @@
         for (i = 0; i < abs_size_b; i++)                                      \
         {                                                                     \
             tmp = a->digits[i] + b->digits[i] + carry;                        \
+            /* FIXME: if b->digits[i] == BI_MASK and carry == 1, this code    \
+             * fails. */                                                      \
             carry = tmp < a->digits[i];                                       \
             c->digits[i] = tmp;                                               \
         }                                                                     \
