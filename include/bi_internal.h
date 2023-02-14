@@ -19,6 +19,16 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <assert.h>
+
+
+///////////////////////////////////////////////////////////////////////////////
+//  Assumptions
+///////////////////////////////////////////////////////////////////////////////
+/* Assume the implementation has mostly-compliant IEEE-754 64-bit doubles. This
+ * is almost always true. */
+static_assert(sizeof(double) * CHAR_BIT == 64, "64-bit double is assumed.");
+static_assert(INT_MAX < UINT_MAX, "INT_MAX < UINT_MAX is assumed.");
 
 
 ///////////////////////////////////////////////////////////////////////////////

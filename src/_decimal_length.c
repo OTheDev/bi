@@ -8,16 +8,12 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-//  Macro Constants and Assumptions
+//  Macro Constants
 ///////////////////////////////////////////////////////////////////////////////
 /* 2^53 */
 #define DBL_MAX_INT 0x20000000000000u
 /* Approximately (slightly larger than) log10(2). */
 #define LOG10_2 0.30103
-
-/* Assume the implementation has mostly-compliant IEEE-754 64-bit doubles. This
- * is almost always true. */
-static_assert(sizeof(double) * CHAR_BIT == 64, "64-bit double is assumed.");
 
 
 ///////////////////////////////////////////////////////////////////////////////
