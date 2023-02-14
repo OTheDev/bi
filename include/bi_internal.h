@@ -24,12 +24,23 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Assumptions
 ///////////////////////////////////////////////////////////////////////////////
-/* In two's complement, -1 is encoded as 111...111. Note that two's complement
- * implies INT_MAX < UINT_MAX and similar. */
-_Static_assert(-1 == ~0, "Two's complement representation assumed.");
-
 /* Assume implementation has mostly-compliant IEEE-754 64-bit doubles. */
 _Static_assert(sizeof(double) * CHAR_BIT == 64, "64-bit double is assumed.");
+
+/* The C Standard permits (1) sign and magnitude : -1 encoded as 100...001.
+ *                        (2) two's complement   : -1 encoded as 111...111.
+ *                        (3) ones' complement   : -1 encoded as 111...110.
+ * Not currently relied upon by any code. */
+_Static_assert(-1 == ~0, "Two's complement representation assumed.");
+
+/* This assumption is nonrestrictive. Technically, it is hypothetically
+ * possible, for example, that a CPU only supports signed but not unsigned
+ * arithmetic. An int might have N - 1 value bits and 1 sign bit and an
+ * unsigned int may have the same memory layout but with the sign bit treated
+ * as a padding bit, in which case INT_MAX == UINT_MAX. Note that the Standard
+ * guarantees that if an int has M value bits and an unsigned int has N value
+ * bits then M <= N. */
+_Static_assert(INT_MAX < UINT_MAX, "INT_MAX < UINT_MAX assumed.");
 
 
 ///////////////////////////////////////////////////////////////////////////////
