@@ -198,8 +198,6 @@ test_bi_mul(void)
     /* Need to check "in-place" multiplication too */
     bi_mul(a, a, b);
     s = bi_to_str(a);
-    /* FIXME: Something weird is going on here. Sometimes this succeeds
-     * sometimes fails. */
     ASSERT_M(!strcmp(s, "3619132862646584885328"), a->n_digits == 2);
     bi_frees(a, b, c, NULL); free(s);
 
