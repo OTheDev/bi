@@ -1326,7 +1326,7 @@ test_bi_add(void)
     bi_add(r, a, b);
 
     s = bi_to_str(r);
-    ASSERT(strcmp(s, "680564733841876926926749214863536422910")); free(s);
+    ASSERT(!strcmp(s, "680564733841876926926749214863536422910")); free(s);
     bi_frees(r, a, b, NULL);
 
     return true;
