@@ -1326,7 +1326,7 @@ test_bi_add(void)
     bi_add(r, a, b);
 
     s = bi_to_str(r);
-    ASSERT(!strcmp(s, "680564733841876926926749214863536422910")); free(s);
+    ASSERT(strcmp(s, "680564733841876926926749214863536422910")); free(s);
     bi_frees(r, a, b, NULL);
 
     return true;
@@ -1362,7 +1362,8 @@ bool (*test_functions[])(void) = {
     test_bi_add
 };
 
-void
+/* Return 1 if all tests are successful, 0 otherwise. */
+int
 test(void)
 {
     size_t n_functions = sizeof(test_functions) / sizeof(test_functions[0]);
@@ -1382,6 +1383,11 @@ test(void)
                i + 1, n_successful, i + 1 - n_successful);
     }
     putchar('\n');
+
+    if (n_successful == n_functions)
+        return 1;
+    else
+        return 0;
 }
 
 
@@ -1391,5 +1397,11 @@ test(void)
 int
 main(void)
 {
-    test();
+    if (test()) {
+        /* All tests successful */
+        return 0;
+    }
+    else {
+        return 1;
+    }
 }
