@@ -299,6 +299,34 @@ bi_memset(digit *destination, int n_digits, digit value)
     } while (0)
 
 
+/******************************************************************************
+ *  BI_ADDC: add with carry (ADC). Given r, a, b of unsigned integer type
+ *           'type' and carry an unsigned integer that is either 1 or 0, set r
+ *           equal to the computation a + b + carry and set carry to 1 or 0
+ *           depending on whether the addition "overflowed" or not.
+ ******************************************************************************/
+#define BI_ADDC(r, a, b, carry, type)   \
+    do {                                \
+        type _tmp = a + carry;          \
+        r = b + _tmp;                   \
+        carry = (r < b) || (_tmp < a);  \
+    } while (0)
+
+
+/******************************************************************************
+ *  BI_SUBB: subtract with borrow (SBB). Given r, a, b of unsigned integer type
+ *           'type' and borrow an unsigned integer that is either 1 or 0, set r
+ *           equal to the computation a - b - borrow and set carry to 1 or 0
+ *           depending on whether the subtraction "overflowed" or not.
+ ******************************************************************************/
+#define BI_SUBB(r, a, b, borrow, type)      \
+    do {                                    \
+        type _tmp = a - b;                  \
+        r = _tmp - borrow;                  \
+        borrow = (r > _tmp) || (_tmp > a);  \
+    } while (0)
+
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Public
 ///////////////////////////////////////////////////////////////////////////////
