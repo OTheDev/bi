@@ -29,17 +29,71 @@
 //      (1) Assume there is overflow (i.e. a + b >= 2^w). Then by definition
 //          UADD(a, b) = a + b - 2^w < a + 0 = a (since b < 2^w).
 //          Thus,
-//              (overflow) ==> (UADD(a, b) < a).
+//              overflow ==> UADD(a, b) < a.
 //      (2) Assume there is no overflow. Then UADD(a, b) = a + b >= a (since
 //          b >= 0). By logical equivalence of the contrapositive, we have
 //          that
-//              (UADD(a, b) < a) ==> overflow is true. QED.
+//              UADD(a, b) < a ==> overflow. QED.
 //
 //      By symmetry, there is overflow iff UADD(a, b) < b.
 //
-//      Theorem: (a < b) <==> overflow caused by the subtraction of a from b.
-//      Proof: By definition, there is overflow iff a - b < 0 <==> a < b. QED.
+//      Theorem: USUB(a, b) > a iff there is overflow.
+//      Proof:
+//      (1) Assume there is overflow (i.e. a - b < 0). Then by definition
+//          USUB(a, b) = a - b + 2^w. But (2^w - b) + a > a since 2^w > b.
+//          Thus,
+//              overflow ==> USUB(a, b) > a.
+//      (2) Assume there is no overflow (i.e. a - b >= 0). Then by definition
+//          USUB(a, b) = a - b >= 0. But USUB(a, b) = a - b <= a since
+//          b >= 0 <==> -b <= 0 <==> a - b <= a. Thus, by logical equivalence
+//          of the contrapositive,
+//              USUB(a, b) > a ==> overflow. QED.
 ///////////////////////////////////////////////////////////////////////////////
+/* Consider UADDC(a, b, carry) where a, b are unsigned integers of the same
+ * width and carry may be 1 or 0. This represents the computation
+ *     a + b + carry.
+ *
+ * Case 1: carry is 0.
+ *         This is same as r = a + b.
+ *         overflow <==> r < a (by theorem above).
+ * Case 2: carry is 1.
+ *         This is same as r = a + (b + 1).
+ *         Case (a): (b + 1) does not overflow (<==> b < UMAX).
+ *                   Then overflow <==> r < a (by theorem above).
+ *         Case (b): (b + 1) does overflow (<==> b is UMAX).
+ *                   In this case, (b + 1) becomes zero.
+ *                   Thus, r = a is true.
+ *                   overflow <==> r = a.
+ *
+ * So to check if r = UADDC(a, b, c) had an overflow, use
+ *     r = a + b + c;
+ *     c = r < a || (c && r == a);
+ *
+ * Consider USUBB(a, b, borrow) where a, b are unsigned integers of the same
+ * width and borrow may be 1 or 0. This represents the computation
+ *     a - b - borrow.
+ *
+ * Case 1: borrow is 0.
+ *         This is same as r = a - b.
+ *         overflow <==> r > a (by theorem above).
+ * Case 2: borrow is 1.
+ *         This is same as r = a - (b + 1).
+ *         Case (a): b < UMAX.
+ *                   overflow <==> r > a (by theorem above).
+ *         Case (b): b = UMAX.
+ *                   In this case, (b + 1) becomes 0.
+ *                   Thus, r = a is true.
+ *                   overflow <==> r = a.
+ *
+ * To check if r = USUBB(a, b, borrow) had an overflow, use
+ *     r = a - b - borrow;
+ *     c = r > a || (borrow && r == a);
+ *
+ * The alternative, simpler approach is to use larger types to perform the
+ * addition and use bit-shifting to determine if there is a carry. After all,
+ * this library does assume the existence of twodigits.
+ */
+
 /* Sets c to |a| + |b|. |a->n_digits| >= |b->n_digits| is assumed.
  * Fact: if a (m digits), b (n digits) are nonnegative integers, a + b has
  *       at most max(m, n) + 1 digits.
@@ -49,8 +103,6 @@
         /* Temporary variable in case c overlaps with a or b */               \
         digit tmp;                                                            \
         uint8_t carry;                                                        \
-        /* This sum should never overflow as reasonable to assume INT_MAX <   \
-           UINT_MAX. */                                                       \
         unsigned i, max_digits = (unsigned)abs_size_a + 1;                    \
         if (max_digits > BI_MAX_DIGITS)                                       \
         {                                                                     \
@@ -65,9 +117,7 @@
         for (i = 0; i < abs_size_b; i++)                                      \
         {                                                                     \
             tmp = a->digits[i] + b->digits[i] + carry;                        \
-            /* FIXME: if b->digits[i] == BI_MASK and carry == 1, this code    \
-             * fails. */                                                      \
-            carry = tmp < a->digits[i];                                       \
+            carry = tmp < a->digits[i] || (carry && tmp == a->digits[i]);     \
             c->digits[i] = tmp;                                               \
         }                                                                     \
         while (i < abs_size_a)                                                \
@@ -92,26 +142,26 @@
  * Fact: if a (m digits), b (n digits) are nonnegative integers with m >= n,
  * then a - b has at most m digits.
  */
-#define SUB(c, a, b, abs_size_a, abs_size_b)                    \
-    do {                                                        \
-        /* Temporary variable in case c overlaps with a or b */ \
-        digit tmp;                                              \
-        int i;                                                  \
-        bool borrow = 0;                                        \
-        if (c->n_alloc < abs_size_a)                            \
-            bi_realloc(c, abs_size_a);                          \
-        for (i = 0; i < abs_size_b; i++)                        \
-        {                                                       \
-            tmp = a->digits[i] - b->digits[i] - borrow;         \
-            borrow = tmp > a->digits[i];                        \
-            c->digits[i] = tmp;                                 \
-        }                                                       \
-        while (i < abs_size_a)                                  \
-        {                                                       \
-            tmp = a->digits[i] - borrow;                        \
-            borrow = tmp > a->digits[i];                        \
-            c->digits[i++] = tmp;                               \
-        }                                                       \
+#define SUB(c, a, b, abs_size_a, abs_size_b)                                \
+    do {                                                                    \
+        /* Temporary variable in case c overlaps with a or b */             \
+        digit tmp;                                                          \
+        int i;                                                              \
+        bool borrow = 0;                                                    \
+        if (c->n_alloc < abs_size_a)                                        \
+            bi_realloc(c, abs_size_a);                                      \
+        for (i = 0; i < abs_size_b; i++)                                    \
+        {                                                                   \
+            tmp = a->digits[i] - b->digits[i] - borrow;                     \
+            borrow = tmp > a->digits[i] || (borrow && tmp == a->digits[i]); \
+            c->digits[i] = tmp;                                             \
+        }                                                                   \
+        while (i < abs_size_a)                                              \
+        {                                                                   \
+            tmp = a->digits[i] - borrow;                                    \
+            borrow = tmp > a->digits[i];                                    \
+            c->digits[i++] = tmp;                                           \
+        }                                                                   \
     } while (0)
 
 

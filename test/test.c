@@ -1297,6 +1297,42 @@ test_bi_negate(void)
 }
 
 
+/******************************************************************************
+ *  Test Adding Integers
+ ******************************************************************************/
+bool
+test_bi_add(void)
+{
+    INIT_TEST();
+
+    bi_t r, a, b;
+    char *s;
+
+    /** Test 1 **/
+    /* This test is important. The original implementation of bi_add() would
+     * have in its intermediate steps (r = a + b + carry; carry = r < a). This
+     * works for most cases, but will cause the following edge case to fail. */
+    bi_preps(r, b, NULL);
+
+    a->digits = (digit *)malloc(2 * sizeof(digit));
+    a->n_alloc = 2;
+    a->n_digits = 2;
+    a->digits[0] = BI_MASK;
+    a->digits[1] = BI_MASK;
+
+    /* Make b a deepcopy of a */
+    bi_set(b, a);
+
+    bi_add(r, a, b);
+
+    s = bi_to_str(r);
+    ASSERT(!strcmp(s, "680564733841876926926749214863536422910")); free(s);
+    bi_frees(r, a, b, NULL);
+
+    return true;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Register the Test Functions
 ///////////////////////////////////////////////////////////////////////////////
@@ -1322,7 +1358,8 @@ bool (*test_functions[])(void) = {
     test_prep_u64,
     test_prep_i64,
     test_bi_abs,
-    test_bi_negate
+    test_bi_negate,
+    test_bi_add
 };
 
 void
