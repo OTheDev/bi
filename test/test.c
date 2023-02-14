@@ -1,8 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Tests for the `bi` arbitrary precision integer library.
 //
-//  This file is still very much in its infancy and the tests can be improved.
-//
 //  To test a function named `X` from "ap.c", the convention followed is to
 //  create a parameterless function `test_X` with a `bool` return type (a
 //  return value of `true` indicates the test was successful):
@@ -24,6 +22,9 @@
 //  becomes difficult to maintain. This should also help create more meaningful
 //  tests with more coverage of the possibilities, which still needs to be done
 //  for the existing tests.
+//
+//  RECOMMENDED: compiling with optimizations enabled is recommended. The
+//               speedup is typically significant.
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 //  Includes
@@ -1039,8 +1040,8 @@ test_prep_i32(void)
 
     for (uint16_t i = 0; i < UINT16_MAX; i++) {
         bi_prep_i32(a, INT32_MIN + i);
-        ASSERT_M(a->digits[0] == (digit)-(stwodigits)(INT32_MIN + i),
-                 a->n_digits == -1, a->n_alloc == 1);
+        ASSERT(a->digits[0] == (digit)-(stwodigits)(INT32_MIN + i));
+        ASSERT_M(a->n_digits == -1, a->n_alloc == 1);
         bi_free(a);
     }
 
@@ -1338,7 +1339,8 @@ test_bi_add(void)
 ///////////////////////////////////////////////////////////////////////////////
 bool (*test_functions[])(void) = {
     test_uint128_div,
-    test_uint128_mul,
+    // Without optimizations enabled, this is slow.
+    // test_uint128_mul,
     test_uint128_add,
     test_bi_mul,
     test_bi_set,

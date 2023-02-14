@@ -8,68 +8,72 @@
 //  Macros
 ///////////////////////////////////////////////////////////////////////////////
 /* Assumes val an unsigned integer with maximum value <= BI_MASK */
-#define PREP_ONE_DIGIT(a, val)                \
-    do {                                      \
-        (a)->digits = _malloc(sizeof(digit)); \
-        (a)->n_digits = (a)->n_alloc = 1;     \
-        (a)->digits[0] = (val) & BI_MASK;     \
+#define PREP_ONE_DIGIT(a, val)              \
+    do {                                    \
+        a->digits = _malloc(sizeof(digit)); \
+        a->n_digits = a->n_alloc = 1;       \
+        a->digits[0] = val & BI_MASK;       \
     } while (0)
 
-/* Assumes val a signed or unsigned integer with maximum magnitude <= BI_MASK */
-#define PREP_ONE_DIGIT_SIGNED(a, val)               \
-    do {                                            \
-        (a)->digits = _malloc(sizeof(digit));       \
-        if ((val) < 0)                              \
-        {                                           \
-            (a)->n_digits = -1;                     \
-            (a)->n_alloc = 1;                       \
-            (a)->digits[0] = ((-(val)) & BI_MASK);  \
-        }                                           \
-        else                                        \
-        {                                           \
-            (a)->n_digits = (a)->n_alloc = 1;       \
-            (a)->digits[0] = (val) & BI_MASK;       \
-        }                                           \
-    } while (0)
-
-/* Assumes val an unsigned integer with maximum value > BI_MASK */
-#define PREP_ATLEAST_ONE_DIGIT(a, val, tmp, i)                \
-    do {                                                      \
-        (a)->n_digits = 1;                                    \
-        (tmp) = (val);                                        \
-        while ((tmp) >>= BI_SHIFT)                            \
-            (a)->n_digits++;                                  \
-        (a)->digits = _malloc((a)->n_digits * sizeof(digit)); \
-        (a)->n_alloc = (a)->n_digits;                         \
-        (i) = 0;                                              \
-        while ((val) != 0)                                    \
-        {                                                     \
-            (a)->digits[(i)++] = (val) & BI_MASK;             \
-            (val) >>= BI_SHIFT;                               \
-        }                                                     \
+/* Assumes val a signed or unsigned integer with maximum magnitude <= BI_MASK.
+ * Note that an intN_t is guaranteed to range [-2^(N - 1), 2^(N - 1) - 1] so if
+ * val is -2^(N - 1), -val would likely be dangerous. */
+#define PREP_ONE_DIGIT_SIGNED(a, val)                     \
+    do {                                                  \
+        a->digits = _malloc(sizeof(digit));               \
+        if (val < 0)                                      \
+        {                                                 \
+            a->n_digits = -1;                             \
+            a->n_alloc = 1;                               \
+            a->digits[0] = -(stwodigits)(val) & BI_MASK;  \
+        }                                                 \
+        else                                              \
+        {                                                 \
+            a->n_digits = a->n_alloc = 1;                 \
+            a->digits[0] = val & BI_MASK;                 \
+        }                                                 \
     } while (0)
 
 /* Assumes val an unsigned integer with maximum value > BI_MASK */
-#define PREP_ATLEAST_ONE_DIGIT_SIGNED(a, val, tmp, i)         \
-    do {                                                      \
-        if ((val) >= 0)                                       \
-        {                                                     \
-            PREP_ATLEAST_ONE_DIGIT((a), (val), (tmp), (i));   \
-            return;                                           \
-        }                                                     \
-        (a)->n_digits = 1;                                    \
-        (tmp) = (val) = -(val);                               \
-        while ((tmp) >>= BI_SHIFT)                            \
-            (a)->n_digits++;                                  \
-        (a)->digits = _malloc((a)->n_digits * sizeof(digit)); \
-        (a)->n_alloc = (a)->n_digits;                         \
-        (a)->n_digits = -((a)->n_digits);                     \
-        (i) = 0;                                              \
-        while ((val) != 0)                                    \
-        {                                                     \
-            (a)->digits[(i)++] = (val) & BI_MASK;             \
-            (val) >>= BI_SHIFT;                               \
-        }                                                     \
+#define PREP_ATLEAST_ONE_DIGIT(a, val, tmp, i)            \
+    do {                                                  \
+        a->n_digits = 1;                                  \
+        tmp = val;                                        \
+        while (tmp >>= BI_SHIFT)                          \
+            a->n_digits++;                                \
+        a->digits = _malloc(a->n_digits * sizeof(digit)); \
+        a->n_alloc = a->n_digits;                         \
+        i = 0;                                            \
+        while (val != 0)                                  \
+        {                                                 \
+            a->digits[i++] = val & BI_MASK;               \
+            val >>= BI_SHIFT;                             \
+        }                                                 \
+    } while (0)
+
+/* Assumes val an unsigned integer with maximum value > BI_MASK. See note to
+ * PREP_ONE_DIGIT_SIGNED() for why we cast to stwodigits below. */
+#define PREP_ATLEAST_ONE_DIGIT_SIGNED(a, val, tmp, i)     \
+    do {                                                  \
+        if (val >= 0)                                     \
+        {                                                 \
+            PREP_ATLEAST_ONE_DIGIT(a, val, tmp, i);       \
+            return;                                       \
+        }                                                 \
+        a->n_digits = 1;                                  \
+        val = -(stwodigits)val;                           \
+        tmp = val;                                        \
+        while (tmp >>= BI_SHIFT)                          \
+            a->n_digits++;                                \
+        a->digits = _malloc(a->n_digits * sizeof(digit)); \
+        a->n_alloc = a->n_digits;                         \
+        a->n_digits = -a->n_digits;                       \
+        i = 0;                                            \
+        while (val != 0)                                  \
+        {                                                 \
+            a->digits[i++] = val & BI_MASK;               \
+            val >>= BI_SHIFT;                             \
+        }                                                 \
     } while (0)
 
 

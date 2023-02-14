@@ -29,8 +29,7 @@ _Static_assert(sizeof(double) * CHAR_BIT == 64, "64-bit double is assumed.");
 
 /* The C Standard permits (1) sign and magnitude : -1 encoded as 100...001.
  *                        (2) two's complement   : -1 encoded as 111...111.
- *                        (3) ones' complement   : -1 encoded as 111...110.
- * Not currently relied upon by any code. */
+ *                        (3) ones' complement   : -1 encoded as 111...110. */
 _Static_assert(-1 == ~0, "Two's complement representation assumed.");
 
 /* This assumption is nonrestrictive. Technically, it is hypothetically
