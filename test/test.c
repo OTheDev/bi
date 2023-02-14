@@ -1340,7 +1340,7 @@ test_bi_add(void)
 bool (*test_functions[])(void) = {
     test_uint128_div,
     // Without optimizations enabled, this is slow.
-    // test_uint128_mul,
+    test_uint128_mul,
     test_uint128_add,
     test_bi_mul,
     test_bi_set,
