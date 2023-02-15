@@ -338,6 +338,24 @@ bi_memset(digit *destination, int n_digits, digit value)
     } while (0)
 
 
+/* Functionally equivalent to BI_ADDC(), BI_SUBB() but generally slower (unless
+ * optimizations are enabled, in which case they are virtually equivalent).
+ * An earlier version of add.c gives a proof of why this algorithm works.
+ * BI_ADDC(), BI_SUBB() are not only faster, but also more readable, and so the
+ * choice feels obvious. */
+#define BI_ADDC_V2(r, a, b, carry)            \
+    do {                                      \
+        r = a + b + carry;                    \
+        carry = (r < a) || (carry && r == a); \
+    } while (0)
+
+#define BI_SUBB_V2(r, a, b, borrow)             \
+    do {                                        \
+        r = a - b - borrow;                     \
+        borrow = (r > a) || (borrow && r == a); \
+    } while (0)
+
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Public
 ///////////////////////////////////////////////////////////////////////////////
