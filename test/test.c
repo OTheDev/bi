@@ -1336,10 +1336,12 @@ test_bi_add(void)
 //  Register the Test Functions
 ///////////////////////////////////////////////////////////////////////////////
 bool (*test_functions[])(void) = {
+  #ifndef BI_IGNORE_TEST_UINT128
     test_uint128_div,
     // Without optimizations enabled, this is slow.
     test_uint128_mul,
     test_uint128_add,
+  #endif
     test_bi_mul,
     test_bi_set,
     test_bit_length_digit,
