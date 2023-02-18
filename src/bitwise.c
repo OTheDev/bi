@@ -58,7 +58,7 @@ bi_set_bit(bi_t a, unsigned long i)
         a->digits = bi_realloc(a, new_n_alloc);
         a->n_digits = (a->n_digits < 0) ? -new_n_alloc : new_n_alloc;
 
-        BI_MEMSET(a->digits + asize, digit_idx - asize, 0);
+        bi_memset(a->digits + asize, digit_idx - asize, 0);
 
         a->digits[digit_idx] = DIGIT_C(1) << (i % BI_DIGIT_BITS);
     }
