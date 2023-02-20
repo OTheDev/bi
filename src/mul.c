@@ -77,7 +77,7 @@ bi_mul(bi_t c, const bi_t a, const bi_t b)
         {
             /* On my system, realloc() + memset() is faster for builds with
              * optimizations disabled. However, for any nonzero optimization
-             * level (with gcc), free() + calloc() is a lot faster. Here, we
+             * level (with Clang), free() + calloc() is a lot faster. Here, we
              * code for builds that enable optimizations. */
             p = _calloc(n_c_digits, sizeof(digit));
 
