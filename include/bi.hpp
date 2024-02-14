@@ -86,8 +86,6 @@ class BI_API bi_t {
   bi_t(bi_t&& other) noexcept;
   explicit bi_t(const std::string&);
   explicit bi_t(const char*);
-  template <DigitIterator InputIterator>
-  bi_t(InputIterator first, InputIterator last, bool negative = false);
 
   ~bi_t() = default;
 
@@ -272,6 +270,10 @@ class BI_API bi_t {
   // to_string() helpers
   uint8_t idiv10() noexcept;
   size_t decimal_length() const;
+
+  // misc.
+  template <DigitIterator InputIterator>
+  bi_t(InputIterator first, InputIterator last, bool negative = false);
 };
 
 BI_API std::ostream& operator<<(std::ostream&, const bi_t&);
