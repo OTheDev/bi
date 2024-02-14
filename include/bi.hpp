@@ -100,7 +100,6 @@ class BI_API bi_t {
   // Unary operators
   bi_t operator+() const;
   bi_t operator-() const;
-  bi_t operator~() const;
 
   // Increment and decrement
   bi_t& operator++();
@@ -140,6 +139,7 @@ class BI_API bi_t {
   bool operator!=(const bi_t&) const noexcept;
 
   // Bitwise operators
+  bi_t operator~() const;
   bi_t operator&(const bi_t&) const;
   bi_t operator|(const bi_t&) const;
   bi_t operator^(const bi_t&) const;
