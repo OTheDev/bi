@@ -1,0 +1,46 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout main branch
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+
+    - name: Install Doxygen
+      # run: sudo apt-get install doxygen
+      run: |
+        wget https://www.doxygen.nl/files/doxygen-1.10.0.linux.bin.tar.gz
+        tar -xf doxygen-1.10.0.linux.bin.tar.gz
+        sudo mv doxygen-1.10.0/bin/doxygen /usr/local/bin/doxygen
+
+    - name: Generate Documentation
+      run: INTERNAL_DOCS=YES doxygen Doxyfile
+
+    - name: Checkout docs branch
+      uses: actions/checkout@v4
+      with:
+        ref: docs
+        path: docs
+
+    - name: Copy Documentation to docs branch
+      run: |
+        cp -r doc/html/* docs/
+        cd docs
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add .
+        if git diff --staged --quiet; then
+          echo "No changes to commit."
+          exit 0
+        fi
+        git commit -m "Update documentation"
+        git push
