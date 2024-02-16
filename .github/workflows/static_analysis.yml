@@ -39,7 +39,7 @@ jobs:
       working-directory: bi
 
     - name: Run clang-tidy
-      run: clang-tidy -p build include/*.hpp src/*.cpp test/*.cpp --warnings-as-errors='*'
+      run: clang-tidy -p build include/*.hpp src/*.hpp src/*.cpp test/*.hpp test/*.cpp --warnings-as-errors='*'
       working-directory: bi
 
   cpplint:

@@ -1,6 +1,9 @@
 add_library(
   bi
   bi.cpp
+  bi_dvector.cpp
+  bi_exceptions.cpp
+  h_.cpp
 )
 
 set_target_properties(
