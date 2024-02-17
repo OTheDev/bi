@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.15)
 
 project(bi VERSION 0.1)
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  message(STATUS "Clang detected")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=lld")
+endif()
+
 add_library(bi_compiler_flags INTERFACE)
 target_compile_features(bi_compiler_flags INTERFACE cxx_std_20)
 set(gcc_like "$<COMPILE_LANG_AND_ID:C,CXX,ARMClang,AppleClang,Clang,GNU,LCC>")
