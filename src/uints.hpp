@@ -3,8 +3,8 @@ Copyright 2024 Owain Davies
 SPDX-License-Identifier: Apache-2.0
 */
 
-#ifndef BI_INCLUDE_UINTS_HPP_
-#define BI_INCLUDE_UINTS_HPP_
+#ifndef BI_SRC_UINTS_HPP_
+#define BI_SRC_UINTS_HPP_
 
 #include <climits>
 #include <concepts>
@@ -162,4 +162,4 @@ constexpr bool has_double_exact(T value) noexcept {
 
 }  // namespace uints
 
-#endif  // BI_INCLUDE_UINTS_HPP_
+#endif  // BI_SRC_UINTS_HPP_
