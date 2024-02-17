@@ -17,6 +17,11 @@ target_link_libraries(
   bi
 )
 
+target_include_directories(
+  bi_test PRIVATE
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+)
+
 include(GoogleTest)
 
 gtest_discover_tests(bi_test)

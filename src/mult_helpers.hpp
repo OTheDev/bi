@@ -3,8 +3,8 @@ Copyright 2024 Owain Davies
 SPDX-License-Identifier: Apache-2.0
 */
 
-#ifndef BI_INCLUDE_MULT_HELPERS_HPP_
-#define BI_INCLUDE_MULT_HELPERS_HPP_
+#ifndef BI_SRC_MULT_HELPERS_HPP_
+#define BI_SRC_MULT_HELPERS_HPP_
 
 #include <cstdint>
 #include <utility>
@@ -83,4 +83,4 @@ constexpr std::pair<T, T> mult2_add2(T y, T x, T a, T b) {
 
 }  // namespace mult_helpers
 
-#endif  // BI_INCLUDE_MULT_HELPERS_HPP_
+#endif  // BI_SRC_MULT_HELPERS_HPP_
