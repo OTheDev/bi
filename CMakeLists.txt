@@ -2,6 +2,15 @@ cmake_minimum_required(VERSION 3.15)
 
 project(bi VERSION 0.1)
 
+include(CheckIPOSupported)
+check_ipo_supported(RESULT result OUTPUT output)
+if(result)
+  set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
+  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+else()
+  message(WARNING "IPO is not supported: ${output}")
+endif()
+
 add_library(bi_compiler_flags INTERFACE)
 target_compile_features(bi_compiler_flags INTERFACE cxx_std_20)
 set(gcc_like "$<COMPILE_LANG_AND_ID:C,CXX,ARMClang,AppleClang,Clang,GNU,LCC>")
