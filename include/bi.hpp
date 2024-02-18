@@ -128,8 +128,12 @@ class BI_API bi_t {
   bi_t& operator>>=(bi_bitcount_t shift);
 
   // Comparisons
-  std::strong_ordering operator<=>(const bi_t& other) const noexcept;
+  std::strong_ordering operator<=>(const bi_t&) const noexcept;
   bool operator==(const bi_t&) const noexcept;
+  template <std::integral T>
+  std::strong_ordering operator<=>(T) const noexcept;
+  template <std::integral T>
+  bool operator==(T) const noexcept;
 
   // Bitwise operators
   bi_t operator~() const;
@@ -139,20 +143,6 @@ class BI_API bi_t {
   bi_t& operator&=(const bi_t&);
   bi_t& operator|=(const bi_t&);
   bi_t& operator^=(const bi_t&);
-
-  // Comparison with integral types
-  template <std::integral T>
-  bool operator<(T) const noexcept;
-  template <std::integral T>
-  bool operator>(T) const noexcept;
-  template <std::integral T>
-  bool operator<=(T) const noexcept;
-  template <std::integral T>
-  bool operator>=(T) const noexcept;
-  template <std::integral T>
-  bool operator==(T) const noexcept;
-  template <std::integral T>
-  bool operator!=(T) const noexcept;
 
   // Conversion operators
   explicit operator bool() const noexcept;
@@ -169,34 +159,15 @@ class BI_API bi_t {
   std::span<const digit> digits() const;
   void print_internal(std::ostream& os = std::cout) const noexcept;
 
-  /* Other */
-  // Swap: there is also a non-member swap function in the same namespace
+  // Other
   void swap(bi_t&) noexcept;
-
-  // Integer to string
   std::string to_string() const;
-
   void negate() noexcept;
   int sign() const noexcept;
   bool odd() const noexcept;
   bool even() const noexcept;
 
-  /* Friends */
-  // Non-member operator overloads for relational and equality operators also
-  // implemented for when T is on the LHS.
-  template <std::integral T>
-  friend bool operator<(T lhs, const bi_t& rhs) noexcept;
-  template <std::integral T>
-  friend bool operator>(T lhs, const bi_t& rhs) noexcept;
-  template <std::integral T>
-  friend bool operator<=(T lhs, const bi_t& rhs) noexcept;
-  template <std::integral T>
-  friend bool operator>=(T lhs, const bi_t& rhs) noexcept;
-  template <std::integral T>
-  friend bool operator==(T lhs, const bi_t& rhs) noexcept;
-  template <std::integral T>
-  friend bool operator!=(T lhs, const bi_t& rhs) noexcept;
-
+  // Friends
   BI_API friend std::ostream& operator<<(std::ostream& os, const bi_t& x);
 
  private:
@@ -516,81 +487,21 @@ int bi_t::cmp(const bi_t& a, T b) noexcept {
 }
 
 /**
- *  @name Comparison with integral types
+ *  @name Comparisons with integral types
  *  @brief Efficient comparison between `bi_t`s and any standard integral type
  *  `T`, with no implicit conversions from `T`s to `bi_t`s (and hence no memory
  *  allocation).
- *  @note These apply for when a `bi_t` is on the LHS and a `T` is on the RHS.
- *  Non-member operator overloads for relational and equality operators are also
- *  implemented for when `T` is on the LHS. See friend functions.
  */
 ///@{
+
+template <std::integral T>
+std::strong_ordering bi_t::operator<=>(T rhs) const noexcept {
+  return bi_t::cmp(*this, rhs) <=> 0;
+}
 
 template <std::integral T>
 bool bi_t::operator==(T rhs) const noexcept {
   return bi_t::cmp(*this, rhs) == 0;
-}
-
-template <std::integral T>
-bool bi_t::operator!=(T rhs) const noexcept {
-  return bi_t::cmp(*this, rhs) != 0;
-}
-
-template <std::integral T>
-bool bi_t::operator<(T rhs) const noexcept {
-  return bi_t::cmp(*this, rhs) < 0;
-}
-
-template <std::integral T>
-bool bi_t::operator>(T rhs) const noexcept {
-  return bi_t::cmp(*this, rhs) > 0;
-}
-
-template <std::integral T>
-bool bi_t::operator<=(T rhs) const noexcept {
-  return bi_t::cmp(*this, rhs) <= 0;
-}
-
-template <std::integral T>
-bool bi_t::operator>=(T rhs) const noexcept {
-  return bi_t::cmp(*this, rhs) >= 0;
-}
-
-///@}
-
-/**
- *  @name Comparison with integral types: non-member operator overloads
- */
-///@{
-
-template <std::integral T>
-bool operator==(T lhs, const bi_t& rhs) noexcept {
-  return bi_t::cmp(rhs, lhs) == 0;
-}
-
-template <std::integral T>
-bool operator!=(T lhs, const bi_t& rhs) noexcept {
-  return bi_t::cmp(rhs, lhs) != 0;
-}
-
-template <std::integral T>
-bool operator<(T lhs, const bi_t& rhs) noexcept {
-  return bi_t::cmp(rhs, lhs) > 0;
-}
-
-template <std::integral T>
-bool operator>(T lhs, const bi_t& rhs) noexcept {
-  return bi_t::cmp(rhs, lhs) < 0;
-}
-
-template <std::integral T>
-bool operator<=(T lhs, const bi_t& rhs) noexcept {
-  return bi_t::cmp(rhs, lhs) >= 0;
-}
-
-template <std::integral T>
-bool operator>=(T lhs, const bi_t& rhs) noexcept {
-  return bi_t::cmp(rhs, lhs) <= 0;
 }
 
 ///@}
