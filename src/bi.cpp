@@ -6,6 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 #include "bi.hpp"
 
 #include <array>
+#include <compare>
 #include <iostream>
 #include <version>
 #if defined(__cpp_lib_format)
@@ -432,37 +433,16 @@ int bi_t::cmp(const bi_t& x, const bi_t& y) noexcept {
 }
 
 /**
- *  @name Relational operators
+ *  @name Comparisons
  */
 ///@{
 
-bool bi_t::operator<(const bi_t& other) const noexcept {
-  return cmp(*this, other) < 0;
+std::strong_ordering bi_t::operator<=>(const bi_t& other) const noexcept {
+  return cmp(*this, other) <=> 0;
 }
-
-bool bi_t::operator>(const bi_t& other) const noexcept { return other < *this; }
-
-bool bi_t::operator<=(const bi_t& other) const noexcept {
-  return !(*this > other);
-}
-
-bool bi_t::operator>=(const bi_t& other) const noexcept {
-  return !(*this < other);
-}
-
-///@}
-
-/**
- *  @name Equality operators
- */
-///@{
 
 bool bi_t::operator==(const bi_t& other) const noexcept {
   return cmp(*this, other) == 0;
-}
-
-bool bi_t::operator!=(const bi_t& other) const noexcept {
-  return !(*this == other);
 }
 
 ///@}

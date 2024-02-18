@@ -8,6 +8,7 @@ SPDX-License-Identifier: Apache-2.0
 
 #include <algorithm>
 #include <cassert>
+#include <compare>
 #include <iostream>
 #include <limits>
 #include <span>
@@ -126,15 +127,9 @@ class BI_API bi_t {
   bi_t& operator<<=(bi_bitcount_t shift);
   bi_t& operator>>=(bi_bitcount_t shift);
 
-  // Relational operators
-  bool operator<(const bi_t&) const noexcept;
-  bool operator>(const bi_t&) const noexcept;
-  bool operator<=(const bi_t&) const noexcept;
-  bool operator>=(const bi_t&) const noexcept;
-
-  // Equality operators
+  // Comparisons
+  std::strong_ordering operator<=>(const bi_t& other) const noexcept;
   bool operator==(const bi_t&) const noexcept;
-  bool operator!=(const bi_t&) const noexcept;
 
   // Bitwise operators
   bi_t operator~() const;
