@@ -130,8 +130,8 @@ template&lt;std::integral T&gt; </td></tr>
 <div class="line"><a class="code hl_function" href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi_t</a> empty{<span class="stringliteral">&quot;&quot;</span>};       <span class="comment">// Throws std::invalid_argument</span></div>
 <div class="line"><a class="code hl_function" href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi_t</a> nll{<span class="keyword">nullptr</span>};    <span class="comment">// Throws std::invalid_argument</span></div>
 <div class="line"><a class="code hl_function" href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi_t</a> invalid{<span class="stringliteral">&quot;  -&quot;</span>};  <span class="comment">// Throws std::invalid_argument</span></div>
-<div class="ttc" id="aclassbi_1_1bi__t_html"><div class="ttname"><a href="classbi_1_1bi__t.html">bi::bi_t</a></div><div class="ttdoc">Arbitrary-precision integer type and related functions.</div><div class="ttdef"><b>Definition</b> bi.hpp:79</div></div>
-<div class="ttc" id="aclassbi_1_1bi__t_html_a3897c3329c32d4f802f4af2f31a4fa8a"><div class="ttname"><a href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi::bi_t::bi_t</a></div><div class="ttdeci">bi_t() noexcept</div><div class="ttdoc">Default constructor. The integer is initialized to zero and no memory allocation occurs.</div><div class="ttdef"><b>Definition</b> bi.cpp:30</div></div>
+<div class="ttc" id="aclassbi_1_1bi__t_html"><div class="ttname"><a href="classbi_1_1bi__t.html">bi::bi_t</a></div><div class="ttdoc">Arbitrary-precision integer type and related functions.</div><div class="ttdef"><b>Definition</b> bi.hpp:80</div></div>
+<div class="ttc" id="aclassbi_1_1bi__t_html_a3897c3329c32d4f802f4af2f31a4fa8a"><div class="ttname"><a href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi::bi_t::bi_t</a></div><div class="ttdeci">bi_t() noexcept</div><div class="ttdoc">Default constructor. The integer is initialized to zero and no memory allocation occurs.</div><div class="ttdef"><b>Definition</b> bi.cpp:31</div></div>
 </div><!-- fragment --> </div></td></tr>
 <tr class="memitem:ad359be5b108bce8306e67c11049312f0" id="r_ad359be5b108bce8306e67c11049312f0"><td class="memItemLeft" align="right" valign="top"><a id="ad359be5b108bce8306e67c11049312f0" name="ad359be5b108bce8306e67c11049312f0"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>bi_t</b> (const std::string &amp;)</td></tr>
@@ -228,26 +228,13 @@ template&lt;std::integral T&gt; </td></tr>
 <tr class="memitem:af7526a79539fd448b5c517ac7a50f17d" id="r_af7526a79539fd448b5c517ac7a50f17d"><td class="memItemLeft" align="right" valign="top"><a id="af7526a79539fd448b5c517ac7a50f17d" name="af7526a79539fd448b5c517ac7a50f17d"></a>
 <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&gt;&gt;=</b> (bi_bitcount_t shift)</td></tr>
 <tr class="separator:af7526a79539fd448b5c517ac7a50f17d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">Relational operators</div></td></tr>
-<tr class="memitem:a381aadb0d6654420e3340094693a39eb" id="r_a381aadb0d6654420e3340094693a39eb"><td class="memItemLeft" align="right" valign="top"><a id="a381aadb0d6654420e3340094693a39eb" name="a381aadb0d6654420e3340094693a39eb"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;</b> (const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;) const noexcept</td></tr>
-<tr class="separator:a381aadb0d6654420e3340094693a39eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae965a566b930e177e5f09be877ad7edd" id="r_ae965a566b930e177e5f09be877ad7edd"><td class="memItemLeft" align="right" valign="top"><a id="ae965a566b930e177e5f09be877ad7edd" name="ae965a566b930e177e5f09be877ad7edd"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&gt;</b> (const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;) const noexcept</td></tr>
-<tr class="separator:ae965a566b930e177e5f09be877ad7edd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20a921b674596e4d3b18064e351484b9" id="r_a20a921b674596e4d3b18064e351484b9"><td class="memItemLeft" align="right" valign="top"><a id="a20a921b674596e4d3b18064e351484b9" name="a20a921b674596e4d3b18064e351484b9"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;=</b> (const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;) const noexcept</td></tr>
-<tr class="separator:a20a921b674596e4d3b18064e351484b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5970227a7b0b7f3c96ca55b21597cd19" id="r_a5970227a7b0b7f3c96ca55b21597cd19"><td class="memItemLeft" align="right" valign="top"><a id="a5970227a7b0b7f3c96ca55b21597cd19" name="a5970227a7b0b7f3c96ca55b21597cd19"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&gt;=</b> (const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;) const noexcept</td></tr>
-<tr class="separator:a5970227a7b0b7f3c96ca55b21597cd19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">Equality operators</div></td></tr>
+<tr><td colspan="2"><div class="groupHeader">Comparisons</div></td></tr>
+<tr class="memitem:a471249c398c5abb6cdac7955deca0252" id="r_a471249c398c5abb6cdac7955deca0252"><td class="memItemLeft" align="right" valign="top"><a id="a471249c398c5abb6cdac7955deca0252" name="a471249c398c5abb6cdac7955deca0252"></a>
+std::strong_ordering&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;=&gt;</b> (const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;other) const noexcept</td></tr>
+<tr class="separator:a471249c398c5abb6cdac7955deca0252"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf79771c63341c98fe1be774e68ceb4e" id="r_adf79771c63341c98fe1be774e68ceb4e"><td class="memItemLeft" align="right" valign="top"><a id="adf79771c63341c98fe1be774e68ceb4e" name="adf79771c63341c98fe1be774e68ceb4e"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;) const noexcept</td></tr>
 <tr class="separator:adf79771c63341c98fe1be774e68ceb4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abcab547f75e4123c542ee780a1754c1f" id="r_abcab547f75e4123c542ee780a1754c1f"><td class="memItemLeft" align="right" valign="top"><a id="abcab547f75e4123c542ee780a1754c1f" name="abcab547f75e4123c542ee780a1754c1f"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;) const noexcept</td></tr>
-<tr class="separator:abcab547f75e4123c542ee780a1754c1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Bitwise operators</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><dl class="section note"><dt>Note</dt><dd>These operators perform bitwise operations on integers using two's complement representation (with sign extension). </dd></dl>
 </div></td></tr>
@@ -1037,7 +1024,7 @@ r_{i} \) such that  </p><p class="formulaDsp">
 <div class="line">s = x.<a class="code hl_function" href="#a58d5889bb5438a6f48b1cae282a0d7e5">to_string</a>();              <span class="comment">// s == &quot;65535&quot;</span></div>
 <div class="line">x = -32768;</div>
 <div class="line">s = x.<a class="code hl_function" href="#a58d5889bb5438a6f48b1cae282a0d7e5">to_string</a>();              <span class="comment">// s == &quot;-32768&quot;</span></div>
-<div class="ttc" id="aclassbi_1_1bi__t_html_a58d5889bb5438a6f48b1cae282a0d7e5"><div class="ttname"><a href="#a58d5889bb5438a6f48b1cae282a0d7e5">bi::bi_t::to_string</a></div><div class="ttdeci">std::string to_string() const</div><div class="ttdoc">Return a string containing the base-10 (decimal) representation of the integer.</div><div class="ttdef"><b>Definition</b> bi.cpp:763</div></div>
+<div class="ttc" id="aclassbi_1_1bi__t_html_a58d5889bb5438a6f48b1cae282a0d7e5"><div class="ttname"><a href="#a58d5889bb5438a6f48b1cae282a0d7e5">bi::bi_t::to_string</a></div><div class="ttdeci">std::string to_string() const</div><div class="ttdoc">Return a string containing the base-10 (decimal) representation of the integer.</div><div class="ttdef"><b>Definition</b> bi.cpp:743</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
