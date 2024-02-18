@@ -229,12 +229,23 @@ template&lt;std::integral T&gt; </td></tr>
 <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&gt;&gt;=</b> (bi_bitcount_t shift)</td></tr>
 <tr class="separator:af7526a79539fd448b5c517ac7a50f17d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Comparisons</div></td></tr>
-<tr class="memitem:a471249c398c5abb6cdac7955deca0252" id="r_a471249c398c5abb6cdac7955deca0252"><td class="memItemLeft" align="right" valign="top"><a id="a471249c398c5abb6cdac7955deca0252" name="a471249c398c5abb6cdac7955deca0252"></a>
-std::strong_ordering&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;=&gt;</b> (const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;other) const noexcept</td></tr>
-<tr class="separator:a471249c398c5abb6cdac7955deca0252"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa41d311f006e13c5448f9255e09d0813" id="r_aa41d311f006e13c5448f9255e09d0813"><td class="memItemLeft" align="right" valign="top"><a id="aa41d311f006e13c5448f9255e09d0813" name="aa41d311f006e13c5448f9255e09d0813"></a>
+std::strong_ordering&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;=&gt;</b> (const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;) const noexcept</td></tr>
+<tr class="separator:aa41d311f006e13c5448f9255e09d0813"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf79771c63341c98fe1be774e68ceb4e" id="r_adf79771c63341c98fe1be774e68ceb4e"><td class="memItemLeft" align="right" valign="top"><a id="adf79771c63341c98fe1be774e68ceb4e" name="adf79771c63341c98fe1be774e68ceb4e"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;) const noexcept</td></tr>
 <tr class="separator:adf79771c63341c98fe1be774e68ceb4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Comparisons with integral types</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p>Efficient comparison between <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code>s and any standard integral type <code>T</code>, with no implicit conversions from <code>T</code>s to <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code>s (and hence no memory allocation). </p>
+</div></td></tr>
+<tr class="memitem:ad2eab6b8e05efa3564494ea78a6bb2b7" id="r_ad2eab6b8e05efa3564494ea78a6bb2b7"><td class="memTemplParams" colspan="2"><a id="ad2eab6b8e05efa3564494ea78a6bb2b7" name="ad2eab6b8e05efa3564494ea78a6bb2b7"></a>
+template&lt;std::integral T&gt; </td></tr>
+<tr class="memitem:ad2eab6b8e05efa3564494ea78a6bb2b7"><td class="memTemplItemLeft" align="right" valign="top">std::strong_ordering&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;=&gt;</b> (T) const noexcept</td></tr>
+<tr class="separator:ad2eab6b8e05efa3564494ea78a6bb2b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0584fa84af5435be84168fcfefe0850" id="r_ab0584fa84af5435be84168fcfefe0850"><td class="memTemplParams" colspan="2"><a id="ab0584fa84af5435be84168fcfefe0850" name="ab0584fa84af5435be84168fcfefe0850"></a>
+template&lt;std::integral T&gt; </td></tr>
+<tr class="memitem:ab0584fa84af5435be84168fcfefe0850"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator==</b> (T) const noexcept</td></tr>
+<tr class="separator:ab0584fa84af5435be84168fcfefe0850"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Bitwise operators</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><dl class="section note"><dt>Note</dt><dd>These operators perform bitwise operations on integers using two's complement representation (with sign extension). </dd></dl>
 </div></td></tr>
@@ -257,34 +268,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
 <tr class="memitem:a9d2c38f1b98931a2244da51f6ca6bc6f" id="r_a9d2c38f1b98931a2244da51f6ca6bc6f"><td class="memItemLeft" align="right" valign="top"><a id="a9d2c38f1b98931a2244da51f6ca6bc6f" name="a9d2c38f1b98931a2244da51f6ca6bc6f"></a>
 <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator^=</b> (const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;)</td></tr>
 <tr class="separator:a9d2c38f1b98931a2244da51f6ca6bc6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">Comparison with integral types</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p>Efficient comparison between <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code>s and any standard integral type <code>T</code>, with no implicit conversions from <code>T</code>s to <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code>s (and hence no memory allocation).</p>
-<dl class="section note"><dt>Note</dt><dd>These apply for when a <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> is on the LHS and a <code>T</code> is on the RHS. Non-member operator overloads for relational and equality operators are also implemented for when <code>T</code> is on the LHS. See friend functions. </dd></dl>
-</div></td></tr>
-<tr class="memitem:a5c771ad9a540e6d6cd7fd1a9578b2c20" id="r_a5c771ad9a540e6d6cd7fd1a9578b2c20"><td class="memTemplParams" colspan="2"><a id="a5c771ad9a540e6d6cd7fd1a9578b2c20" name="a5c771ad9a540e6d6cd7fd1a9578b2c20"></a>
-template&lt;std::integral T&gt; </td></tr>
-<tr class="memitem:a5c771ad9a540e6d6cd7fd1a9578b2c20"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;</b> (T) const noexcept</td></tr>
-<tr class="separator:a5c771ad9a540e6d6cd7fd1a9578b2c20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d8ff54b87475b882a93485cb32ef20d" id="r_a4d8ff54b87475b882a93485cb32ef20d"><td class="memTemplParams" colspan="2"><a id="a4d8ff54b87475b882a93485cb32ef20d" name="a4d8ff54b87475b882a93485cb32ef20d"></a>
-template&lt;std::integral T&gt; </td></tr>
-<tr class="memitem:a4d8ff54b87475b882a93485cb32ef20d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&gt;</b> (T) const noexcept</td></tr>
-<tr class="separator:a4d8ff54b87475b882a93485cb32ef20d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62074cea0b16e6bf9b2cd717acbfeb01" id="r_a62074cea0b16e6bf9b2cd717acbfeb01"><td class="memTemplParams" colspan="2"><a id="a62074cea0b16e6bf9b2cd717acbfeb01" name="a62074cea0b16e6bf9b2cd717acbfeb01"></a>
-template&lt;std::integral T&gt; </td></tr>
-<tr class="memitem:a62074cea0b16e6bf9b2cd717acbfeb01"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;=</b> (T) const noexcept</td></tr>
-<tr class="separator:a62074cea0b16e6bf9b2cd717acbfeb01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e754ff1c7f29fe08341ef48b5622821" id="r_a2e754ff1c7f29fe08341ef48b5622821"><td class="memTemplParams" colspan="2"><a id="a2e754ff1c7f29fe08341ef48b5622821" name="a2e754ff1c7f29fe08341ef48b5622821"></a>
-template&lt;std::integral T&gt; </td></tr>
-<tr class="memitem:a2e754ff1c7f29fe08341ef48b5622821"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&gt;=</b> (T) const noexcept</td></tr>
-<tr class="separator:a2e754ff1c7f29fe08341ef48b5622821"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0584fa84af5435be84168fcfefe0850" id="r_ab0584fa84af5435be84168fcfefe0850"><td class="memTemplParams" colspan="2"><a id="ab0584fa84af5435be84168fcfefe0850" name="ab0584fa84af5435be84168fcfefe0850"></a>
-template&lt;std::integral T&gt; </td></tr>
-<tr class="memitem:ab0584fa84af5435be84168fcfefe0850"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator==</b> (T) const noexcept</td></tr>
-<tr class="separator:ab0584fa84af5435be84168fcfefe0850"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade94f555cf0a048c5e8b4a92d690ad79" id="r_ade94f555cf0a048c5e8b4a92d690ad79"><td class="memTemplParams" colspan="2"><a id="ade94f555cf0a048c5e8b4a92d690ad79" name="ade94f555cf0a048c5e8b4a92d690ad79"></a>
-template&lt;std::integral T&gt; </td></tr>
-<tr class="memitem:ade94f555cf0a048c5e8b4a92d690ad79"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator!=</b> (T) const noexcept</td></tr>
-<tr class="separator:ade94f555cf0a048c5e8b4a92d690ad79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Conversion operators</div></td></tr>
 <tr class="memitem:a4426bac6c16d5a91603eff8884c9242e" id="r_a4426bac6c16d5a91603eff8884c9242e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4426bac6c16d5a91603eff8884c9242e">operator bool</a> () const noexcept</td></tr>
 <tr class="memdesc:a4426bac6c16d5a91603eff8884c9242e"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>true</code> if and only if this integer is nonzero.  <br /></td></tr>
@@ -342,30 +325,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>negative</b> () const
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:a4f0edaec50c5293ffb7002202f5b5b71" id="r_a4f0edaec50c5293ffb7002202f5b5b71"><td class="memTemplParams" colspan="2"><a id="a4f0edaec50c5293ffb7002202f5b5b71" name="a4f0edaec50c5293ffb7002202f5b5b71"></a>
-template&lt;std::integral T&gt; </td></tr>
-<tr class="memitem:a4f0edaec50c5293ffb7002202f5b5b71"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;</b> (T lhs, const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a4f0edaec50c5293ffb7002202f5b5b71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e94cca407918124112a20d734c9d422" id="r_a3e94cca407918124112a20d734c9d422"><td class="memTemplParams" colspan="2"><a id="a3e94cca407918124112a20d734c9d422" name="a3e94cca407918124112a20d734c9d422"></a>
-template&lt;std::integral T&gt; </td></tr>
-<tr class="memitem:a3e94cca407918124112a20d734c9d422"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&gt;</b> (T lhs, const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a3e94cca407918124112a20d734c9d422"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a820c7fa7b5d5bb326c0d842f3bff6c33" id="r_a820c7fa7b5d5bb326c0d842f3bff6c33"><td class="memTemplParams" colspan="2"><a id="a820c7fa7b5d5bb326c0d842f3bff6c33" name="a820c7fa7b5d5bb326c0d842f3bff6c33"></a>
-template&lt;std::integral T&gt; </td></tr>
-<tr class="memitem:a820c7fa7b5d5bb326c0d842f3bff6c33"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;=</b> (T lhs, const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a820c7fa7b5d5bb326c0d842f3bff6c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38e69884ffde63183392e1b7733f66a2" id="r_a38e69884ffde63183392e1b7733f66a2"><td class="memTemplParams" colspan="2"><a id="a38e69884ffde63183392e1b7733f66a2" name="a38e69884ffde63183392e1b7733f66a2"></a>
-template&lt;std::integral T&gt; </td></tr>
-<tr class="memitem:a38e69884ffde63183392e1b7733f66a2"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&gt;=</b> (T lhs, const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a38e69884ffde63183392e1b7733f66a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e7513e50f70a4ddf3b395884017b243" id="r_a3e7513e50f70a4ddf3b395884017b243"><td class="memTemplParams" colspan="2"><a id="a3e7513e50f70a4ddf3b395884017b243" name="a3e7513e50f70a4ddf3b395884017b243"></a>
-template&lt;std::integral T&gt; </td></tr>
-<tr class="memitem:a3e7513e50f70a4ddf3b395884017b243"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator==</b> (T lhs, const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a3e7513e50f70a4ddf3b395884017b243"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae01c6e79006eb3df7d61dd2e85fffa96" id="r_ae01c6e79006eb3df7d61dd2e85fffa96"><td class="memTemplParams" colspan="2"><a id="ae01c6e79006eb3df7d61dd2e85fffa96" name="ae01c6e79006eb3df7d61dd2e85fffa96"></a>
-template&lt;std::integral T&gt; </td></tr>
-<tr class="memitem:ae01c6e79006eb3df7d61dd2e85fffa96"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator!=</b> (T lhs, const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:ae01c6e79006eb3df7d61dd2e85fffa96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74256c43675696b13a9b982238bae423" id="r_a74256c43675696b13a9b982238bae423"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74256c43675696b13a9b982238bae423">operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;x)</td></tr>
 <tr class="memdesc:a74256c43675696b13a9b982238bae423"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outputs the base-10 (decimal) representation of a <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> object to a standard output stream.  <br /></td></tr>
 <tr class="separator:a74256c43675696b13a9b982238bae423"><td class="memSeparator" colspan="2">&#160;</td></tr>
