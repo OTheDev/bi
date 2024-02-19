@@ -3,37 +3,28 @@ Copyright 2024 Owain Davies
 SPDX-License-Identifier: Apache-2.0
 */
 
-#ifndef BI_INCLUDE_BI_DIGIT_VECTOR_HPP_
-#define BI_INCLUDE_BI_DIGIT_VECTOR_HPP_
+#ifndef BI_INCLUDE_BI_DIGIT_VECTOR_IMPL_HPP_
+#define BI_INCLUDE_BI_DIGIT_VECTOR_IMPL_HPP_
 
 #include <algorithm>
 #include <cassert>
+#include <climits>
+#include <concepts>
 #include <iterator>
+#include <limits>
 #include <memory>
-#include <stdexcept>
 #include <utility>
 
-#include "bi_config.hpp"
 #include "bi_exceptions.hpp"
 
 namespace bi {
 
-using bi_config::bi_max_digits;
-using bi_config::digit;
-using bi_config::range_check;
-
-template <typename T>
-concept DigitIterator =
-    std::input_iterator<T> &&
-    std::convertible_to<typename std::iterator_traits<T>::value_type, digit>;
-
-/**
- *  @brief Digit vector class.
- *  @note Not to be confused with `std::vector`. The semantics of some
- *  operations differ.
- */
+template <std::unsigned_integral digit, std::unsigned_integral bitcount>
 class digit_vector {
  public:
+  using digit_type = digit;
+  using bitcount_type = bitcount;
+
   using iterator = digit*;
   using const_iterator = const digit*;
   using riterator = std::reverse_iterator<digit*>;
@@ -60,7 +51,7 @@ class digit_vector {
     other.capacity_ = 0;
   }
 
-  // Copy assignment operator
+  // Copy assignment
   digit_vector& operator=(const digit_vector& other) {
     if (this != &other) {
       digit_vector temp(other);
@@ -71,7 +62,7 @@ class digit_vector {
     return *this;
   }
 
-  // Move assignment operator
+  // Move assignment
   digit_vector& operator=(digit_vector&& other) noexcept {
     if (this != &other) {
       digits_ = std::move(other.digits_);
@@ -91,30 +82,6 @@ class digit_vector {
     std::copy(first, last, digits_.get());
     size_ = distance;
     capacity_ = distance;
-  }
-
-  size_t size() const noexcept { return size_; }
-  size_t capacity() const noexcept { return capacity_; }
-  digit* data() noexcept { return digits_.get(); }
-  const digit* data() const noexcept { return digits_.get(); }
-  size_t max_size() const noexcept { return bi_max_digits; }
-
-  digit& operator[](size_t index) {
-    if constexpr (range_check) {
-      if (index >= size_) {
-        throw std::out_of_range("Index out of range");
-      }
-    }
-    return digits_[index];
-  }
-
-  const digit& operator[](size_t index) const {
-    if constexpr (range_check) {
-      if (index >= size_) {
-        throw std::out_of_range("Index out of range");
-      }
-    }
-    return digits_[index];
   }
 
   void resize(size_t new_size) {
@@ -147,23 +114,36 @@ class digit_vector {
     ++size_;
   }
 
-  // Iterators
-  iterator begin() noexcept { return digits_.get(); }
-  iterator end() noexcept { return digits_.get() + size_; }
-  const_iterator begin() const noexcept { return digits_.get(); }
-  const_iterator end() const noexcept { return digits_.get() + size_; }
-
-  riterator rbegin() noexcept { return riterator(end()); }
-  riterator rend() noexcept { return riterator(begin()); }
-  const_riterator rbegin() const noexcept { return const_riterator(end()); }
-  const_riterator rend() const noexcept { return const_riterator(begin()); }
-
-  // Deviations
-  /// Sets the size of the vector. Use only if `new_size <= capacity()`
   void resize_unsafe(size_t new_size) {
     assert(new_size <= capacity_);
     size_ = new_size;
   }
+
+  digit* data() noexcept { return digits_.get(); }
+  const digit* data() const noexcept { return digits_.get(); }
+  size_t size() const noexcept { return size_; }
+  size_t capacity() const noexcept { return capacity_; }
+
+  size_t max_size() const noexcept {
+    constexpr size_t a = std::numeric_limits<size_t>::max() / sizeof(digit);
+    constexpr bitcount b =
+        std::numeric_limits<bitcount>::max() / (CHAR_BIT * sizeof(digit));
+
+    return a < b ? a : static_cast<size_t>(b);
+  }
+
+  digit& operator[](size_t index) { return digits_[index]; }
+  const digit& operator[](size_t index) const { return digits_[index]; }
+
+  iterator begin() noexcept { return digits_.get(); }
+  const_iterator begin() const noexcept { return digits_.get(); }
+  iterator end() noexcept { return digits_.get() + size_; }
+  const_iterator end() const noexcept { return digits_.get() + size_; }
+
+  riterator rbegin() noexcept { return riterator(end()); }
+  const_riterator rbegin() const noexcept { return const_riterator(end()); }
+  riterator rend() noexcept { return riterator(begin()); }
+  const_riterator rend() const noexcept { return const_riterator(begin()); }
 
  private:
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
@@ -174,4 +154,4 @@ class digit_vector {
 
 };  // namespace bi
 
-#endif  // BI_INCLUDE_BI_DIGIT_VECTOR_HPP_
+#endif  // BI_INCLUDE_BI_DIGIT_VECTOR_IMPL_HPP_
