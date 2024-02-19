@@ -1,7 +1,16 @@
 add_library(
   bi
   bi.cpp
+  bi_exceptions.cpp
 )
+
+# include(CheckIPOSupported)
+# check_ipo_supported(RESULT result OUTPUT output)
+# if(result)
+#   set_target_properties(bi PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+# else()
+#   message(WARNING "IPO is not supported: ${output}")
+# endif()
 
 set_target_properties(
   bi PROPERTIES

@@ -13,6 +13,7 @@ SPDX-License-Identifier: Apache-2.0
 
 #include "bi.hpp"
 #include "bi_exceptions.hpp"
+#include "constants.hpp"
 #include "int128.hpp"
 #include "uints.hpp"
 
