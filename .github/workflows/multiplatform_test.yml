@@ -13,6 +13,7 @@ on:
       - 'src/**'
       - 'include/**'
       - 'test/**'
+      - '.github/workflows/multiplatform_test.yml'
 
 jobs:
   build:
@@ -72,6 +73,12 @@ jobs:
 
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      id: build
+      continue-on-error: true
+
+    - name: Build Verbose On Failure
+      if: steps.build.outcome == 'failure'
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }} --verbose
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
