@@ -95,7 +95,7 @@ $(function() {
 <p>Arbitrary-precision integer type and related functions.  
  <a href="#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="bi_8hpp_source.html">bi.hpp</a>&gt;</code></p>
+<p><code>#include &quot;<a class="el" href="bi_8hpp_source.html">bi.hpp</a>&quot;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -130,8 +130,8 @@ template&lt;std::integral T&gt; </td></tr>
 <div class="line"><a class="code hl_function" href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi_t</a> empty{<span class="stringliteral">&quot;&quot;</span>};       <span class="comment">// Throws std::invalid_argument</span></div>
 <div class="line"><a class="code hl_function" href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi_t</a> nll{<span class="keyword">nullptr</span>};    <span class="comment">// Throws std::invalid_argument</span></div>
 <div class="line"><a class="code hl_function" href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi_t</a> invalid{<span class="stringliteral">&quot;  -&quot;</span>};  <span class="comment">// Throws std::invalid_argument</span></div>
-<div class="ttc" id="aclassbi_1_1bi__t_html"><div class="ttname"><a href="classbi_1_1bi__t.html">bi::bi_t</a></div><div class="ttdoc">Arbitrary-precision integer type and related functions.</div><div class="ttdef"><b>Definition</b> bi.hpp:80</div></div>
-<div class="ttc" id="aclassbi_1_1bi__t_html_a3897c3329c32d4f802f4af2f31a4fa8a"><div class="ttname"><a href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi::bi_t::bi_t</a></div><div class="ttdeci">bi_t() noexcept</div><div class="ttdoc">Default constructor. The integer is initialized to zero and no memory allocation occurs.</div><div class="ttdef"><b>Definition</b> bi.cpp:31</div></div>
+<div class="ttc" id="aclassbi_1_1bi__t_html"><div class="ttname"><a href="classbi_1_1bi__t.html">bi::bi_t</a></div><div class="ttdoc">Arbitrary-precision integer type and related functions.</div><div class="ttdef"><b>Definition</b> bi.hpp:53</div></div>
+<div class="ttc" id="aclassbi_1_1bi__t_html_a3897c3329c32d4f802f4af2f31a4fa8a"><div class="ttname"><a href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi::bi_t::bi_t</a></div><div class="ttdeci">bi_t() noexcept</div><div class="ttdoc">Default constructor. The integer is initialized to zero and no memory allocation occurs.</div><div class="ttdef"><b>Definition</b> bi.cpp:74</div></div>
 </div><!-- fragment --> </div></td></tr>
 <tr class="memitem:ad359be5b108bce8306e67c11049312f0" id="r_ad359be5b108bce8306e67c11049312f0"><td class="memItemLeft" align="right" valign="top"><a id="ad359be5b108bce8306e67c11049312f0" name="ad359be5b108bce8306e67c11049312f0"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>bi_t</b> (const std::string &amp;)</td></tr>
@@ -363,7 +363,7 @@ Related Symbols</h2></td></tr>
 <p>The custom exception classes derive from <code>std::runtime_error</code>. To catch and handle these specific exceptions, <code>#include</code> the <code>"bi_exceptions.hpp"</code> header (in addition to <code>"bi.hpp"</code>).</p>
 <h2><a class="anchor" id="internals"></a>
 Internals</h2>
-<p>The representation of a <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> consists of a digit vector and a boolean indicating if the integer is negative. The integer is represented internally as a base \( 2^{n} \) integer where \( n \) is typically 32 bits. An element of the digit vector, i.e. a digit, is typically a <code>uint32_t</code>. The digit vector stores the magnitude of the integer, with least significant digits first. Counts of bits are represented by the <code>bi_bitcount_t</code> type, which is an <code>unsigned long</code>. Counts of bytes for dynamically allocated memory expects a <code>size_t</code> type. Thus, the digit vector is theoretically constrained to be less than or equal to <code>SIZE_MAX / bi_sizeof_digit</code>, where <code>bi_sizeof_digit</code> represents the number of bytes in a digit (typically 4). Additionally, because counts of bits use the <code>unsigned long</code> type, we also constrain the maximum size of the vector to be less than or equal to <code>ULONG_MAX / bi_dbits</code>, where <code>bi_dbits</code> is the number of bits in the digit data type (typically 32). Together, these constraints determine <code>max_size()</code> for the internal digit vector. An operation that expects a result to exceed <code>max_size()</code> throws <code><a class="el" href="classbi_1_1overflow__error.html" title="Throws if an operation expects the result to require a digit vector with size() exceeding max_size()....">bi::overflow_error</a></code>. </p>
+<p>The representation of a <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> consists of a digit vector and a boolean indicating if the integer is negative. The integer is represented internally as a base \( 2^{n} \) integer where \( n \) is typically 32 bits. An element of the digit vector, i.e. a digit, is typically a <code>uint32_t</code>. The digit vector stores the magnitude of the integer, with least significant digits first. Counts of bits are represented by the <code>bi_bitcount_t</code> type, which is an <code>unsigned long</code>. Counts of bytes for dynamically allocated memory expects a <code>size_t</code> type. Thus, the digit vector is theoretically constrained to be less than or equal to <code>SIZE_MAX / sizeof(digit)</code>. Additionally, because counts of bits use the <code>unsigned long</code> type, we also constrain the maximum size of the vector to be less than or equal to <code>ULONG_MAX / (CHAR_BIT * sizeof(digit))</code>, where the denominator is the number of bits in the digit data type (typically 32). Together, these constraints determine <code>max_size()</code> for the internal digit vector. An operation that expects a result to exceed <code>max_size()</code> throws <code><a class="el" href="classbi_1_1overflow__error.html" title="Throws if an operation expects the result to require a digit vector with size() exceeding max_size()....">bi::overflow_error</a></code>. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3897c3329c32d4f802f4af2f31a4fa8a" name="a3897c3329c32d4f802f4af2f31a4fa8a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3897c3329c32d4f802f4af2f31a4fa8a">&#9670;&#160;</a></span>bi_t()</h2>
@@ -389,7 +389,7 @@ Internals</h2>
 </div><div class="memdoc">
 
 <p>Default constructor. The integer is initialized to zero and no memory allocation occurs. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000001">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000006">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -445,7 +445,7 @@ Internals</h2>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A pair of <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> objects where the <code>first</code> element is the quotient and the <code>second</code> element is the remainder. </dd></dl>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000008">Complexity</a></b></dt><dd>\( O(m \cdot n) \) where \( m \) is the <code><a class="el" href="#a6aef492df515dca50e98969d7e65388a" title="Return the number of digits used. Instance represents 0 iff size() == 0.">size()</a></code> of the dividend and \( n \) is the <code><a class="el" href="#a6aef492df515dca50e98969d7e65388a" title="Return the number of digits used. Instance represents 0 iff size() == 0.">size()</a></code> of the divisor. </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000013">Complexity</a></b></dt><dd>\( O(m \cdot n) \) where \( m \) is the <code><a class="el" href="#a6aef492df515dca50e98969d7e65388a" title="Return the number of digits used. Instance represents 0 iff size() == 0.">size()</a></code> of the dividend and \( n \) is the <code><a class="el" href="#a6aef492df515dca50e98969d7e65388a" title="Return the number of digits used. Instance represents 0 iff size() == 0.">size()</a></code> of the divisor. </dd></dl>
 
 </div>
 </div>
@@ -473,7 +473,7 @@ Internals</h2>
 </div><div class="memdoc">
 
 <p>Return <code>true</code> if this integer is even, <code>false</code> otherwise. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000020">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000005">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -501,7 +501,7 @@ Internals</h2>
 </div><div class="memdoc">
 
 <p>Negates the integer in place. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000018">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000002">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -529,7 +529,7 @@ Internals</h2>
 </div><div class="memdoc">
 
 <p>Return <code>true</code> if this integer is odd, <code>false</code> otherwise. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000019">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000004">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -564,7 +564,7 @@ Internals</h2>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;x is zero!&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">}</div>
 </div><!-- fragment --><p> The output is </p><div class="fragment"><div class="line">x is zero!</div>
-</div><!-- fragment --> <dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000013">Complexity</a></b></dt><dd>O(1) </dd></dl>
+</div><!-- fragment --> <dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000018">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -582,7 +582,7 @@ Internals</h2>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000004">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000009">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
 
 </div>
 </div>
@@ -600,7 +600,7 @@ Internals</h2>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000007">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000012">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
 
 </div>
 </div>
@@ -641,7 +641,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000002">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000007">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
 
 </div>
 </div>
@@ -659,7 +659,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000005">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000010">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
 
 </div>
 </div>
@@ -677,7 +677,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000009">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000014">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
 
 </div>
 </div>
@@ -695,7 +695,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000011">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000016">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
 
 </div>
 </div>
@@ -713,7 +713,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000010">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000015">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
 
 </div>
 </div>
@@ -731,7 +731,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000012">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000017">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
 
 </div>
 </div>
@@ -749,7 +749,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000003">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000008">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
 
 </div>
 </div>
@@ -767,7 +767,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000006">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000011">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
 
 </div>
 </div>
@@ -929,7 +929,7 @@ r_{i} \) such that  </p><p class="formulaDsp">
 </div><div class="memdoc">
 
 <p>Return an <code>int</code> indicating the sign of the number: <code>-1</code> for negative, <code>0</code> for zero, <code>1</code> for positive. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000017">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000003">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -957,7 +957,7 @@ r_{i} \) such that  </p><p class="formulaDsp">
 </div><div class="memdoc">
 
 <p>Swap the contents of this <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> object with another <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> object. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000016">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000001">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -983,7 +983,7 @@ r_{i} \) such that  </p><p class="formulaDsp">
 <div class="line">s = x.<a class="code hl_function" href="#a58d5889bb5438a6f48b1cae282a0d7e5">to_string</a>();              <span class="comment">// s == &quot;65535&quot;</span></div>
 <div class="line">x = -32768;</div>
 <div class="line">s = x.<a class="code hl_function" href="#a58d5889bb5438a6f48b1cae282a0d7e5">to_string</a>();              <span class="comment">// s == &quot;-32768&quot;</span></div>
-<div class="ttc" id="aclassbi_1_1bi__t_html_a58d5889bb5438a6f48b1cae282a0d7e5"><div class="ttname"><a href="#a58d5889bb5438a6f48b1cae282a0d7e5">bi::bi_t::to_string</a></div><div class="ttdeci">std::string to_string() const</div><div class="ttdoc">Return a string containing the base-10 (decimal) representation of the integer.</div><div class="ttdef"><b>Definition</b> bi.cpp:743</div></div>
+<div class="ttc" id="aclassbi_1_1bi__t_html_a58d5889bb5438a6f48b1cae282a0d7e5"><div class="ttname"><a href="#a58d5889bb5438a6f48b1cae282a0d7e5">bi::bi_t::to_string</a></div><div class="ttdeci">std::string to_string() const</div><div class="ttdoc">Return a string containing the base-10 (decimal) representation of the integer.</div><div class="ttdef"><b>Definition</b> bi.cpp:688</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1086,14 +1086,10 @@ r_{i} \) such that  </p><p class="formulaDsp">
 </div><div class="memdoc">
 
 <p>Swap the contents of <code>a</code> with <code>b</code>. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000014">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000019">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>include/<a class="el" href="bi_8hpp_source.html">bi.hpp</a></li>
-<li>src/<b>bi.cpp</b></li>
-</ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
