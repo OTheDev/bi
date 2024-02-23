@@ -604,7 +604,7 @@ void h_::div_algo_knuth(bi_t& q, bi_t& r, const bi_t& u, const bi_t& v) {
   while ((v_msd << e) < b_half) {
     ++e;
   }
-  const int compl_e = bi_dwidth - e;
+  const unsigned compl_e = bi_dwidth - e;
 
   bi_t u_norm, v_norm;
   u_norm.resize_(m + 1);

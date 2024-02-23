@@ -561,6 +561,48 @@ bi_t& bi_t::operator^=(const bi_t& other) {
  */
 bi_t::operator bool() const noexcept { return size() == 0 ? false : true; }
 
+/**
+ *  @brief Converts a `bi_t` object to an integral type T.
+ *
+ *  As with the C++20 Standard (7.3.8, p. 93):
+ *  > [T]he result is the unique value of the destination type that is congruent
+ *  > to the source integer modulo \f$ 2^{N} \f$, where \f$ N \f$ is the width
+ *  > of the destination type.
+ */
+template <std::integral T>
+bi_t::operator T() const noexcept {
+  if (size() == 0) {
+    return 0;
+  }
+
+  constexpr unsigned t_bits = CHAR_BIT * sizeof(T);
+  constexpr bool t_is_signed = std::is_signed<T>::value;
+
+  T ret = 0;
+  if constexpr (t_bits > bi_dbits) {
+    constexpr size_t max_digits_for_t = uints::div_ceil(t_bits, bi_dbits);
+    size_t n_digits = std::min(size(), max_digits_for_t);
+
+    for (size_t i = n_digits - 1; i < SIZE_MAX; --i) {
+      ret = (ret << bi_dbits) | (*this)[i];
+    }
+  } else {
+    ret = (*this)[0];
+  }
+
+  if constexpr (t_is_signed) {
+    if (negative()) {
+      ret = -ret;
+    }
+  } else {
+    if (negative()) {
+      ret = ~ret + 1;
+    }
+  }
+
+  return ret;
+}
+
 ///@}
 
 /**
@@ -831,4 +873,5 @@ BI_INST_TEMPLATE_FOR_INTEGRAL_TYPES(std::strong_ordering bi_t::operator<=>,
                                     const noexcept);
 BI_INST_TEMPLATE_FOR_INTEGRAL_TYPES(bool bi_t::operator==, const noexcept);
 
+BI_INST_TEMPLATE_FOR_INTEGRAL_TYPES_CONV(bi_t::operator, const noexcept);
 };  // namespace bi

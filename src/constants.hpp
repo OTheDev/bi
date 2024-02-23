@@ -26,9 +26,9 @@ using ddigit = uint64_t;
 
 constexpr digit digit_c(digit v) { return v; }
 
-constexpr int bi_sizeof_digit = sizeof(digit);
-constexpr int bi_dwidth = CHAR_BIT * sizeof(digit);
-constexpr int bi_dbits = bi_dwidth;
+constexpr unsigned bi_sizeof_digit = sizeof(digit);
+constexpr unsigned bi_dwidth = CHAR_BIT * sizeof(digit);
+constexpr unsigned bi_dbits = bi_dwidth;
 constexpr digit bi_dmax = std::numeric_limits<digit>::max();
 constexpr auto bi_base = static_cast<ddigit>(1) << bi_dwidth;
 

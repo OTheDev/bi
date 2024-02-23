@@ -1450,6 +1450,50 @@ TEST_F(BITest, OperatorBool) {
   EXPECT_TRUE(neg);
 }
 
+TEST_F(BITest, OperatorUnsignedIntegral) {
+  bi_t x = 0;
+  EXPECT_EQ(static_cast<unsigned int>(x), 0);
+
+  x = 123;
+  EXPECT_EQ(static_cast<unsigned int>(x), 123);
+
+  x = -123;
+  EXPECT_EQ(static_cast<unsigned int>(x), static_cast<unsigned int>(-123));
+
+  x = ddigit_max;
+  EXPECT_EQ(static_cast<ddigit>(x), ddigit_max);
+
+  x = sddigit_min;
+  EXPECT_EQ(static_cast<ddigit>(x), static_cast<ddigit>(sddigit_min));
+  EXPECT_EQ(static_cast<digit>(x), static_cast<digit>(sddigit_min));
+}
+
+TEST_F(BITest, OperatorSignedIntegral) {
+  bi_t x = 0;
+  EXPECT_EQ(static_cast<int>(x), 0);
+
+  x = 123;
+  EXPECT_EQ(static_cast<int>(x), 123);
+
+  x = -123;
+  EXPECT_EQ(static_cast<int>(x), -123);
+
+  x = ddigit_max;
+  EXPECT_EQ(static_cast<sddigit>(x), static_cast<sddigit>(ddigit_max));
+  EXPECT_EQ(static_cast<sdigit>(x), static_cast<sdigit>(ddigit_max));
+
+  x = sddigit_min;
+  EXPECT_EQ(static_cast<sddigit>(x), static_cast<sddigit>(sddigit_min));
+  EXPECT_EQ(static_cast<sdigit>(x), static_cast<sdigit>(sddigit_min));
+
+  x = sddigit_max;
+  EXPECT_EQ(static_cast<sddigit>(x), static_cast<sddigit>(sddigit_max));
+  EXPECT_EQ(static_cast<sdigit>(x), static_cast<sdigit>(sddigit_max));
+
+  x = std::numeric_limits<long>::min();
+  EXPECT_EQ(static_cast<long>(x), std::numeric_limits<long>::min());
+}
+
 TEST_F(BITest, EvenOrOdd) {
   bi_t zero;
   EXPECT_TRUE(zero.even());

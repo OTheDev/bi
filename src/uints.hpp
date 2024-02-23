@@ -160,6 +160,11 @@ constexpr bool has_double_exact(T value) noexcept {
   return value <= dbl_max_int;
 }
 
+template <std::unsigned_integral T, std::unsigned_integral U>
+constexpr T div_ceil(T x, U y) {
+  return x == 0 ? 0 : 1 + (x - 1) / y;
+}
+
 }  // namespace uints
 
 #endif  // BI_SRC_UINTS_HPP_
