@@ -1351,6 +1351,21 @@ void h_::init_atleast_one_digit(bi_t& x, T value) {
  *  @endinternal
  */
 /**
+ *  In the comment block above `decimal_length()`, it is shown how to calculate
+ *  the minimum number of base-b digits, \f$ n \f$, required to represent any
+ *  integer with \f$ m \f$ base-c digits.
+ *
+ *  We can find an upper bound another way as well.
+ *
+ *  Let \f$ e \f$ denote the largest exponent such that \f$ c^{e} \f$ fits in
+ *  one base-b digit. By construction, any e-digit base-c number will fit in a
+ *  base-b digit, but not every \f$ (e + 1) \f$ digit base-c number will. By
+ *  dividing the number of base-c digits in an integer, \f$ m \f$, by \f$ e \f$,
+ *  and rounding up the result of the division to the nearest integer, we obtain
+ *  an upperbound on the number of base-b digits, \f$ n f$, needed to represent
+ *  any m-digit base-c integer.
+ */
+/**
  *  @name Private helpers for string constructors
  */
 ///@{
@@ -1409,7 +1424,7 @@ constexpr auto make_powers_of_ten(std::index_sequence<Indices...>) {
 
 // If digit <==> uint32_t (uint64_t), 10^{9} (10^{19}) is the highest power of
 // 10 that fits in it.
-constexpr int max_batch_size = (bi_dwidth == 64) ? 19 : 9;
+constexpr unsigned max_batch_size = (bi_dwidth == 64) ? 19 : 9;
 
 constexpr auto powers_of_ten =
     make_powers_of_ten(std::make_index_sequence<max_batch_size + 1>{});
@@ -1442,16 +1457,7 @@ void h_::init_string(bi_t& x, const std::string& s) {
   }
 
   size_t n_base10 = std::distance(start_digit, it);  // it - start_digit
-  if (!uints::has_double_exact(n_base10)) {
-    throw overflow_error("Too many decimal characters in the string.");
-  }
-
-  // Theoretical number of base (bi_dmax + 1) digits required to represent any
-  // base 10 number with n_base10 base 10 digits. See decimal_length().
-  // conversion_ratio is 1 / log10(bi_base)
-  constexpr double conversion_ratio = (bi_dwidth == 64) ? 0.052 : 0.104;
-  const size_t n_digits = static_cast<size_t>(
-      std::ceil(static_cast<double>(n_base10) * conversion_ratio));
+  const size_t n_digits = uints::div_ceil(n_base10, max_batch_size);
 
   x.reserve_(n_digits);
 
