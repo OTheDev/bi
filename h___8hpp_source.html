@@ -932,163 +932,154 @@ $(function() { codefold.init(0); });
 <div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span>}</div>
 <div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span> </div>
 <div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span><span class="comment">// TODO: move this somewhere else.</span></div>
-<div class="line"><a id="l01356" name="l01356"></a><span class="lineno"> 1356</span> </div>
-<div class="line"><a id="l01357" name="l01357"></a><span class="lineno"> 1357</span> </div>
-<div class="line"><a id="l01358" name="l01358"></a><span class="lineno"> 1358</span><span class="keyword">constexpr</span> <span class="keyword">auto</span> pow2_8 = 1 &lt;&lt; 8;</div>
-<div class="line"><a id="l01359" name="l01359"></a><span class="lineno"> 1359</span> </div>
-<div class="line"><a id="l01360" name="l01360"></a><span class="lineno"> 1360</span><span class="keyword">constexpr</span> std::array&lt;uint8_t, pow2_8&gt; create_char_to_b36_map() {</div>
-<div class="line"><a id="l01361" name="l01361"></a><span class="lineno"> 1361</span>  <span class="comment">// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)</span></div>
-<div class="line"><a id="l01362" name="l01362"></a><span class="lineno"> 1362</span>  <span class="keyword">constexpr</span> <span class="keyword">auto</span> n_digits = 10;</div>
-<div class="line"><a id="l01363" name="l01363"></a><span class="lineno"> 1363</span>  <span class="keyword">constexpr</span> <span class="keyword">auto</span> n_letters = 26;</div>
-<div class="line"><a id="l01364" name="l01364"></a><span class="lineno"> 1364</span>  <span class="keyword">constexpr</span> std::array&lt;char, n_letters&gt; lowercase{</div>
-<div class="line"><a id="l01365" name="l01365"></a><span class="lineno"> 1365</span>      <span class="charliteral">&#39;a&#39;</span>, <span class="charliteral">&#39;b&#39;</span>, <span class="charliteral">&#39;c&#39;</span>, <span class="charliteral">&#39;d&#39;</span>, <span class="charliteral">&#39;e&#39;</span>, <span class="charliteral">&#39;f&#39;</span>, <span class="charliteral">&#39;g&#39;</span>, <span class="charliteral">&#39;h&#39;</span>, <span class="charliteral">&#39;i&#39;</span>, <span class="charliteral">&#39;j&#39;</span>, <span class="charliteral">&#39;k&#39;</span>, <span class="charliteral">&#39;l&#39;</span>, <span class="charliteral">&#39;m&#39;</span>,</div>
-<div class="line"><a id="l01366" name="l01366"></a><span class="lineno"> 1366</span>      <span class="charliteral">&#39;n&#39;</span>, <span class="charliteral">&#39;o&#39;</span>, <span class="charliteral">&#39;p&#39;</span>, <span class="charliteral">&#39;q&#39;</span>, <span class="charliteral">&#39;r&#39;</span>, <span class="charliteral">&#39;s&#39;</span>, <span class="charliteral">&#39;t&#39;</span>, <span class="charliteral">&#39;u&#39;</span>, <span class="charliteral">&#39;v&#39;</span>, <span class="charliteral">&#39;w&#39;</span>, <span class="charliteral">&#39;x&#39;</span>, <span class="charliteral">&#39;y&#39;</span>, <span class="charliteral">&#39;z&#39;</span>};</div>
-<div class="line"><a id="l01367" name="l01367"></a><span class="lineno"> 1367</span>  <span class="keyword">constexpr</span> std::array&lt;char, n_letters&gt; uppercase{</div>
-<div class="line"><a id="l01368" name="l01368"></a><span class="lineno"> 1368</span>      <span class="charliteral">&#39;A&#39;</span>, <span class="charliteral">&#39;B&#39;</span>, <span class="charliteral">&#39;C&#39;</span>, <span class="charliteral">&#39;D&#39;</span>, <span class="charliteral">&#39;E&#39;</span>, <span class="charliteral">&#39;F&#39;</span>, <span class="charliteral">&#39;G&#39;</span>, <span class="charliteral">&#39;H&#39;</span>, <span class="charliteral">&#39;I&#39;</span>, <span class="charliteral">&#39;J&#39;</span>, <span class="charliteral">&#39;K&#39;</span>, <span class="charliteral">&#39;L&#39;</span>, <span class="charliteral">&#39;M&#39;</span>,</div>
-<div class="line"><a id="l01369" name="l01369"></a><span class="lineno"> 1369</span>      <span class="charliteral">&#39;N&#39;</span>, <span class="charliteral">&#39;O&#39;</span>, <span class="charliteral">&#39;P&#39;</span>, <span class="charliteral">&#39;Q&#39;</span>, <span class="charliteral">&#39;R&#39;</span>, <span class="charliteral">&#39;S&#39;</span>, <span class="charliteral">&#39;T&#39;</span>, <span class="charliteral">&#39;U&#39;</span>, <span class="charliteral">&#39;V&#39;</span>, <span class="charliteral">&#39;W&#39;</span>, <span class="charliteral">&#39;X&#39;</span>, <span class="charliteral">&#39;Y&#39;</span>, <span class="charliteral">&#39;Z&#39;</span>};</div>
-<div class="line"><a id="l01370" name="l01370"></a><span class="lineno"> 1370</span> </div>
-<div class="line"><a id="l01371" name="l01371"></a><span class="lineno"> 1371</span>  std::array&lt;uint8_t, pow2_8&gt; map{};</div>
-<div class="line"><a id="l01372" name="l01372"></a><span class="lineno"> 1372</span>  map.fill(0xFF);</div>
-<div class="line"><a id="l01373" name="l01373"></a><span class="lineno"> 1373</span> </div>
-<div class="line"><a id="l01374" name="l01374"></a><span class="lineno"> 1374</span>  <span class="keywordflow">for</span> (uint8_t i = 0; i &lt; n_digits; ++i) {</div>
-<div class="line"><a id="l01375" name="l01375"></a><span class="lineno"> 1375</span>    map.at(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(<span class="charliteral">&#39;0&#39;</span>) + i) = i;</div>
-<div class="line"><a id="l01376" name="l01376"></a><span class="lineno"> 1376</span>  }</div>
-<div class="line"><a id="l01377" name="l01377"></a><span class="lineno"> 1377</span> </div>
-<div class="line"><a id="l01378" name="l01378"></a><span class="lineno"> 1378</span>  <span class="keywordflow">for</span> (uint8_t i = 0; i &lt; n_letters; ++i) {</div>
-<div class="line"><a id="l01379" name="l01379"></a><span class="lineno"> 1379</span>    map.at(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(lowercase.at(i))) = 10 + i;</div>
-<div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span>    map.at(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(uppercase.at(i))) = 10 + i;</div>
-<div class="line"><a id="l01381" name="l01381"></a><span class="lineno"> 1381</span>  }</div>
-<div class="line"><a id="l01382" name="l01382"></a><span class="lineno"> 1382</span> </div>
-<div class="line"><a id="l01383" name="l01383"></a><span class="lineno"> 1383</span>  <span class="keywordflow">return</span> map;</div>
-<div class="line"><a id="l01384" name="l01384"></a><span class="lineno"> 1384</span>  <span class="comment">// NOLINTEND(cppcoreguidelines-avoid-magic-numbers)</span></div>
-<div class="line"><a id="l01385" name="l01385"></a><span class="lineno"> 1385</span>}</div>
-<div class="line"><a id="l01386" name="l01386"></a><span class="lineno"> 1386</span> </div>
-<div class="line"><a id="l01387" name="l01387"></a><span class="lineno"> 1387</span><span class="keyword">constexpr</span> <span class="keyword">auto</span> char_to_int_map = create_char_to_b36_map();</div>
+<div class="line"><a id="l01371" name="l01371"></a><span class="lineno"> 1371</span> </div>
+<div class="line"><a id="l01372" name="l01372"></a><span class="lineno"> 1372</span> </div>
+<div class="line"><a id="l01373" name="l01373"></a><span class="lineno"> 1373</span><span class="keyword">constexpr</span> <span class="keyword">auto</span> pow2_8 = 1 &lt;&lt; 8;</div>
+<div class="line"><a id="l01374" name="l01374"></a><span class="lineno"> 1374</span> </div>
+<div class="line"><a id="l01375" name="l01375"></a><span class="lineno"> 1375</span><span class="keyword">constexpr</span> std::array&lt;uint8_t, pow2_8&gt; create_char_to_b36_map() {</div>
+<div class="line"><a id="l01376" name="l01376"></a><span class="lineno"> 1376</span>  <span class="comment">// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)</span></div>
+<div class="line"><a id="l01377" name="l01377"></a><span class="lineno"> 1377</span>  <span class="keyword">constexpr</span> <span class="keyword">auto</span> n_digits = 10;</div>
+<div class="line"><a id="l01378" name="l01378"></a><span class="lineno"> 1378</span>  <span class="keyword">constexpr</span> <span class="keyword">auto</span> n_letters = 26;</div>
+<div class="line"><a id="l01379" name="l01379"></a><span class="lineno"> 1379</span>  <span class="keyword">constexpr</span> std::array&lt;char, n_letters&gt; lowercase{</div>
+<div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span>      <span class="charliteral">&#39;a&#39;</span>, <span class="charliteral">&#39;b&#39;</span>, <span class="charliteral">&#39;c&#39;</span>, <span class="charliteral">&#39;d&#39;</span>, <span class="charliteral">&#39;e&#39;</span>, <span class="charliteral">&#39;f&#39;</span>, <span class="charliteral">&#39;g&#39;</span>, <span class="charliteral">&#39;h&#39;</span>, <span class="charliteral">&#39;i&#39;</span>, <span class="charliteral">&#39;j&#39;</span>, <span class="charliteral">&#39;k&#39;</span>, <span class="charliteral">&#39;l&#39;</span>, <span class="charliteral">&#39;m&#39;</span>,</div>
+<div class="line"><a id="l01381" name="l01381"></a><span class="lineno"> 1381</span>      <span class="charliteral">&#39;n&#39;</span>, <span class="charliteral">&#39;o&#39;</span>, <span class="charliteral">&#39;p&#39;</span>, <span class="charliteral">&#39;q&#39;</span>, <span class="charliteral">&#39;r&#39;</span>, <span class="charliteral">&#39;s&#39;</span>, <span class="charliteral">&#39;t&#39;</span>, <span class="charliteral">&#39;u&#39;</span>, <span class="charliteral">&#39;v&#39;</span>, <span class="charliteral">&#39;w&#39;</span>, <span class="charliteral">&#39;x&#39;</span>, <span class="charliteral">&#39;y&#39;</span>, <span class="charliteral">&#39;z&#39;</span>};</div>
+<div class="line"><a id="l01382" name="l01382"></a><span class="lineno"> 1382</span>  <span class="keyword">constexpr</span> std::array&lt;char, n_letters&gt; uppercase{</div>
+<div class="line"><a id="l01383" name="l01383"></a><span class="lineno"> 1383</span>      <span class="charliteral">&#39;A&#39;</span>, <span class="charliteral">&#39;B&#39;</span>, <span class="charliteral">&#39;C&#39;</span>, <span class="charliteral">&#39;D&#39;</span>, <span class="charliteral">&#39;E&#39;</span>, <span class="charliteral">&#39;F&#39;</span>, <span class="charliteral">&#39;G&#39;</span>, <span class="charliteral">&#39;H&#39;</span>, <span class="charliteral">&#39;I&#39;</span>, <span class="charliteral">&#39;J&#39;</span>, <span class="charliteral">&#39;K&#39;</span>, <span class="charliteral">&#39;L&#39;</span>, <span class="charliteral">&#39;M&#39;</span>,</div>
+<div class="line"><a id="l01384" name="l01384"></a><span class="lineno"> 1384</span>      <span class="charliteral">&#39;N&#39;</span>, <span class="charliteral">&#39;O&#39;</span>, <span class="charliteral">&#39;P&#39;</span>, <span class="charliteral">&#39;Q&#39;</span>, <span class="charliteral">&#39;R&#39;</span>, <span class="charliteral">&#39;S&#39;</span>, <span class="charliteral">&#39;T&#39;</span>, <span class="charliteral">&#39;U&#39;</span>, <span class="charliteral">&#39;V&#39;</span>, <span class="charliteral">&#39;W&#39;</span>, <span class="charliteral">&#39;X&#39;</span>, <span class="charliteral">&#39;Y&#39;</span>, <span class="charliteral">&#39;Z&#39;</span>};</div>
+<div class="line"><a id="l01385" name="l01385"></a><span class="lineno"> 1385</span> </div>
+<div class="line"><a id="l01386" name="l01386"></a><span class="lineno"> 1386</span>  std::array&lt;uint8_t, pow2_8&gt; map{};</div>
+<div class="line"><a id="l01387" name="l01387"></a><span class="lineno"> 1387</span>  map.fill(0xFF);</div>
 <div class="line"><a id="l01388" name="l01388"></a><span class="lineno"> 1388</span> </div>
-<div class="line"><a id="l01389" name="l01389"></a><span class="lineno"> 1389</span><span class="keyword">constexpr</span> uint8_t char_to_b36(<span class="keywordtype">char</span> ch) {</div>
-<div class="line"><a id="l01390" name="l01390"></a><span class="lineno"> 1390</span>  <span class="comment">// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)</span></div>
-<div class="line"><a id="l01391" name="l01391"></a><span class="lineno"> 1391</span>  <span class="keywordflow">return</span> char_to_int_map[<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(ch)];</div>
-<div class="line"><a id="l01392" name="l01392"></a><span class="lineno"> 1392</span>}</div>
-<div class="line"><a id="l01393" name="l01393"></a><span class="lineno"> 1393</span> </div>
-<div class="line"><a id="l01394" name="l01394"></a><span class="lineno"> 1394</span><span class="comment">// Calculate 10 ** n</span></div>
-<div class="line"><a id="l01395" name="l01395"></a><span class="lineno"> 1395</span><span class="keyword">constexpr</span> digit pow10(<span class="keywordtype">size_t</span> n) {</div>
-<div class="line"><a id="l01396" name="l01396"></a><span class="lineno"> 1396</span>  digit result = 1;</div>
-<div class="line"><a id="l01397" name="l01397"></a><span class="lineno"> 1397</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; n; ++i) {</div>
-<div class="line"><a id="l01398" name="l01398"></a><span class="lineno"> 1398</span>    <span class="comment">// NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)</span></div>
-<div class="line"><a id="l01399" name="l01399"></a><span class="lineno"> 1399</span>    result *= 10;</div>
-<div class="line"><a id="l01400" name="l01400"></a><span class="lineno"> 1400</span>  }</div>
-<div class="line"><a id="l01401" name="l01401"></a><span class="lineno"> 1401</span>  <span class="keywordflow">return</span> result;</div>
-<div class="line"><a id="l01402" name="l01402"></a><span class="lineno"> 1402</span>}</div>
+<div class="line"><a id="l01389" name="l01389"></a><span class="lineno"> 1389</span>  <span class="keywordflow">for</span> (uint8_t i = 0; i &lt; n_digits; ++i) {</div>
+<div class="line"><a id="l01390" name="l01390"></a><span class="lineno"> 1390</span>    map.at(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(<span class="charliteral">&#39;0&#39;</span>) + i) = i;</div>
+<div class="line"><a id="l01391" name="l01391"></a><span class="lineno"> 1391</span>  }</div>
+<div class="line"><a id="l01392" name="l01392"></a><span class="lineno"> 1392</span> </div>
+<div class="line"><a id="l01393" name="l01393"></a><span class="lineno"> 1393</span>  <span class="keywordflow">for</span> (uint8_t i = 0; i &lt; n_letters; ++i) {</div>
+<div class="line"><a id="l01394" name="l01394"></a><span class="lineno"> 1394</span>    map.at(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(lowercase.at(i))) = 10 + i;</div>
+<div class="line"><a id="l01395" name="l01395"></a><span class="lineno"> 1395</span>    map.at(<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(uppercase.at(i))) = 10 + i;</div>
+<div class="line"><a id="l01396" name="l01396"></a><span class="lineno"> 1396</span>  }</div>
+<div class="line"><a id="l01397" name="l01397"></a><span class="lineno"> 1397</span> </div>
+<div class="line"><a id="l01398" name="l01398"></a><span class="lineno"> 1398</span>  <span class="keywordflow">return</span> map;</div>
+<div class="line"><a id="l01399" name="l01399"></a><span class="lineno"> 1399</span>  <span class="comment">// NOLINTEND(cppcoreguidelines-avoid-magic-numbers)</span></div>
+<div class="line"><a id="l01400" name="l01400"></a><span class="lineno"> 1400</span>}</div>
+<div class="line"><a id="l01401" name="l01401"></a><span class="lineno"> 1401</span> </div>
+<div class="line"><a id="l01402" name="l01402"></a><span class="lineno"> 1402</span><span class="keyword">constexpr</span> <span class="keyword">auto</span> char_to_int_map = create_char_to_b36_map();</div>
 <div class="line"><a id="l01403" name="l01403"></a><span class="lineno"> 1403</span> </div>
-<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span><span class="comment">// Generate an array of powers of ten</span></div>
-<div class="line"><a id="l01405" name="l01405"></a><span class="lineno"> 1405</span><span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span>... Indices&gt;</div>
-<div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span><span class="keyword">constexpr</span> <span class="keyword">auto</span> make_powers_of_ten(std::index_sequence&lt;Indices...&gt;) {</div>
-<div class="line"><a id="l01407" name="l01407"></a><span class="lineno"> 1407</span>  <span class="keywordflow">return</span> std::array&lt;digit, <span class="keyword">sizeof</span>...(Indices)&gt;{pow10(Indices)...};</div>
-<div class="line"><a id="l01408" name="l01408"></a><span class="lineno"> 1408</span>}</div>
-<div class="line"><a id="l01409" name="l01409"></a><span class="lineno"> 1409</span> </div>
-<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span><span class="comment">// If digit &lt;==&gt; uint32_t (uint64_t), 10^{9} (10^{19}) is the highest power of</span></div>
-<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span><span class="comment">// 10 that fits in it.</span></div>
-<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span><span class="keyword">constexpr</span> <span class="keywordtype">int</span> max_batch_size = (bi_dwidth == 64) ? 19 : 9;</div>
-<div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span> </div>
-<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span><span class="keyword">constexpr</span> <span class="keyword">auto</span> powers_of_ten =</div>
-<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span>    make_powers_of_ten(std::make_index_sequence&lt;max_batch_size + 1&gt;{});</div>
-<div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span> </div>
-<div class="line"><a id="l01417" name="l01417"></a><span class="lineno"> 1417</span><span class="keywordtype">void</span> h_::init_string(bi_t&amp; x, <span class="keyword">const</span> std::string&amp; s) {</div>
-<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span>  <span class="comment">// std::stoi and company allow leading whitespace and a plus/minus sign. We</span></div>
-<div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span>  <span class="comment">// follow suit.</span></div>
-<div class="line"><a id="l01420" name="l01420"></a><span class="lineno"> 1420</span> </div>
-<div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span>  <span class="comment">// Allow leading whitespace</span></div>
-<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>  <span class="keyword">auto</span> it = std::find_if_not(s.begin(), s.end(),</div>
-<div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span>                             [](<span class="keywordtype">char</span> ch) { return std::isspace(ch); });</div>
+<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span><span class="keyword">constexpr</span> uint8_t char_to_b36(<span class="keywordtype">char</span> ch) {</div>
+<div class="line"><a id="l01405" name="l01405"></a><span class="lineno"> 1405</span>  <span class="comment">// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)</span></div>
+<div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span>  <span class="keywordflow">return</span> char_to_int_map[<span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(ch)];</div>
+<div class="line"><a id="l01407" name="l01407"></a><span class="lineno"> 1407</span>}</div>
+<div class="line"><a id="l01408" name="l01408"></a><span class="lineno"> 1408</span> </div>
+<div class="line"><a id="l01409" name="l01409"></a><span class="lineno"> 1409</span><span class="comment">// Calculate 10 ** n</span></div>
+<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span><span class="keyword">constexpr</span> digit pow10(<span class="keywordtype">size_t</span> n) {</div>
+<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span>  digit result = 1;</div>
+<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; n; ++i) {</div>
+<div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span>    <span class="comment">// NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)</span></div>
+<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>    result *= 10;</div>
+<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span>  }</div>
+<div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span>  <span class="keywordflow">return</span> result;</div>
+<div class="line"><a id="l01417" name="l01417"></a><span class="lineno"> 1417</span>}</div>
+<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span> </div>
+<div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span><span class="comment">// Generate an array of powers of ten</span></div>
+<div class="line"><a id="l01420" name="l01420"></a><span class="lineno"> 1420</span><span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span>... Indices&gt;</div>
+<div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span><span class="keyword">constexpr</span> <span class="keyword">auto</span> make_powers_of_ten(std::index_sequence&lt;Indices...&gt;) {</div>
+<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>  <span class="keywordflow">return</span> std::array&lt;digit, <span class="keyword">sizeof</span>...(Indices)&gt;{pow10(Indices)...};</div>
+<div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span>}</div>
 <div class="line"><a id="l01424" name="l01424"></a><span class="lineno"> 1424</span> </div>
-<div class="line"><a id="l01425" name="l01425"></a><span class="lineno"> 1425</span>  <span class="comment">// Allow plus/minus sign to precede first decimal digit</span></div>
-<div class="line"><a id="l01426" name="l01426"></a><span class="lineno"> 1426</span>  x.negative_ = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l01427" name="l01427"></a><span class="lineno"> 1427</span>  <span class="keywordflow">if</span> (it != s.end()) {</div>
-<div class="line"><a id="l01428" name="l01428"></a><span class="lineno"> 1428</span>    <span class="keywordflow">if</span> (*it == <span class="charliteral">&#39;-&#39;</span>) {</div>
-<div class="line"><a id="l01429" name="l01429"></a><span class="lineno"> 1429</span>      x.negative_ = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l01430" name="l01430"></a><span class="lineno"> 1430</span>      ++it;</div>
-<div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (*it == <span class="charliteral">&#39;+&#39;</span>) {</div>
-<div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span>      ++it;</div>
-<div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span>    }</div>
-<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>  }</div>
+<div class="line"><a id="l01425" name="l01425"></a><span class="lineno"> 1425</span><span class="comment">// If digit &lt;==&gt; uint32_t (uint64_t), 10^{9} (10^{19}) is the highest power of</span></div>
+<div class="line"><a id="l01426" name="l01426"></a><span class="lineno"> 1426</span><span class="comment">// 10 that fits in it.</span></div>
+<div class="line"><a id="l01427" name="l01427"></a><span class="lineno"> 1427</span><span class="keyword">constexpr</span> <span class="keywordtype">unsigned</span> max_batch_size = (bi_dwidth == 64) ? 19 : 9;</div>
+<div class="line"><a id="l01428" name="l01428"></a><span class="lineno"> 1428</span> </div>
+<div class="line"><a id="l01429" name="l01429"></a><span class="lineno"> 1429</span><span class="keyword">constexpr</span> <span class="keyword">auto</span> powers_of_ten =</div>
+<div class="line"><a id="l01430" name="l01430"></a><span class="lineno"> 1430</span>    make_powers_of_ten(std::make_index_sequence&lt;max_batch_size + 1&gt;{});</div>
+<div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span> </div>
+<div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span><span class="keywordtype">void</span> h_::init_string(bi_t&amp; x, <span class="keyword">const</span> std::string&amp; s) {</div>
+<div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span>  <span class="comment">// std::stoi and company allow leading whitespace and a plus/minus sign. We</span></div>
+<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>  <span class="comment">// follow suit.</span></div>
 <div class="line"><a id="l01435" name="l01435"></a><span class="lineno"> 1435</span> </div>
-<div class="line"><a id="l01436" name="l01436"></a><span class="lineno"> 1436</span>  <span class="keyword">const</span> <span class="keyword">auto</span> start_digit = it;</div>
-<div class="line"><a id="l01437" name="l01437"></a><span class="lineno"> 1437</span>  it = std::find_if_not(start_digit, s.end(),</div>
-<div class="line"><a id="l01438" name="l01438"></a><span class="lineno"> 1438</span>                        [](<span class="keywordtype">char</span> ch) { return std::isdigit(ch); });</div>
+<div class="line"><a id="l01436" name="l01436"></a><span class="lineno"> 1436</span>  <span class="comment">// Allow leading whitespace</span></div>
+<div class="line"><a id="l01437" name="l01437"></a><span class="lineno"> 1437</span>  <span class="keyword">auto</span> it = std::find_if_not(s.begin(), s.end(),</div>
+<div class="line"><a id="l01438" name="l01438"></a><span class="lineno"> 1438</span>                             [](<span class="keywordtype">char</span> ch) { return std::isspace(ch); });</div>
 <div class="line"><a id="l01439" name="l01439"></a><span class="lineno"> 1439</span> </div>
-<div class="line"><a id="l01440" name="l01440"></a><span class="lineno"> 1440</span>  <span class="keywordflow">if</span> (start_digit == it) {</div>
-<div class="line"><a id="l01441" name="l01441"></a><span class="lineno"> 1441</span>    <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;Invalid string format.&quot;</span>);</div>
-<div class="line"><a id="l01442" name="l01442"></a><span class="lineno"> 1442</span>  }</div>
-<div class="line"><a id="l01443" name="l01443"></a><span class="lineno"> 1443</span> </div>
-<div class="line"><a id="l01444" name="l01444"></a><span class="lineno"> 1444</span>  <span class="keywordtype">size_t</span> n_base10 = std::distance(start_digit, it);  <span class="comment">// it - start_digit</span></div>
-<div class="line"><a id="l01445" name="l01445"></a><span class="lineno"> 1445</span>  <span class="keywordflow">if</span> (!uints::has_double_exact(n_base10)) {</div>
-<div class="line"><a id="l01446" name="l01446"></a><span class="lineno"> 1446</span>    <span class="keywordflow">throw</span> overflow_error(<span class="stringliteral">&quot;Too many decimal characters in the string.&quot;</span>);</div>
-<div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span>  }</div>
-<div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span> </div>
-<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>  <span class="comment">// Theoretical number of base (bi_dmax + 1) digits required to represent any</span></div>
-<div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span>  <span class="comment">// base 10 number with n_base10 base 10 digits. See decimal_length().</span></div>
-<div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span>  <span class="comment">// conversion_ratio is 1 / log10(bi_base)</span></div>
-<div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span>  <span class="keyword">constexpr</span> <span class="keywordtype">double</span> conversion_ratio = (bi_dwidth == 64) ? 0.052 : 0.104;</div>
-<div class="line"><a id="l01453" name="l01453"></a><span class="lineno"> 1453</span>  <span class="keyword">const</span> <span class="keywordtype">size_t</span> n_digits = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(</div>
-<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span>      std::ceil(<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(n_base10) * conversion_ratio));</div>
-<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"> 1455</span> </div>
-<div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span>  x.reserve_(n_digits);</div>
-<div class="line"><a id="l01457" name="l01457"></a><span class="lineno"> 1457</span> </div>
-<div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> dec_it = start_digit; dec_it &lt; it;) {</div>
-<div class="line"><a id="l01459" name="l01459"></a><span class="lineno"> 1459</span>    <span class="comment">/* We could replace all the code in the body of this loop with just</span></div>
-<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"> 1460</span><span class="comment">     * `imul1add1(10, *dec_it++ - &#39;0&#39;);` and the end result will be the same.</span></div>
-<div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span><span class="comment">     * However, it is more efficient to batch some base-10 digits together. */</span></div>
-<div class="line"><a id="l01462" name="l01462"></a><span class="lineno"> 1462</span>    <span class="comment">// Initialize batch value</span></div>
-<div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span>    digit batch = 0;</div>
-<div class="line"><a id="l01464" name="l01464"></a><span class="lineno"> 1464</span> </div>
-<div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span>    <span class="comment">// Calculate how many base-10 digits we can process in this batch</span></div>
-<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> remaining = std::distance(dec_it, it);</div>
-<div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> digits_in_batch =</div>
-<div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span>        std::min(remaining, <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(max_batch_size));</div>
-<div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span> </div>
-<div class="line"><a id="l01470" name="l01470"></a><span class="lineno"> 1470</span>    <span class="comment">// Convert batch substring to integer value</span></div>
-<div class="line"><a id="l01471" name="l01471"></a><span class="lineno"> 1471</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> j = 0; j &lt; digits_in_batch; ++j, ++dec_it) {</div>
-<div class="line"><a id="l01472" name="l01472"></a><span class="lineno"> 1472</span>      <span class="comment">// NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)</span></div>
-<div class="line"><a id="l01473" name="l01473"></a><span class="lineno"> 1473</span>      batch = (*dec_it - <span class="charliteral">&#39;0&#39;</span>) + batch * 10;</div>
-<div class="line"><a id="l01474" name="l01474"></a><span class="lineno"> 1474</span>    }</div>
+<div class="line"><a id="l01440" name="l01440"></a><span class="lineno"> 1440</span>  <span class="comment">// Allow plus/minus sign to precede first decimal digit</span></div>
+<div class="line"><a id="l01441" name="l01441"></a><span class="lineno"> 1441</span>  x.negative_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l01442" name="l01442"></a><span class="lineno"> 1442</span>  <span class="keywordflow">if</span> (it != s.end()) {</div>
+<div class="line"><a id="l01443" name="l01443"></a><span class="lineno"> 1443</span>    <span class="keywordflow">if</span> (*it == <span class="charliteral">&#39;-&#39;</span>) {</div>
+<div class="line"><a id="l01444" name="l01444"></a><span class="lineno"> 1444</span>      x.negative_ = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01445" name="l01445"></a><span class="lineno"> 1445</span>      ++it;</div>
+<div class="line"><a id="l01446" name="l01446"></a><span class="lineno"> 1446</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (*it == <span class="charliteral">&#39;+&#39;</span>) {</div>
+<div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span>      ++it;</div>
+<div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span>    }</div>
+<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>  }</div>
+<div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span> </div>
+<div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span>  <span class="keyword">const</span> <span class="keyword">auto</span> start_digit = it;</div>
+<div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span>  it = std::find_if_not(start_digit, s.end(),</div>
+<div class="line"><a id="l01453" name="l01453"></a><span class="lineno"> 1453</span>                        [](<span class="keywordtype">char</span> ch) { return std::isdigit(ch); });</div>
+<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span> </div>
+<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"> 1455</span>  <span class="keywordflow">if</span> (start_digit == it) {</div>
+<div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span>    <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;Invalid string format.&quot;</span>);</div>
+<div class="line"><a id="l01457" name="l01457"></a><span class="lineno"> 1457</span>  }</div>
+<div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span> </div>
+<div class="line"><a id="l01459" name="l01459"></a><span class="lineno"> 1459</span>  <span class="keywordtype">size_t</span> n_base10 = std::distance(start_digit, it);  <span class="comment">// it - start_digit</span></div>
+<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"> 1460</span>  <span class="keyword">const</span> <span class="keywordtype">size_t</span> n_digits = uints::div_ceil(n_base10, max_batch_size);</div>
+<div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span> </div>
+<div class="line"><a id="l01462" name="l01462"></a><span class="lineno"> 1462</span>  x.reserve_(n_digits);</div>
+<div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span> </div>
+<div class="line"><a id="l01464" name="l01464"></a><span class="lineno"> 1464</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> dec_it = start_digit; dec_it &lt; it;) {</div>
+<div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span>    <span class="comment">/* We could replace all the code in the body of this loop with just</span></div>
+<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span><span class="comment">     * `imul1add1(10, *dec_it++ - &#39;0&#39;);` and the end result will be the same.</span></div>
+<div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span><span class="comment">     * However, it is more efficient to batch some base-10 digits together. */</span></div>
+<div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span>    <span class="comment">// Initialize batch value</span></div>
+<div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span>    digit batch = 0;</div>
+<div class="line"><a id="l01470" name="l01470"></a><span class="lineno"> 1470</span> </div>
+<div class="line"><a id="l01471" name="l01471"></a><span class="lineno"> 1471</span>    <span class="comment">// Calculate how many base-10 digits we can process in this batch</span></div>
+<div class="line"><a id="l01472" name="l01472"></a><span class="lineno"> 1472</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> remaining = std::distance(dec_it, it);</div>
+<div class="line"><a id="l01473" name="l01473"></a><span class="lineno"> 1473</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> digits_in_batch =</div>
+<div class="line"><a id="l01474" name="l01474"></a><span class="lineno"> 1474</span>        std::min(remaining, <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(max_batch_size));</div>
 <div class="line"><a id="l01475" name="l01475"></a><span class="lineno"> 1475</span> </div>
-<div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span>    <span class="comment">// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)</span></div>
-<div class="line"><a id="l01477" name="l01477"></a><span class="lineno"> 1477</span>    h_::imul1add1(x, powers_of_ten[digits_in_batch], batch);</div>
-<div class="line"><a id="l01478" name="l01478"></a><span class="lineno"> 1478</span>  }</div>
-<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span> </div>
-<div class="line"><a id="l01480" name="l01480"></a><span class="lineno"> 1480</span>  x.trim_trailing_zeros();</div>
-<div class="line"><a id="l01481" name="l01481"></a><span class="lineno"> 1481</span>}</div>
-<div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span> </div>
-<div class="line"><a id="l01484" name="l01484"></a><span class="lineno"> 1484</span> </div>
-<div class="line"><a id="l01486" name="l01486"></a><span class="lineno"> 1486</span><span class="keyword">inline</span> dvector h_::to_twos_complement(<span class="keyword">const</span> dvector&amp; vec) {</div>
-<div class="line"><a id="l01487" name="l01487"></a><span class="lineno"> 1487</span>  <span class="keyword">const</span> <span class="keywordtype">size_t</span> vec_size = vec.size();</div>
-<div class="line"><a id="l01488" name="l01488"></a><span class="lineno"> 1488</span>  dvector result;</div>
-<div class="line"><a id="l01489" name="l01489"></a><span class="lineno"> 1489</span>  result.resize(vec_size);</div>
+<div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span>    <span class="comment">// Convert batch substring to integer value</span></div>
+<div class="line"><a id="l01477" name="l01477"></a><span class="lineno"> 1477</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> j = 0; j &lt; digits_in_batch; ++j, ++dec_it) {</div>
+<div class="line"><a id="l01478" name="l01478"></a><span class="lineno"> 1478</span>      <span class="comment">// NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)</span></div>
+<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>      batch = (*dec_it - <span class="charliteral">&#39;0&#39;</span>) + batch * 10;</div>
+<div class="line"><a id="l01480" name="l01480"></a><span class="lineno"> 1480</span>    }</div>
+<div class="line"><a id="l01481" name="l01481"></a><span class="lineno"> 1481</span> </div>
+<div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span>    <span class="comment">// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)</span></div>
+<div class="line"><a id="l01483" name="l01483"></a><span class="lineno"> 1483</span>    h_::imul1add1(x, powers_of_ten[digits_in_batch], batch);</div>
+<div class="line"><a id="l01484" name="l01484"></a><span class="lineno"> 1484</span>  }</div>
+<div class="line"><a id="l01485" name="l01485"></a><span class="lineno"> 1485</span> </div>
+<div class="line"><a id="l01486" name="l01486"></a><span class="lineno"> 1486</span>  x.trim_trailing_zeros();</div>
+<div class="line"><a id="l01487" name="l01487"></a><span class="lineno"> 1487</span>}</div>
+<div class="line"><a id="l01488" name="l01488"></a><span class="lineno"> 1488</span> </div>
 <div class="line"><a id="l01490" name="l01490"></a><span class="lineno"> 1490</span> </div>
-<div class="line"><a id="l01491" name="l01491"></a><span class="lineno"> 1491</span>  <span class="keywordtype">bool</span> carry = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l01492" name="l01492"></a><span class="lineno"> 1492</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; vec_size; ++i) {</div>
-<div class="line"><a id="l01493" name="l01493"></a><span class="lineno"> 1493</span>    <span class="keyword">const</span> digit sum = ~vec[i] + carry;</div>
-<div class="line"><a id="l01494" name="l01494"></a><span class="lineno"> 1494</span>    carry = sum &lt; static_cast&lt;uint8_t&gt;(carry);</div>
-<div class="line"><a id="l01495" name="l01495"></a><span class="lineno"> 1495</span>    result[i] = sum;</div>
-<div class="line"><a id="l01496" name="l01496"></a><span class="lineno"> 1496</span>  }</div>
-<div class="line"><a id="l01497" name="l01497"></a><span class="lineno"> 1497</span> </div>
-<div class="line"><a id="l01498" name="l01498"></a><span class="lineno"> 1498</span>  <span class="keywordflow">return</span> result;</div>
-<div class="line"><a id="l01499" name="l01499"></a><span class="lineno"> 1499</span>}</div>
-<div class="line"><a id="l01500" name="l01500"></a><span class="lineno"> 1500</span> </div>
-<div class="line"><a id="l01502" name="l01502"></a><span class="lineno"> 1502</span><span class="keyword">inline</span> <span class="keywordtype">void</span> h_::to_twos_complement_in_place(dvector&amp; vec) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l01503" name="l01503"></a><span class="lineno"> 1503</span>  <span class="keyword">const</span> <span class="keywordtype">size_t</span> vec_size = vec.size();</div>
-<div class="line"><a id="l01504" name="l01504"></a><span class="lineno"> 1504</span> </div>
-<div class="line"><a id="l01505" name="l01505"></a><span class="lineno"> 1505</span>  <span class="keywordtype">bool</span> carry = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l01506" name="l01506"></a><span class="lineno"> 1506</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; vec_size; ++i) {</div>
-<div class="line"><a id="l01507" name="l01507"></a><span class="lineno"> 1507</span>    <span class="keyword">const</span> digit sum = ~vec[i] + carry;</div>
-<div class="line"><a id="l01508" name="l01508"></a><span class="lineno"> 1508</span>    carry = sum &lt; static_cast&lt;uint8_t&gt;(carry);</div>
-<div class="line"><a id="l01509" name="l01509"></a><span class="lineno"> 1509</span>    vec[i] = sum;</div>
-<div class="line"><a id="l01510" name="l01510"></a><span class="lineno"> 1510</span>  }</div>
-<div class="line"><a id="l01511" name="l01511"></a><span class="lineno"> 1511</span>}</div>
-<div class="line"><a id="l01512" name="l01512"></a><span class="lineno"> 1512</span> </div>
-<div class="line"><a id="l01513" name="l01513"></a><span class="lineno"> 1513</span>}  <span class="comment">// namespace bi</span></div>
-<div class="line"><a id="l01514" name="l01514"></a><span class="lineno"> 1514</span> </div>
-<div class="line"><a id="l01515" name="l01515"></a><span class="lineno"> 1515</span><span class="preprocessor">#endif  </span><span class="comment">// BI_SRC_H__HPP_</span></div>
+<div class="line"><a id="l01492" name="l01492"></a><span class="lineno"> 1492</span><span class="keyword">inline</span> dvector h_::to_twos_complement(<span class="keyword">const</span> dvector&amp; vec) {</div>
+<div class="line"><a id="l01493" name="l01493"></a><span class="lineno"> 1493</span>  <span class="keyword">const</span> <span class="keywordtype">size_t</span> vec_size = vec.size();</div>
+<div class="line"><a id="l01494" name="l01494"></a><span class="lineno"> 1494</span>  dvector result;</div>
+<div class="line"><a id="l01495" name="l01495"></a><span class="lineno"> 1495</span>  result.resize(vec_size);</div>
+<div class="line"><a id="l01496" name="l01496"></a><span class="lineno"> 1496</span> </div>
+<div class="line"><a id="l01497" name="l01497"></a><span class="lineno"> 1497</span>  <span class="keywordtype">bool</span> carry = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01498" name="l01498"></a><span class="lineno"> 1498</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; vec_size; ++i) {</div>
+<div class="line"><a id="l01499" name="l01499"></a><span class="lineno"> 1499</span>    <span class="keyword">const</span> digit sum = ~vec[i] + carry;</div>
+<div class="line"><a id="l01500" name="l01500"></a><span class="lineno"> 1500</span>    carry = sum &lt; static_cast&lt;uint8_t&gt;(carry);</div>
+<div class="line"><a id="l01501" name="l01501"></a><span class="lineno"> 1501</span>    result[i] = sum;</div>
+<div class="line"><a id="l01502" name="l01502"></a><span class="lineno"> 1502</span>  }</div>
+<div class="line"><a id="l01503" name="l01503"></a><span class="lineno"> 1503</span> </div>
+<div class="line"><a id="l01504" name="l01504"></a><span class="lineno"> 1504</span>  <span class="keywordflow">return</span> result;</div>
+<div class="line"><a id="l01505" name="l01505"></a><span class="lineno"> 1505</span>}</div>
+<div class="line"><a id="l01506" name="l01506"></a><span class="lineno"> 1506</span> </div>
+<div class="line"><a id="l01508" name="l01508"></a><span class="lineno"> 1508</span><span class="keyword">inline</span> <span class="keywordtype">void</span> h_::to_twos_complement_in_place(dvector&amp; vec) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l01509" name="l01509"></a><span class="lineno"> 1509</span>  <span class="keyword">const</span> <span class="keywordtype">size_t</span> vec_size = vec.size();</div>
+<div class="line"><a id="l01510" name="l01510"></a><span class="lineno"> 1510</span> </div>
+<div class="line"><a id="l01511" name="l01511"></a><span class="lineno"> 1511</span>  <span class="keywordtype">bool</span> carry = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01512" name="l01512"></a><span class="lineno"> 1512</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; vec_size; ++i) {</div>
+<div class="line"><a id="l01513" name="l01513"></a><span class="lineno"> 1513</span>    <span class="keyword">const</span> digit sum = ~vec[i] + carry;</div>
+<div class="line"><a id="l01514" name="l01514"></a><span class="lineno"> 1514</span>    carry = sum &lt; static_cast&lt;uint8_t&gt;(carry);</div>
+<div class="line"><a id="l01515" name="l01515"></a><span class="lineno"> 1515</span>    vec[i] = sum;</div>
+<div class="line"><a id="l01516" name="l01516"></a><span class="lineno"> 1516</span>  }</div>
+<div class="line"><a id="l01517" name="l01517"></a><span class="lineno"> 1517</span>}</div>
+<div class="line"><a id="l01518" name="l01518"></a><span class="lineno"> 1518</span> </div>
+<div class="line"><a id="l01519" name="l01519"></a><span class="lineno"> 1519</span>}  <span class="comment">// namespace bi</span></div>
+<div class="line"><a id="l01520" name="l01520"></a><span class="lineno"> 1520</span> </div>
+<div class="line"><a id="l01521" name="l01521"></a><span class="lineno"> 1521</span><span class="preprocessor">#endif  </span><span class="comment">// BI_SRC_H__HPP_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
