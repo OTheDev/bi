@@ -130,7 +130,7 @@ template&lt;std::integral T&gt; </td></tr>
 <div class="line"><a class="code hl_function" href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi_t</a> empty{<span class="stringliteral">&quot;&quot;</span>};       <span class="comment">// Throws std::invalid_argument</span></div>
 <div class="line"><a class="code hl_function" href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi_t</a> nll{<span class="keyword">nullptr</span>};    <span class="comment">// Throws std::invalid_argument</span></div>
 <div class="line"><a class="code hl_function" href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi_t</a> invalid{<span class="stringliteral">&quot;  -&quot;</span>};  <span class="comment">// Throws std::invalid_argument</span></div>
-<div class="ttc" id="aclassbi_1_1bi__t_html"><div class="ttname"><a href="classbi_1_1bi__t.html">bi::bi_t</a></div><div class="ttdoc">Arbitrary-precision integer type and related functions.</div><div class="ttdef"><b>Definition</b> bi.hpp:53</div></div>
+<div class="ttc" id="aclassbi_1_1bi__t_html"><div class="ttname"><a href="classbi_1_1bi__t.html">bi::bi_t</a></div><div class="ttdoc">Arbitrary-precision integer type and related functions.</div><div class="ttdef"><b>Definition</b> bi.hpp:51</div></div>
 <div class="ttc" id="aclassbi_1_1bi__t_html_a3897c3329c32d4f802f4af2f31a4fa8a"><div class="ttname"><a href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi::bi_t::bi_t</a></div><div class="ttdeci">bi_t() noexcept</div><div class="ttdoc">Default constructor. The integer is initialized to zero and no memory allocation occurs.</div><div class="ttdef"><b>Definition</b> bi.cpp:74</div></div>
 </div><!-- fragment --> </div></td></tr>
 <tr class="memitem:ad359be5b108bce8306e67c11049312f0" id="r_ad359be5b108bce8306e67c11049312f0"><td class="memItemLeft" align="right" valign="top"><a id="ad359be5b108bce8306e67c11049312f0" name="ad359be5b108bce8306e67c11049312f0"></a>
@@ -286,17 +286,14 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>test_bit</b> (bi_bitc
 <tr class="memdesc:a31e6f6d2c1f2aeeef312832a34147a95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set bit <code>i</code>, acting as if the integer is nonnegative, but preserving its original sign in the result. <br /></td></tr>
 <tr class="separator:a31e6f6d2c1f2aeeef312832a34147a95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Accessors for internal representation</div></td></tr>
-<tr class="memitem:a60e33f9717c2d46ca6e0282a43c16a1c" id="r_a60e33f9717c2d46ca6e0282a43c16a1c"><td class="memItemLeft" align="right" valign="top"><a id="a60e33f9717c2d46ca6e0282a43c16a1c" name="a60e33f9717c2d46ca6e0282a43c16a1c"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>capacity</b> () const noexcept</td></tr>
-<tr class="memdesc:a60e33f9717c2d46ca6e0282a43c16a1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of digits the allocated storage can hold. <br /></td></tr>
+<tr class="memitem:a60e33f9717c2d46ca6e0282a43c16a1c" id="r_a60e33f9717c2d46ca6e0282a43c16a1c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60e33f9717c2d46ca6e0282a43c16a1c">capacity</a> () const noexcept</td></tr>
+<tr class="memdesc:a60e33f9717c2d46ca6e0282a43c16a1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of digits the allocated storage can hold.  <br /></td></tr>
 <tr class="separator:a60e33f9717c2d46ca6e0282a43c16a1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6aef492df515dca50e98969d7e65388a" id="r_a6aef492df515dca50e98969d7e65388a"><td class="memItemLeft" align="right" valign="top"><a id="a6aef492df515dca50e98969d7e65388a" name="a6aef492df515dca50e98969d7e65388a"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const noexcept</td></tr>
-<tr class="memdesc:a6aef492df515dca50e98969d7e65388a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of digits used. Instance represents <code>0</code> iff <code><a class="el" href="#a6aef492df515dca50e98969d7e65388a" title="Return the number of digits used. Instance represents 0 iff size() == 0.">size()</a> == 0</code>. <br /></td></tr>
+<tr class="memitem:a6aef492df515dca50e98969d7e65388a" id="r_a6aef492df515dca50e98969d7e65388a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6aef492df515dca50e98969d7e65388a">size</a> () const noexcept</td></tr>
+<tr class="memdesc:a6aef492df515dca50e98969d7e65388a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the number of digits used. Instance represents <code>0</code> iff <code><a class="el" href="#a6aef492df515dca50e98969d7e65388a" title="Return the number of digits used. Instance represents 0 iff size() == 0.">size()</a> == 0</code>.  <br /></td></tr>
 <tr class="separator:a6aef492df515dca50e98969d7e65388a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab88a9f12ad992d48939b13cd0963c706" id="r_ab88a9f12ad992d48939b13cd0963c706"><td class="memItemLeft" align="right" valign="top"><a id="ab88a9f12ad992d48939b13cd0963c706" name="ab88a9f12ad992d48939b13cd0963c706"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>negative</b> () const noexcept</td></tr>
-<tr class="memdesc:ab88a9f12ad992d48939b13cd0963c706"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reture <code>true</code> if the integer is (strictly) negative, false otherwise. <br /></td></tr>
+<tr class="memitem:ab88a9f12ad992d48939b13cd0963c706" id="r_ab88a9f12ad992d48939b13cd0963c706"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab88a9f12ad992d48939b13cd0963c706">negative</a> () const noexcept</td></tr>
+<tr class="memdesc:ab88a9f12ad992d48939b13cd0963c706"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return <code>true</code> if the integer is (strictly) negative, false otherwise.  <br /></td></tr>
 <tr class="separator:ab88a9f12ad992d48939b13cd0963c706"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0e899ec8c428ff539f0226bd5eaf99e" id="r_aa0e899ec8c428ff539f0226bd5eaf99e"><td class="memItemLeft" align="right" valign="top">std::span&lt; const digit &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0e899ec8c428ff539f0226bd5eaf99e">digits</a> () const</td></tr>
 <tr class="memdesc:aa0e899ec8c428ff539f0226bd5eaf99e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a read-only span of the digits stored in the internal digit vector, with least significant digits first. If the integer is zero, an empty span is returned.  <br /></td></tr>
@@ -389,13 +386,13 @@ Internals</h2>
 </div><div class="memdoc">
 
 <p>Default constructor. The integer is initialized to zero and no memory allocation occurs. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000006">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000001">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa0e899ec8c428ff539f0226bd5eaf99e" name="aa0e899ec8c428ff539f0226bd5eaf99e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0e899ec8c428ff539f0226bd5eaf99e">&#9670;&#160;</a></span>digits()</h2>
+<a id="a60e33f9717c2d46ca6e0282a43c16a1c" name="a60e33f9717c2d46ca6e0282a43c16a1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60e33f9717c2d46ca6e0282a43c16a1c">&#9670;&#160;</a></span>capacity()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -404,7 +401,7 @@ Internals</h2>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::span&lt; const digit &gt; bi::bi_t::digits </td>
+          <td class="memname">size_t bi::bi_t::capacity </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"></span></td><td>)</td>
           <td> const</td>
@@ -412,13 +409,34 @@ Internals</h2>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
+<p>Return the number of digits the allocated storage can hold. </p>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000014">Complexity</a></b></dt><dd>O(1) </dd></dl>
+
+</div>
+</div>
+<a id="aa0e899ec8c428ff539f0226bd5eaf99e" name="aa0e899ec8c428ff539f0226bd5eaf99e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0e899ec8c428ff539f0226bd5eaf99e">&#9670;&#160;</a></span>digits()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::span&lt; const digit &gt; bi::bi_t::digits </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
 <p>Return a read-only span of the digits stored in the internal digit vector, with least significant digits first. If the integer is zero, an empty span is returned. </p>
 <dl class="section warning"><dt>Warning</dt><dd>Modifying the integer after the span is returned may invalidate the span. </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000017">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -445,7 +463,7 @@ Internals</h2>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A pair of <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> objects where the <code>first</code> element is the quotient and the <code>second</code> element is the remainder. </dd></dl>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000013">Complexity</a></b></dt><dd>\( O(m \cdot n) \) where \( m \) is the <code><a class="el" href="#a6aef492df515dca50e98969d7e65388a" title="Return the number of digits used. Instance represents 0 iff size() == 0.">size()</a></code> of the dividend and \( n \) is the <code><a class="el" href="#a6aef492df515dca50e98969d7e65388a" title="Return the number of digits used. Instance represents 0 iff size() == 0.">size()</a></code> of the divisor. </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000008">Complexity</a></b></dt><dd>\( O(m \cdot n) \) where \( m \) is the <code><a class="el" href="#a6aef492df515dca50e98969d7e65388a" title="Return the number of digits used. Instance represents 0 iff size() == 0.">size()</a></code> of the dividend and \( n \) is the <code><a class="el" href="#a6aef492df515dca50e98969d7e65388a" title="Return the number of digits used. Instance represents 0 iff size() == 0.">size()</a></code> of the divisor. </dd></dl>
 
 </div>
 </div>
@@ -467,13 +485,13 @@ Internals</h2>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Return <code>true</code> if this integer is even, <code>false</code> otherwise. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000005">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000023">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -495,13 +513,41 @@ Internals</h2>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Negates the integer in place. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000002">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000020">Complexity</a></b></dt><dd>O(1) </dd></dl>
+
+</div>
+</div>
+<a id="ab88a9f12ad992d48939b13cd0963c706" name="ab88a9f12ad992d48939b13cd0963c706"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab88a9f12ad992d48939b13cd0963c706">&#9670;&#160;</a></span>negative()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool bi::bi_t::negative </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return <code>true</code> if the integer is (strictly) negative, false otherwise. </p>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000016">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -523,13 +569,13 @@ Internals</h2>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Return <code>true</code> if this integer is odd, <code>false</code> otherwise. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000004">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000022">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -564,7 +610,7 @@ Internals</h2>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;x is zero!&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">}</div>
 </div><!-- fragment --><p> The output is </p><div class="fragment"><div class="line">x is zero!</div>
-</div><!-- fragment --> <dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000018">Complexity</a></b></dt><dd>O(1) </dd></dl>
+</div><!-- fragment --> <dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000013">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -582,7 +628,7 @@ Internals</h2>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000009">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000004">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
 
 </div>
 </div>
@@ -600,7 +646,7 @@ Internals</h2>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000012">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000007">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
 
 </div>
 </div>
@@ -641,7 +687,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000007">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000002">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
 
 </div>
 </div>
@@ -659,7 +705,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000010">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000005">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
 
 </div>
 </div>
@@ -677,7 +723,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000014">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000009">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
 
 </div>
 </div>
@@ -695,7 +741,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000016">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000011">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
 
 </div>
 </div>
@@ -713,7 +759,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000015">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000010">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
 
 </div>
 </div>
@@ -731,7 +777,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000017">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000012">Complexity</a></b></dt><dd>\( O(n) \) </dd></dl>
 
 </div>
 </div>
@@ -749,7 +795,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000008">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000003">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
 
 </div>
 </div>
@@ -767,7 +813,7 @@ y_{i} \) of their binary representation, the result of \( x \; \&amp; \; y \) (b
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000011">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000006">Complexity</a></b></dt><dd>\( O(m \cdot n) \) </dd></dl>
 
 </div>
 </div>
@@ -902,6 +948,7 @@ r_{i} \) such that  </p><p class="formulaDsp">
   </table>
   </dd>
 </dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000018">Complexity</a></b></dt><dd>O(n) </dd></dl>
 
 </div>
 </div>
@@ -923,13 +970,41 @@ r_{i} \) such that  </p><p class="formulaDsp">
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Return an <code>int</code> indicating the sign of the number: <code>-1</code> for negative, <code>0</code> for zero, <code>1</code> for positive. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000003">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000021">Complexity</a></b></dt><dd>O(1) </dd></dl>
+
+</div>
+</div>
+<a id="a6aef492df515dca50e98969d7e65388a" name="a6aef492df515dca50e98969d7e65388a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6aef492df515dca50e98969d7e65388a">&#9670;&#160;</a></span>size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t bi::bi_t::size </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the number of digits used. Instance represents <code>0</code> iff <code><a class="el" href="#a6aef492df515dca50e98969d7e65388a" title="Return the number of digits used. Instance represents 0 iff size() == 0.">size()</a> == 0</code>. </p>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000015">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -951,13 +1026,13 @@ r_{i} \) such that  </p><p class="formulaDsp">
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Swap the contents of this <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> object with another <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> object. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000001">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000019">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
@@ -983,7 +1058,7 @@ r_{i} \) such that  </p><p class="formulaDsp">
 <div class="line">s = x.<a class="code hl_function" href="#a58d5889bb5438a6f48b1cae282a0d7e5">to_string</a>();              <span class="comment">// s == &quot;65535&quot;</span></div>
 <div class="line">x = -32768;</div>
 <div class="line">s = x.<a class="code hl_function" href="#a58d5889bb5438a6f48b1cae282a0d7e5">to_string</a>();              <span class="comment">// s == &quot;-32768&quot;</span></div>
-<div class="ttc" id="aclassbi_1_1bi__t_html_a58d5889bb5438a6f48b1cae282a0d7e5"><div class="ttname"><a href="#a58d5889bb5438a6f48b1cae282a0d7e5">bi::bi_t::to_string</a></div><div class="ttdeci">std::string to_string() const</div><div class="ttdoc">Return a string containing the base-10 (decimal) representation of the integer.</div><div class="ttdef"><b>Definition</b> bi.cpp:688</div></div>
+<div class="ttc" id="aclassbi_1_1bi__t_html_a58d5889bb5438a6f48b1cae282a0d7e5"><div class="ttname"><a href="#a58d5889bb5438a6f48b1cae282a0d7e5">bi::bi_t::to_string</a></div><div class="ttdeci">std::string to_string() const</div><div class="ttdoc">Return a string containing the base-10 (decimal) representation of the integer.</div><div class="ttdef"><b>Definition</b> bi.cpp:725</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1086,7 +1161,7 @@ r_{i} \) such that  </p><p class="formulaDsp">
 </div><div class="memdoc">
 
 <p>Swap the contents of <code>a</code> with <code>b</code>. </p>
-<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000019">Complexity</a></b></dt><dd>O(1) </dd></dl>
+<dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000024">Complexity</a></b></dt><dd>O(1) </dd></dl>
 
 </div>
 </div>
