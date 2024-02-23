@@ -619,6 +619,36 @@ bi_t& bi_t::set_bit(bi_bitcount_t i) {
 ///@{
 
 /**
+ *  @fn size_t bi_t::capacity() const noexcept
+ *  @brief Return the number of digits the allocated storage can hold.
+ *  @complexity O(1)
+ */
+
+/**
+ *  @fn size_t bi_t::size() const noexcept
+ *  @brief Return the number of digits used. Instance represents `0` iff
+ *  `size() == 0`.
+ *  @complexity O(1)
+ */
+
+/**
+ *  @fn bool bi_t::negative() const noexcept
+ *  @brief Return `true` if the integer is (strictly) negative, false otherwise.
+ *  @complexity O(1)
+ */
+
+/**
+ *  @fn std::span<const digit> bi_t::digits() const
+ *  @brief Return a read-only span of the digits stored in the internal digit
+ *  vector, with least significant digits first. If the integer is zero, an
+ *  empty span is returned.
+ *
+ *  @warning Modifying the integer after the span is returned may invalidate the
+ *  span.
+ *  @complexity O(1)
+ */
+
+/**
  *  Prints the integer in the form
  *  @code
  *  (d_p * 2**(bi_dbits * p) + ... + d_0 * 2**(bi_dbits * 0))
@@ -632,6 +662,7 @@ bi_t& bi_t::set_bit(bi_bitcount_t i) {
  *
  *  @param os The output stream to which the internal representation is printed.
  *  If not specified, defaults to standard output (`std::cout`).
+ *  @complexity O(n)
  */
 void bi_t::print_internal(std::ostream& os) const noexcept {
   if (size() == 0) {
@@ -672,6 +703,12 @@ void bi_t::print_internal(std::ostream& os) const noexcept {
 ///@{
 
 /**
+ *  @fn void bi_t::swap(bi_t& other) noexcept
+ *  @brief Swap the contents of this `bi_t` object with another `bi_t` object.
+ *  @complexity O(1)
+ */
+
+/**
  *  @brief Return a `string` containing the base-10 (decimal) representation of
  *  the integer.
  *
@@ -708,6 +745,31 @@ std::string bi_t::to_string() const {
   std::reverse(result.begin(), result.end());
   return result;
 }
+
+/**
+ *  @fn void bi_t::negate() noexcept
+ *  @brief Negates the integer in place.
+ *  @complexity O(1)
+ */
+
+/**
+ *  @fn int bi_t::sign() const noexcept
+ *  @brief Return an `int` indicating the sign of the number: `-1` for negative,
+ *  `0` for zero, `1` for positive.
+ *  @complexity O(1)
+ */
+
+/**
+ *  @fn bool bi_t::odd() const noexcept
+ *  @brief Return `true` if this integer is odd, `false` otherwise.
+ *  @complexity O(1)
+ */
+
+/**
+ *  @fn bool bi_t::even() const noexcept
+ *  @brief Return `true` if this integer is even, `false` otherwise.
+ *  @complexity O(1)
+ */
 
 ///@}
 

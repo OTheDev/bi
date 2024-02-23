@@ -3,8 +3,8 @@ Copyright 2024 Owain Davies
 SPDX-License-Identifier: Apache-2.0
 */
 
-#ifndef BI_INCLUDE_BI_DIGIT_VECTOR_IMPL_HPP_
-#define BI_INCLUDE_BI_DIGIT_VECTOR_IMPL_HPP_
+#ifndef BI_INCLUDE_IMPL_BI_DIGIT_VECTOR_HPP_
+#define BI_INCLUDE_IMPL_BI_DIGIT_VECTOR_HPP_
 
 #include <algorithm>
 #include <cassert>
@@ -154,4 +154,4 @@ class digit_vector {
 
 };  // namespace bi
 
-#endif  // BI_INCLUDE_BI_DIGIT_VECTOR_IMPL_HPP_
+#endif  // BI_INCLUDE_IMPL_BI_DIGIT_VECTOR_HPP_
