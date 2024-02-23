@@ -813,6 +813,28 @@ std::string bi_t::to_string() const {
  *  @complexity O(1)
  */
 
+/**
+ *  @brief Return `true` if this integer fits in an integral type T, `false`
+ *  otherwise.
+ *
+ *  For `bi_t` object `x` and integral type `T`, `x.within<T>()` evaluates to
+ *  @code
+ *  x >= std::numeric_limits<T>::min() && x <= std::numeric_limits<T>::max()
+ *  @endcode
+ *
+ *  Example:
+ *  @code{.cpp}
+ *  bi_t x = std::numeric_limits<int32_t>::max();
+ *  bool fits_in_int32 = x.within<int32_t>();  // true
+ *  bool fits_in_int16 = x.within<int16_t>();  // false
+ *  @endcode
+ */
+template <std::integral T>
+bool bi_t::within() const noexcept {
+  return (*this) >= std::numeric_limits<T>::min() &&
+         (*this) <= std::numeric_limits<T>::max();
+}
+
 ///@}
 
 /**
@@ -866,12 +888,16 @@ bi_t abs(const bi_t& value) {
   return value;
 }
 
+/// @cond
 BI_INST_TEMPLATE_FOR_INTEGRAL_TYPES(bi_t::bi_t, BI_EMPTY);
 BI_INST_TEMPLATE_FOR_INTEGRAL_TYPES(bi_t& bi_t::operator=, BI_EMPTY);
-
 BI_INST_TEMPLATE_FOR_INTEGRAL_TYPES(std::strong_ordering bi_t::operator<=>,
                                     const noexcept);
 BI_INST_TEMPLATE_FOR_INTEGRAL_TYPES(bool bi_t::operator==, const noexcept);
 
 BI_INST_TEMPLATE_FOR_INTEGRAL_TYPES_CONV(bi_t::operator, const noexcept);
+
+BI_INST_TEMPLATE_FOR_INTEGRAL_TYPES_NOARG(bool bi_t::within, const noexcept);
+/// @endcond
+
 };  // namespace bi
