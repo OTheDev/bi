@@ -139,6 +139,8 @@ class BI_API bi_t {
   int sign() const noexcept;
   bool odd() const noexcept;
   bool even() const noexcept;
+  template <std::integral T>
+  bool within() const noexcept;
 
   // Friends
   BI_API friend std::ostream& operator<<(std::ostream& os, const bi_t& x);

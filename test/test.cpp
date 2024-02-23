@@ -1700,6 +1700,36 @@ TEST_F(BitwiseOperatorsTest, UnaryComplement) {
   }
 }
 
+TEST_F(BITest, WithinIntegral) {
+  bi_t x;
+
+  EXPECT_TRUE(x.within<digit>());
+
+  x = digit_max;
+  EXPECT_TRUE(x.within<digit>());
+  EXPECT_FALSE(x.within<sdigit>());
+
+  x += 1;
+  EXPECT_FALSE(x.within<digit>());
+
+  x = -static_cast<sddigit>(digit_max);
+  EXPECT_FALSE(x.within<digit>());
+  EXPECT_TRUE(x.within<sddigit>());
+  x -= 1;
+  EXPECT_TRUE(x.within<sddigit>());
+
+  x = ddigit_max;
+  EXPECT_TRUE(x.within<ddigit>());
+  EXPECT_FALSE(x.within<digit>());
+
+  // From documentation
+  x = std::numeric_limits<int32_t>::max();
+  bool fits_in_int32 = x.within<int32_t>();  // true
+  bool fits_in_int16 = x.within<int16_t>();  // false
+  EXPECT_TRUE(fits_in_int32);
+  EXPECT_FALSE(fits_in_int16);
+}
+
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
 }  // namespace
