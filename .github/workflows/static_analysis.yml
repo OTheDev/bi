@@ -39,7 +39,7 @@ jobs:
       working-directory: bi
 
     - name: Run clang-tidy
-      run: clang-tidy -p build include/*.hpp src/*.hpp test/*.hpp src/*.cpp test/*.cpp --warnings-as-errors='*'
+      run: clang-tidy -p build include/*.hpp include/*.inl src/*.hpp src/*.cpp test/*.hpp test/*.cpp --warnings-as-errors='*'
       working-directory: bi
 
   cpplint:
@@ -53,7 +53,7 @@ jobs:
     - name: Print cpplint version
       run: pip show cpplint
     - name: Run cpplint
-      run: cpplint --root=.. src/* include/* test/*
+      run: cpplint --root=.. --extensions=hpp,cpp,inl --headers=hpp,inl --recursive include/ src/ test/
       working-directory: bi
 
   clang-format-check:
@@ -76,7 +76,7 @@ jobs:
 
     - name: Check format
       run: |
-        find include/ src/ test/ -iname '*.hpp' -o -iname '*.cpp' | while read file; do
+        find include/** src/** test/** -iname '*.hpp' -o -iname '*.cpp' -o -iname '*.inl' | while read file; do
           clang-format-17 "$file" | diff "$file" -
         done
       working-directory: bi
