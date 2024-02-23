@@ -39,9 +39,14 @@ Extension Signed/Unsigned Integer Types (GCC, Clang)
 #define BI_INST_TEMPLATE_FOR_EXTENSION_INTEGRAL_TYPES_ARG(FUNC, ARG)           \
   template FUNC(__int128, ARG);                                                \
   template FUNC(unsigned __int128, ARG);
+
+#define BI_INST_TEMPLATE_FOR_EXTENSION_INTEGRAL_TYPES_CONV(FUNC, END)          \
+  template FUNC __int128() END;                                                \
+  template FUNC unsigned __int128() END;
 #else
 #define BI_INST_TEMPLATE_FOR_EXTENSION_INTEGRAL_TYPES(FUNC, END)
 #define BI_INST_TEMPLATE_FOR_EXTENSION_INTEGRAL_TYPES_ARG(FUNC, ARG)
+#define BI_INST_TEMPLATE_FOR_EXTENSION_INTEGRAL_TYPES_CONV(FUNC, END)
 #endif
 
 #define BI_INST_TEMPLATE_FOR_INTEGRAL_TYPES(FUNC, END)                         \
@@ -69,6 +74,19 @@ Extension Signed/Unsigned Integer Types (GCC, Clang)
   template FUNC(unsigned long, ARG);                                           \
   template FUNC(unsigned long long, ARG);                                      \
   BI_INST_TEMPLATE_FOR_EXTENSION_INTEGRAL_TYPES_ARG(FUNC, ARG)
+
+#define BI_INST_TEMPLATE_FOR_INTEGRAL_TYPES_CONV(FUNC, END)                    \
+  template FUNC signed char() END;                                             \
+  template FUNC short() END;                                                   \
+  template FUNC int() END;                                                     \
+  template FUNC long() END;                                                    \
+  template FUNC long long() END;                                               \
+  template FUNC unsigned char() END;                                           \
+  template FUNC unsigned short() END;                                          \
+  template FUNC unsigned() END;                                                \
+  template FUNC unsigned long() END;                                           \
+  template FUNC unsigned long long() END;                                      \
+  BI_INST_TEMPLATE_FOR_EXTENSION_INTEGRAL_TYPES_CONV(FUNC, END)
 
 // NOLINTEND(cppcoreguidelines-macro-usage)
 
