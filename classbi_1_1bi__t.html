@@ -272,6 +272,10 @@ template&lt;std::integral T&gt; </td></tr>
 <tr class="memitem:a4426bac6c16d5a91603eff8884c9242e" id="r_a4426bac6c16d5a91603eff8884c9242e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4426bac6c16d5a91603eff8884c9242e">operator bool</a> () const noexcept</td></tr>
 <tr class="memdesc:a4426bac6c16d5a91603eff8884c9242e"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>true</code> if and only if this integer is nonzero.  <br /></td></tr>
 <tr class="separator:a4426bac6c16d5a91603eff8884c9242e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d4a9e1136ac2b3b4d9a7a195301bb2a" id="r_a3d4a9e1136ac2b3b4d9a7a195301bb2a"><td class="memTemplParams" colspan="2">template&lt;std::integral T&gt; </td></tr>
+<tr class="memitem:a3d4a9e1136ac2b3b4d9a7a195301bb2a"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a3d4a9e1136ac2b3b4d9a7a195301bb2a">operator T</a> () const noexcept</td></tr>
+<tr class="memdesc:a3d4a9e1136ac2b3b4d9a7a195301bb2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> object to an integral type T.  <br /></td></tr>
+<tr class="separator:a3d4a9e1136ac2b3b4d9a7a195301bb2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Bits</div></td></tr>
 <tr class="memitem:a36096ab8b873f55d76eda82fff948efe" id="r_a36096ab8b873f55d76eda82fff948efe"><td class="memItemLeft" align="right" valign="top"><a id="a36096ab8b873f55d76eda82fff948efe" name="a36096ab8b873f55d76eda82fff948efe"></a>
 bi_bitcount_t&#160;</td><td class="memItemRight" valign="bottom"><b>bit_length</b> () const noexcept</td></tr>
@@ -611,6 +615,38 @@ Internals</h2>
 <div class="line">}</div>
 </div><!-- fragment --><p> The output is </p><div class="fragment"><div class="line">x is zero!</div>
 </div><!-- fragment --> <dl class="complexity"><dt><b><a class="el" href="complexity.html#_complexity000013">Complexity</a></b></dt><dd>O(1) </dd></dl>
+
+</div>
+</div>
+<a id="a3d4a9e1136ac2b3b4d9a7a195301bb2a" name="a3d4a9e1136ac2b3b4d9a7a195301bb2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d4a9e1136ac2b3b4d9a7a195301bb2a">&#9670;&#160;</a></span>operator T()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::integral T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bi::bi_t::operator T </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> object to an integral type T. </p>
+<p>As with the C++20 Standard (7.3.8, p. 93): </p><blockquote class="doxtable">
+<p>&zwj;[T]he result is the unique value of the destination type that is congruent to the source integer modulo \( 2^{N} \), where \( N \) is the width of the destination type. </p>
+</blockquote>
 
 </div>
 </div>
@@ -1058,7 +1094,7 @@ r_{i} \) such that  </p><p class="formulaDsp">
 <div class="line">s = x.<a class="code hl_function" href="#a58d5889bb5438a6f48b1cae282a0d7e5">to_string</a>();              <span class="comment">// s == &quot;65535&quot;</span></div>
 <div class="line">x = -32768;</div>
 <div class="line">s = x.<a class="code hl_function" href="#a58d5889bb5438a6f48b1cae282a0d7e5">to_string</a>();              <span class="comment">// s == &quot;-32768&quot;</span></div>
-<div class="ttc" id="aclassbi_1_1bi__t_html_a58d5889bb5438a6f48b1cae282a0d7e5"><div class="ttname"><a href="#a58d5889bb5438a6f48b1cae282a0d7e5">bi::bi_t::to_string</a></div><div class="ttdeci">std::string to_string() const</div><div class="ttdoc">Return a string containing the base-10 (decimal) representation of the integer.</div><div class="ttdef"><b>Definition</b> bi.cpp:725</div></div>
+<div class="ttc" id="aclassbi_1_1bi__t_html_a58d5889bb5438a6f48b1cae282a0d7e5"><div class="ttname"><a href="#a58d5889bb5438a6f48b1cae282a0d7e5">bi::bi_t::to_string</a></div><div class="ttdeci">std::string to_string() const</div><div class="ttdoc">Return a string containing the base-10 (decimal) representation of the integer.</div><div class="ttdef"><b>Definition</b> bi.cpp:767</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
