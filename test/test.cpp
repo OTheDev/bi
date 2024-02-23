@@ -307,7 +307,7 @@ TEST_F(BITest, ConstructFromString) {
   EXPECT_EQ(zero, 0);
 
   bi_t zeron{"-0"s};
-  EXPECT_EQ(zero, 0);
+  EXPECT_EQ(zeron, 0);
 
   bi_t zerop{"+0"s};
   EXPECT_EQ(zerop, 0);
@@ -1728,6 +1728,50 @@ TEST_F(BITest, WithinIntegral) {
   bool fits_in_int16 = x.within<int16_t>();  // false
   EXPECT_TRUE(fits_in_int32);
   EXPECT_FALSE(fits_in_int16);
+}
+
+TEST_F(BITest, AssignString) {
+  bi_t x;
+
+  x = "0"s;
+  EXPECT_EQ(x, 0);
+
+  x = "3239"s;
+  EXPECT_EQ(x, 3239);
+
+  x = "-3239"s;
+  EXPECT_EQ(x, -3239);
+
+  EXPECT_THROW(x = "", std::invalid_argument);
+  EXPECT_THROW(x = nullptr, std::invalid_argument);
+  EXPECT_THROW(x = "  -", std::invalid_argument);
+
+  auto str = "999909090093232329302932309230930923230992094029424204"s;
+  x = str;
+  EXPECT_EQ(x.to_string(), str);
+
+  auto strn = "-9999090900932323293029323092309309232309920940294242"s;
+  x = strn;
+  EXPECT_EQ(x.to_string(), strn);
+
+  std::random_device rdev;
+  std::mt19937 rng(rdev());
+
+  EXPECT_EQ(x = bltin_int_to_string(sddigit_min), sddigit_min);
+  EXPECT_EQ(x = bltin_int_to_string(ddigit_max), ddigit_max);
+
+  std::uniform_int_distribution<sddigit> udist(sddigit_min, sddigit_max);
+  std::uniform_int_distribution<int16_t> udist_16(
+      std::numeric_limits<int16_t>::min(), std::numeric_limits<int16_t>::max());
+  for (int16_t i = 0; i < INT16_MAX; ++i) {
+    sddigit rv = udist(rng);
+    std::string s = bltin_int_to_string(rv);
+    ASSERT_EQ(x = s, rv);
+
+    int16_t rv_16 = udist_16(rng);
+    s = bltin_int_to_string(rv_16);
+    ASSERT_EQ(x = s, rv_16);
+  }
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)

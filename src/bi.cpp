@@ -214,6 +214,19 @@ bi_t& bi_t::operator=(T value) {
   return *this;
 }
 
+bi_t& bi_t::operator=(const std::string& s) {
+  h_::init_string(*this, s);
+  return *this;
+}
+
+bi_t& bi_t::operator=(const char* s) {
+  if (s == nullptr) {
+    throw std::invalid_argument("Null string pointer provided.");
+  }
+  h_::init_string(*this, std::string(s));
+  return *this;
+}
+
 ///@}
 
 /**

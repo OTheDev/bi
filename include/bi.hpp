@@ -66,6 +66,8 @@ class BI_API bi_t {
   bi_t& operator=(bi_t&& other) noexcept;
   template <std::integral T>
   bi_t& operator=(T);
+  bi_t& operator=(const std::string&);
+  bi_t& operator=(const char*);
 
   // Unary operators
   bi_t operator+() const;
