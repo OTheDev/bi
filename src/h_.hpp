@@ -1460,6 +1460,7 @@ void h_::init_string(bi_t& x, const std::string& s) {
   const size_t n_digits = uints::div_ceil(n_base10, max_batch_size);
 
   x.reserve_(n_digits);
+  x.resize_unsafe_(0);
 
   for (auto dec_it = start_digit; dec_it < it;) {
     /* We could replace all the code in the body of this loop with just
