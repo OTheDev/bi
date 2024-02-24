@@ -39,6 +39,8 @@ namespace bi {
  *  [internals](@ref internals) below.
  *  @throw bi::division_by_zero Throws if a division by zero attempt is
  *  detected.
+ *  @throw bi::from_float Throws when attempting to convert a NaN or infinity to
+ *  a `bi_t`.
  *  @throw std::invalid_argument Throws in a string constructor if an invalid
  *  string or argument is provided.
  *
@@ -142,6 +144,8 @@ bi_t::bi_t(const char* s) {
   h_::init_string(*this, std::string(s));
 }
 
+bi_t::bi_t(double d) { h_::assign_from_double(*this, d); }
+
 // NOLINTEND(cppcoreguidelines-pro-type-member-init)
 
 ///@}
@@ -224,6 +228,11 @@ bi_t& bi_t::operator=(const char* s) {
     throw std::invalid_argument("Null string pointer provided.");
   }
   h_::init_string(*this, std::string(s));
+  return *this;
+}
+
+bi_t& bi_t::operator=(double d) {
+  h_::assign_from_double(*this, d);
   return *this;
 }
 

@@ -76,6 +76,9 @@ struct h_ {
   // misc.
   static dvector to_twos_complement(const dvector& vec);
   static void to_twos_complement_in_place(dvector& vec) noexcept;
+
+  // double
+  static void assign_from_double(bi_t&, double);
 };
 
 void h_::increment_abs(bi_t& x) {
@@ -1515,6 +1518,46 @@ inline void h_::to_twos_complement_in_place(dvector& vec) noexcept {
     carry = sum < static_cast<uint8_t>(carry);
     vec[i] = sum;
   }
+}
+
+/**
+ *  From C++20 (7.3.10, p. 93): "A prvalue of a floating-point type can be
+ *  converted to a prvalue of an integer type. The conversion truncates; that
+ *  is, the fractional part is discarded. The behavior is undefined if the
+ *  truncated value cannot be represented in the destination type."
+ */
+void h_::assign_from_double(bi_t& x, double d) {
+  if (std::isnan(d) || std::isinf(d)) {
+    throw from_float(
+        "Conversion error: NaN or infinity cannot be converted to an integer.");
+  }
+
+  if (d > -1 && d < 1) {
+    x = 0;
+    return;
+  }
+
+  const bool neg = d < 0;
+  if (neg) {
+    d = -d;
+  }
+
+  size_t n_digits{1};
+  while (bi_base_dbl <= d) {
+    // Equiv. to `d /= bi_base_dbl;`, but multiplication is generally cheaper
+    d *= bi_base_dbl_reciprocal;
+    ++n_digits;
+  }
+
+  x.resize_(n_digits);
+
+  for (size_t i = n_digits; i-- > 0;) {
+    x[i] = static_cast<digit>(d);
+    d = (d - x[i]) * bi_base_dbl;
+  }
+
+  x.negative_ = neg;
+  x.trim_trailing_zeros();
 }
 
 }  // namespace bi

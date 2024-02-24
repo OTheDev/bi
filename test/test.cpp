@@ -1774,6 +1774,82 @@ TEST_F(BITest, AssignString) {
   }
 }
 
+TEST_F(BITest, ConstructAndAssignFromDouble) {
+  bi_t x;
+
+  auto test_doub = [&x]<typename T>(const double& value, const T& exp) {
+    ASSERT_EQ(bi_t{value}, exp) << "Failure in constructor test: bi_t{" << value
+                                << "} vs. expected: " << exp;
+    ASSERT_EQ(x = value, exp) << "Failure in assignment test: x = " << value
+                              << " vs. expected: " << exp;
+  };  // NOLINT(readability/braces)
+
+  /* Special values */
+  double min_double = std::numeric_limits<double>::min();
+  double max_double = std::numeric_limits<double>::max();
+  double lowest_double = std::numeric_limits<double>::lowest();
+  double zero = 0.0;
+  double mzero = -0.0;
+  double nan = std::numeric_limits<double>::quiet_NaN();
+  double snan = std::numeric_limits<double>::signaling_NaN();
+  double inf = std::numeric_limits<double>::infinity();
+  double minf = -std::numeric_limits<double>::infinity();
+  double subnormal_double = std::numeric_limits<double>::denorm_min();
+  double max_int = 9007199254740992.0;       // 2^{53}
+  double max_int_neg = -9007199254740992.0;  // -2^{53}
+  test_doub(min_double, 0);
+  bi_t bi_max_double = max_double;
+  test_doub(max_double,
+            bi_t{"1797693134862315708145274237317043567980705675258449965989174"
+                 "7680315726078002853876058955863276687817154045895351438246423"
+                 "4321326889464182768467546703537516986049910576551282076245490"
+                 "0903893289440758685084551339423045832369032229481658085593321"
+                 "2334827479782620414472316873817718091929988125040402618412485"
+                 "8368"});
+  bi_max_double.negate();
+  test_doub(lowest_double, bi_max_double);
+  test_doub(zero, 0);
+  test_doub(mzero, 0);
+  EXPECT_THROW(bi_t{nan}, bi::from_float);
+  EXPECT_THROW(x = nan, bi::from_float);
+  EXPECT_THROW(bi_t{snan}, bi::from_float);
+  EXPECT_THROW(x = snan, bi::from_float);
+  EXPECT_THROW(bi_t{inf}, bi::from_float);
+  EXPECT_THROW(x = inf, bi::from_float);
+  EXPECT_THROW(bi_t{minf}, bi::from_float);
+  EXPECT_THROW(x = minf, bi::from_float);
+  test_doub(subnormal_double, 0);
+  test_doub(max_int, bi_t{"9007199254740992"});
+  test_doub(max_int_neg, bi_t{"-9007199254740992"});
+
+  /* Misc. */
+  test_doub(9876.54321, 9876);
+  test_doub(-9876.54321, -9876);
+  test_doub(0.987654321, 0);
+  test_doub(0.999999999, 0);
+  test_doub(-0.999999999, 0);
+  test_doub(1e-109, 0);
+  test_doub(1e109,
+            bi_t{"9999999999999999818508707188399807864717650964328171247958398"
+                 "369899072554380053298205803424393137676263358464"});
+
+  /* Random */
+  std::random_device rd;
+  std::mt19937_64 gen(rd());
+  std::uniform_real_distribution<double> dis_0(max_int_neg, max_int);
+  std::uniform_real_distribution<double> dis_1(-100.0, 100.0);
+
+  for (int16_t i = 0; i < INT16_MAX; ++i) {
+    double random_double = dis_0(gen);
+    int64_t int_val = static_cast<int64_t>(random_double);
+    test_doub(random_double, int_val);
+
+    random_double = dis_1(gen);
+    int_val = static_cast<int64_t>(random_double);
+    test_doub(random_double, int_val);
+  }
+}
+
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
 }  // namespace

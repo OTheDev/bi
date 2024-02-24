@@ -58,6 +58,7 @@ class BI_API bi_t {
   bi_t(bi_t&& other) noexcept;
   explicit bi_t(const std::string&);
   explicit bi_t(const char*);
+  bi_t(double);  // NOLINT(runtime/explicit)
 
   ~bi_t() = default;
 
@@ -68,6 +69,7 @@ class BI_API bi_t {
   bi_t& operator=(T);
   bi_t& operator=(const std::string&);
   bi_t& operator=(const char*);
+  bi_t& operator=(double);
 
   // Unary operators
   bi_t operator+() const;

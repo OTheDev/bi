@@ -146,7 +146,7 @@ uint8_t bit_length(T number) noexcept {
  *    return bit_length(value) <= double_precision; [double_precision is 53]
  *
  *  Method 2:
- *    return value <= dbl_max_int;                  [dbl_max_int is 2 ** 53 - 1]
+ *    return value <= dbl_max_int;                  [dbl_max_int is 2 ** 53]
  */
 template <std::unsigned_integral T>
 constexpr bool has_double_exact(T value) noexcept {
@@ -155,7 +155,7 @@ constexpr bool has_double_exact(T value) noexcept {
                 "uint64_t must be available");
   // Static assertion ensures there will be an integer type that can hold this
   // literal constant on the RHS.
-  constexpr auto dbl_max_int = 0x1fffffffffffffu;  // 2 ** 53 - 1
+  constexpr auto dbl_max_int = 0x20000000000000u;  // 2 ** 53
 
   return value <= dbl_max_int;
 }
