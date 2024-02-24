@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['overflow_5ferror_0',['overflow_error',['../classbi_1_1overflow__error.html',1,'bi']]]
+  ['from_5ffloat_0',['from_float',['../classbi_1_1from__float.html',1,'bi']]]
 ];
