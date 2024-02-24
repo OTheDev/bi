@@ -31,6 +31,12 @@ namespace bi {
  *  @brief Throws if a division by zero attempt is detected.
  */
 
+/**
+ *  @class from_float
+ *  @headerfile "bi_exceptions.hpp"
+ *  @brief Throws when attempting to convert a NaN or infinity to a `bi_t`.
+ */
+
 #ifdef __cpp_lib_source_location
 exception::exception(const std::string& message,
                      const std::source_location& location)

@@ -35,6 +35,11 @@ class division_by_zero : public exception {
   using exception::exception;
 };
 
+class from_float : public exception {
+ public:
+  using exception::exception;
+};
+
 }  // namespace bi
 
 #endif  // BI_INCLUDE_BI_EXCEPTIONS_HPP_

@@ -16,6 +16,7 @@ static_assert(CHAR_BIT == 8);
 
 namespace bi {
 
+// TODO: maybe remove dependency on ddigit in the future
 #if defined(BI_DIGIT_64_BIT)
 using digit = uint64_t;
 using ddigit = unsigned __int128;
@@ -31,10 +32,13 @@ constexpr unsigned bi_dwidth = CHAR_BIT * sizeof(digit);
 constexpr unsigned bi_dbits = bi_dwidth;
 constexpr digit bi_dmax = std::numeric_limits<digit>::max();
 constexpr auto bi_base = static_cast<ddigit>(1) << bi_dwidth;
+constexpr double bi_base_dbl =
+    2.0 * static_cast<double>(static_cast<digit>(1) << (bi_dbits - 1));
+constexpr double bi_base_dbl_reciprocal = 1.0 / bi_base_dbl;
 
 using bi_bitcount_t = unsigned long;
 
-constexpr auto dbl_max_int = 0x1fffffffffffffu;  // 2 ** 53 - 1
+constexpr auto dbl_max_int = 0x20000000000000u;  // 2 ** 53
 
 }  // namespace bi
 
