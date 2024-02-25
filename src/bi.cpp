@@ -625,6 +625,25 @@ bi_t::operator T() const noexcept {
   return ret;
 }
 
+bi_t::operator double() const noexcept {
+  if (size() == 0) {
+    return 0.0;
+  }
+
+  double result = 0.0;
+
+  for (size_t i = size(); i-- > 0;) {
+    // First operand to addition same as `std::ldexp(result, bi_dbits)`
+    result = result * bi_base_dbl + static_cast<double>((*this)[i]);
+  }
+
+  if (negative_) {
+    result = -result;
+  }
+
+  return result;
+}
+
 ///@}
 
 /**

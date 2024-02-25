@@ -123,6 +123,7 @@ class BI_API bi_t {
   explicit operator bool() const noexcept;
   template <std::integral T>
   explicit operator T() const noexcept;
+  explicit operator double() const noexcept;
 
   // Bits
   bi_bitcount_t bit_length() const noexcept;

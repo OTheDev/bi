@@ -1553,7 +1553,7 @@ void h_::assign_from_double(bi_t& x, double d) {
 
   for (size_t i = n_digits; i-- > 0;) {
     x[i] = static_cast<digit>(d);
-    d = (d - x[i]) * bi_base_dbl;
+    d = (d - static_cast<double>(x[i])) * bi_base_dbl;
   }
 
   x.negative_ = neg;
