@@ -1850,6 +1850,86 @@ TEST_F(BITest, ConstructAndAssignFromDouble) {
   }
 }
 
+TEST_F(BITest, ConvertToDouble) {
+  /* Special values */
+  double zero = 0.0;
+  double max_int = 9007199254740992.0;       // 2^{53}
+  double max_int_neg = -9007199254740992.0;  // -2^{53}
+  double min_double = std::numeric_limits<double>::min();
+  double max_double = std::numeric_limits<double>::max();
+  double lowest_double = std::numeric_limits<double>::lowest();
+  double subnormal_double = std::numeric_limits<double>::denorm_min();
+  double inf = std::numeric_limits<double>::infinity();
+  double minf = -std::numeric_limits<double>::infinity();
+
+  auto test_db = [](const bi_t& bi_value, auto expected) {
+    EXPECT_EQ(static_cast<double>(bi_value), static_cast<double>(expected));
+  };
+
+  test_db(bi_t{zero}, zero);
+  test_db(bi_t{max_int}, max_int);
+  test_db(bi_t{max_int_neg}, max_int_neg);
+  test_db(bi_t{min_double}, 0.0);
+  test_db(bi_t{lowest_double}, lowest_double);
+  test_db(bi_t{subnormal_double}, 0.0);
+
+  bi_t bi_max_double = max_double;
+  test_db(bi_max_double, max_double);
+  test_db(bi_max_double + 1, max_double + 1.0);
+  test_db(bi_max_double * 987654321, max_double * 987654321);
+  test_db(bi_max_double * bi_max_double, max_double * max_double);
+  test_db(bi_max_double * bi_max_double, inf);
+  test_db(bi_max_double * -bi_max_double, minf);
+
+  test_db(bi_t{digit_max}, digit_max);
+  test_db(bi_t{ddigit_max}, ddigit_max);
+#if defined(__SIZEOF_INT128__) && !defined(BI_DIGIT_64_BIT)
+  test_db(bi_t{qdigit_max}, qdigit_max);
+  test_db(bi_t{sqdigit_min}, sqdigit_min);
+#endif
+
+  // Misc.
+  test_db(bi_t{-1.0}, -1.0);
+  test_db(bi_t{1.0}, 1.0);
+  test_db(bi_t{-987654321.0}, -987654321.0);
+  test_db(bi_t{987654321.0}, 987654321.0);
+
+  /* Random */
+  std::random_device rd;
+  std::mt19937_64 gen(rd());
+  std::uniform_real_distribution<double> dis_0(max_int_neg, max_int);
+  std::uniform_real_distribution<double> dis_1(-100.0, 100.0);
+  std::uniform_int_distribution<uint64_t> dis_2(bi::dbl_max_int, UINT64_MAX);
+#if defined(__SIZEOF_INT128__) && !defined(BI_DIGIT_64_BIT)
+  std::uniform_int_distribution<sqdigit> dis_3(sqdigit_min, sqdigit_max);
+#endif
+  std::uniform_int_distribution<sddigit> dis_4(sddigit_min, sddigit_max);
+
+  for (int16_t i = 0; i < INT16_MAX; ++i) {
+    double random_double = dis_0(gen);
+    int64_t int_val = static_cast<int64_t>(random_double);
+    ASSERT_EQ(static_cast<double>(bi_t{random_double}), int_val);
+
+    random_double = dis_1(gen);
+    int_val = static_cast<int64_t>(random_double);
+    ASSERT_EQ(static_cast<double>(bi_t{random_double}), int_val);
+
+    uint64_t uint_val = dis_2(gen);
+    ASSERT_EQ(static_cast<double>(bi_t{uint_val}),
+              static_cast<double>(uint_val));
+
+#if defined(__SIZEOF_INT128__) && !defined(BI_DIGIT_64_BIT)
+    sqdigit qval = dis_3(gen);
+    ASSERT_DOUBLE_EQ(static_cast<double>(bi_t{qval}),
+                     static_cast<double>(qval));
+#endif
+
+    sddigit sval = dis_4(gen);
+    ASSERT_DOUBLE_EQ(static_cast<double>(bi_t{sval}),
+                     static_cast<double>(sval));
+  }
+}
+
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
 }  // namespace
