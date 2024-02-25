@@ -84,8 +84,9 @@ std::pair<T, bool> umul_overflow(T a, T b) noexcept {
  *  where T is an unsigned integral type.
  */
 template <std::unsigned_integral T>
-uint8_t bit_length(T number) noexcept {
-  constexpr size_t width = sizeof(T) * CHAR_BIT;
+constexpr uint8_t bit_length(T number) noexcept {
+  // For unsigned types, this is the same as `width = sizeof(T) * CHAR_BIT;`
+  constexpr unsigned width = std::numeric_limits<T>::digits;
   static_assert(width <= std::numeric_limits<uint8_t>::max());
 
   uint8_t n_bits = 1;
@@ -134,6 +135,16 @@ uint8_t bit_length(T number) noexcept {
   // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
   return n_bits;
+}
+
+/**
+ *  Return the number of leading zero bits in nonzero unsigned integral `v`,
+ *  starting from the MSB.
+ */
+template <std::unsigned_integral T>
+constexpr uint8_t clz(T v) noexcept {
+  constexpr unsigned width = std::numeric_limits<T>::digits;
+  return width - bit_length(v);
 }
 
 /**
