@@ -40,6 +40,29 @@ using bi_bitcount_t = unsigned long;
 
 constexpr auto dbl_max_int = 0x20000000000000u;  // 2 ** 53
 
+/*
+ *  TRUE: std::ldexp(std::numeric_limits<double>::max(), -1024) < 1  and
+ *        std::ldexp(std::numeric_limits<double>::max(), -1023) >= 1
+ *  What x makes bi_dbits * (x - 1) >= 1024?
+ *    x >= (1024 / bi_dbits + 1) := upper   [note that 1024 % bi_dbits == 0]
+ *
+ *  constexpr auto upper = 1024 / bi_dbits + 1;
+ */
+constexpr int find_upper() {
+  double dbl = std::numeric_limits<double>::max();
+  int x = 1;
+
+  while (dbl >= 1.0) {
+    // Equiv. to dbl /= bi_base_dbl
+    dbl *= bi_base_dbl_reciprocal;
+    ++x;
+  }
+
+  return x;
+}
+
+constexpr auto bi_cmp_dbl_size_upper = find_upper();
+
 }  // namespace bi
 
 #endif  // BI_SRC_CONSTANTS_HPP_

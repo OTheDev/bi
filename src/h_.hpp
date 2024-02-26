@@ -79,6 +79,8 @@ struct h_ {
 
   // double
   static void assign_from_double(bi_t&, double);
+  static int cmp_abs(const bi_t&, double) noexcept;
+  static int cmp(const bi_t&, double) noexcept;
 };
 
 void h_::increment_abs(bi_t& x) {
@@ -1558,6 +1560,49 @@ void h_::assign_from_double(bi_t& x, double d) {
 
   x.negative_ = neg;
   x.trim_trailing_zeros();
+}
+
+int h_::cmp_abs(const bi_t& z, double dbl) noexcept {
+  if (z.size() == 0) {
+    return dbl > 0 ? -1 : 0;
+  }
+
+  if (z.size() >= bi_cmp_dbl_size_upper) {
+    return 1;
+  }
+
+  // Same as dbl = std::ldexp(dbl, -static_cast<int>(bi_dbits) *
+  //                                static_cast<int>(z.size() - 1));
+  for (size_t j = 1; j < z.size(); ++j) {
+    // Equiv. to `dbl /= bi_base_dbl;`, but multiplication is generally cheaper
+    dbl *= bi_base_dbl_reciprocal;
+  }
+
+  if (bi_base_dbl <= dbl) {
+    return -1;
+  }
+
+  for (auto it = z.rbegin(); it != z.rend(); ++it) {
+    const digit cur = static_cast<digit>(dbl);
+
+    if (*it < cur) {
+      return -1;
+    } else if (*it > cur) {
+      return 1;
+    } else {
+      dbl = (dbl - static_cast<double>(cur)) * bi_base_dbl;
+    }
+  }
+
+  return dbl > 0 ? -1 : 0;
+}
+
+int h_::cmp(const bi_t& z, double dbl) noexcept {
+  if (!z.negative()) {
+    return dbl < 0 ? 1 : h_::cmp_abs(z, dbl);
+  } else {
+    return dbl < 0 ? -h_::cmp_abs(z, -dbl) : -1;
+  }
 }
 
 }  // namespace bi

@@ -1930,6 +1930,117 @@ TEST_F(BITest, ConvertToDouble) {
   }
 }
 
+TEST_F(BITest, CompareToDouble) {
+  double zero = 0.0;
+  double max_int = 9007199254740992.0;       // 2^{53}
+  double max_int_neg = -9007199254740992.0;  // -2^{53}
+  double min_double = std::numeric_limits<double>::min();
+  double max_double = std::numeric_limits<double>::max();
+  double lowest_double = std::numeric_limits<double>::lowest();
+  double subnormal_double = std::numeric_limits<double>::denorm_min();
+  double inf = std::numeric_limits<double>::infinity();
+  double minf = -std::numeric_limits<double>::infinity();
+  double nan = std::numeric_limits<double>::quiet_NaN();
+  double snan = std::numeric_limits<double>::signaling_NaN();
+
+  bi_t bi_max_double{max_double};
+
+  EXPECT_EQ(bi_t{}, zero);
+  EXPECT_TRUE(bi_t{} < min_double);
+  EXPECT_TRUE(bi_t{} < subnormal_double);
+  EXPECT_TRUE(bi_t{} > lowest_double);
+
+  // Infinity should be larger than all ints
+  EXPECT_TRUE(bi_max_double < inf);
+  EXPECT_TRUE(bi_t{} < inf);
+
+  // -Infinity should be less than all ints
+  EXPECT_TRUE(-bi_max_double > minf);
+  EXPECT_TRUE(bi_t{} > minf);
+
+  // Boundary around max_double
+  EXPECT_EQ(bi_t{max_double}, max_double);
+  EXPECT_TRUE(++bi_t{max_double} > max_double);
+  EXPECT_TRUE(--bi_t{max_double} < max_double);
+  EXPECT_EQ(bi_t{-max_double}, -max_double);
+  EXPECT_TRUE(++bi_t{-max_double} > -max_double);
+  EXPECT_TRUE(--bi_t{-max_double} < -max_double);
+
+  /* IEEE 754: NaN compared to another floating point number x (where x can be
+   * finite, an infinite, or NaN) evaluates to false with >=, <=, >, <, ==,
+   * but true when NaN != x is evaluated. */
+  bi_t one{1};
+  EXPECT_TRUE(one != nan);
+  EXPECT_TRUE(one != snan);
+  EXPECT_FALSE(one == nan);
+  EXPECT_FALSE(one == snan);
+  EXPECT_FALSE(one < nan);
+  EXPECT_FALSE(one < snan);
+  EXPECT_FALSE(one <= nan);
+  EXPECT_FALSE(one <= snan);
+  EXPECT_FALSE(one > nan);
+  EXPECT_FALSE(one > snan);
+  EXPECT_FALSE(one >= nan);
+  EXPECT_FALSE(one >= snan);
+
+  // Comparison with infinities above triggers the case where bi_base_dbl <= dbl
+  // in the implementation. Similarly, this does too:
+  EXPECT_TRUE(bi_t{ddigit_max} <= static_cast<double>(ddigit_max));
+
+  EXPECT_TRUE(bi_t{sddigit_min} >= static_cast<double>(sddigit_min));
+  EXPECT_TRUE(bi_t{sdigit_min} >= static_cast<double>(sdigit_min));
+  EXPECT_TRUE(bi_t{digit_max} <= static_cast<double>(digit_max));
+
+  // *it < cur: one iteration (the max_double ones above cover > 1 iteration)
+  EXPECT_TRUE(bi_t{1} << bi_dwidth < std::ldexp(1.0, bi_dwidth + 1));
+  EXPECT_TRUE((bi_t{1} << (bi_dwidth * 2)) <
+              std::ldexp(1.0, bi_dwidth * 2 + 1));
+
+  // *it > cur: one iteration (the max_double ones above cover > 1 iteration)
+  EXPECT_TRUE(bi_t{1} << (bi_dwidth + 2) > std::ldexp(1.0, bi_dwidth + 1));
+  EXPECT_TRUE((bi_t{1} << (bi_dwidth * 2 + 2)) >
+              std::ldexp(1.0, bi_dwidth * 2 + 1));
+
+  // Large is the first number possible that will trigger the z.size() >= upper
+  // branch of the impl.
+  constexpr auto upper = bi::bi_cmp_dbl_size_upper;
+  constexpr auto shift = bi::bi_dbits * (upper - 1);  // Should be 1024
+  bi_t large = bi_t{1} << shift;
+  if (bi::bi_dbits == 32) {
+    EXPECT_EQ(large.size(), 33);
+  } else if (bi::bi_dbits == 64) {
+    EXPECT_EQ(large.size(), 17);
+  }
+  EXPECT_TRUE(large > std::numeric_limits<double>::max());
+  EXPECT_TRUE((large + 1) > std::numeric_limits<double>::max());
+  // This will not trigger the z.size() >= upper branch
+  EXPECT_TRUE((large - 1) > std::numeric_limits<double>::max());
+
+  // Misc.
+  EXPECT_TRUE(bi_t{5} > 4.9);
+  EXPECT_TRUE(4.9 < bi_t{5});
+  EXPECT_TRUE(bi_t{1} > -1.0);
+  EXPECT_TRUE(bi_t{-1} < 1.0);
+
+  // Random
+  std::random_device rd;
+  std::mt19937_64 gen(rd());
+  std::uniform_real_distribution<double> dis(max_int_neg, max_int);
+  for (int16_t i = 0; i < INT16_MAX; ++i) {
+    const double rand_double = dis(gen);
+    const int64_t i64 = static_cast<int64_t>(rand_double);
+    const bi_t rand_bi{rand_double};
+
+    EXPECT_TRUE(rand_bi == i64);
+
+    if (rand_double < 0) {
+      EXPECT_TRUE(rand_bi >= rand_double);
+    } else {
+      EXPECT_TRUE(rand_bi <= rand_double);
+    }
+  }
+}
+
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
 }  // namespace
