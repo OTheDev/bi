@@ -492,6 +492,86 @@ bool bi_t::operator==(T rhs) const noexcept {
 ///@}
 
 /**
+ *  @name Comparisons with floats
+ *  @brief Compare a `bi_t` to a floating-point number.
+ *
+ *  @details
+ *  These member functions handle the case where a `bi_t` is on the left-hand
+ *  side (LHS) and a `double` is on the right-hand side (RHS). There are also
+ *  non-member functions that facilitate comparisons where the `double` is on
+ *  the LHS.
+ *
+ *  These comparisons are designed to be consistent with IEEE 754, handling
+ *  special cases like NaNs and infinities.
+ *
+ *  **NaN**:
+ *  - Operators `==`, `<`, `<=`, `>`, and `>=` return `false` when comparing
+ *    with NaN.
+ *  - Operator `!=` returns `true` when comparing with NaN.
+ *
+ *  **Infinities**:
+ *  - Positive infinity is treated as greater than any `bi_t` number.
+ *  - Negative infinity is treated as less than any `bi_t` number.
+ *
+ *  @note The spaceship operator (`<=>`) is not used here due to the unordered
+ *  nature of NaN in IEEE 754. Instead, each comparison operator is explicitly
+ *  defined to handle NaN appropriately. In comparisons of `bi_t`s with `bi_t`s
+ *  and `bi_t`s with integral types, the spaceship operator is used, which,
+ *  combined with `operator==`, implicitly allows comparisons using `==`,
+ *  `!=`, `<`, `<=`, `>`, and `>=`, both when a `bi_t` is on the LHS and on the
+ *  RHS. Here, in order to handle NaN appropriately, we explicitly define all
+ *  of `==`, `!=`, `<`, `<=`, `>`, and `>=`, both for when a `bi_t` is on the
+ *  LHS and RHS.
+ */
+///@{
+
+// Only these two needed if we leave comparisons undefined for NaN and `bi_t`
+// std::strong_ordering bi_t::operator<=>(double other) const noexcept {
+//   return h_::cmp(*this, other) <=> 0;
+// }
+
+// bool bi_t::operator==(double other) const noexcept {
+//   return h_::cmp(*this, other) == 0;
+// }
+
+/// @complexity O(1)
+bool bi_t::operator==(double other) const noexcept {
+  return !std::isnan(other) && h_::cmp(*this, other) == 0;
+}
+
+/// @complexity O(1)
+bool bi_t::operator!=(double other) const noexcept { return !(*this == other); }
+
+/// @complexity O(1)
+bool bi_t::operator<(double other) const noexcept {
+  return !std::isnan(other) && h_::cmp(*this, other) < 0;
+}
+
+/// @complexity O(1)
+bool bi_t::operator<=(double other) const noexcept {
+  return !std::isnan(other) && h_::cmp(*this, other) <= 0;
+}
+
+/// @complexity O(1)
+bool bi_t::operator>(double other) const noexcept {
+  return !std::isnan(other) && h_::cmp(*this, other) > 0;
+}
+
+/// @complexity O(1)
+bool bi_t::operator>=(double other) const noexcept {
+  return !std::isnan(other) && h_::cmp(*this, other) >= 0;
+}
+
+///@}
+
+bool operator==(double lhs, const bi_t& rhs) noexcept { return rhs == lhs; }
+bool operator!=(double lhs, const bi_t& rhs) noexcept { return rhs != lhs; }
+bool operator<(double lhs, const bi_t& rhs) noexcept { return rhs > lhs; }
+bool operator<=(double lhs, const bi_t& rhs) noexcept { return rhs >= lhs; }
+bool operator>(double lhs, const bi_t& rhs) noexcept { return rhs < lhs; }
+bool operator>=(double lhs, const bi_t& rhs) noexcept { return rhs <= lhs; }
+
+/**
  *  @name Bitwise operators
  *  @note These operators perform bitwise operations on integers using two's
  *  complement representation (with sign extension).

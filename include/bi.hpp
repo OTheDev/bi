@@ -105,10 +105,18 @@ class BI_API bi_t {
   // Comparisons
   std::strong_ordering operator<=>(const bi_t&) const noexcept;
   bool operator==(const bi_t&) const noexcept;
+
   template <std::integral T>
   std::strong_ordering operator<=>(T) const noexcept;
   template <std::integral T>
   bool operator==(T) const noexcept;
+
+  bool operator==(double) const noexcept;
+  bool operator!=(double) const noexcept;
+  bool operator<(double) const noexcept;
+  bool operator<=(double) const noexcept;
+  bool operator>(double) const noexcept;
+  bool operator>=(double) const noexcept;
 
   // Bitwise operators
   bi_t operator~() const;
@@ -149,6 +157,13 @@ class BI_API bi_t {
 
   // Friends
   BI_API friend std::ostream& operator<<(std::ostream& os, const bi_t& x);
+
+  friend bool operator==(double lhs, const bi_t& rhs) noexcept;
+  friend bool operator!=(double lhs, const bi_t& rhs) noexcept;
+  friend bool operator<(double lhs, const bi_t& rhs) noexcept;
+  friend bool operator<=(double lhs, const bi_t& rhs) noexcept;
+  friend bool operator>(double lhs, const bi_t& rhs) noexcept;
+  friend bool operator>=(double lhs, const bi_t& rhs) noexcept;
 
  private:
   dvector vec_;
