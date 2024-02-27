@@ -2041,6 +2041,101 @@ TEST_F(BITest, CompareToDouble) {
   }
 }
 
+TEST_F(BITest, Exponentiation) {
+  bi_t zero;
+  bi_t one{1};
+  bi_t mone{-1};
+  bi_t two{2};
+  bi_t dmax = bi_t{ddigit_max};
+  bi_t sdmin = bi_t{sddigit_min};
+
+  // Zero base
+  EXPECT_EQ(bi_t::pow(zero, 9), 0);
+  EXPECT_EQ(bi_t::pow(zero, bi_t{"987654321"}), 0);
+
+  // Zero exponent
+  EXPECT_EQ(bi_t::pow(zero, 0), 1);
+  EXPECT_EQ(bi_t::pow(dmax, 0), 1);
+  EXPECT_EQ(bi_t::pow(sdmin, 0), 1);
+
+  // Negative exponent (only relevant for the bi_t ** bi_t overload)
+  EXPECT_THROW(bi_t::pow(zero, bi_t{-1}), std::invalid_argument);
+  EXPECT_THROW(bi_t::pow(dmax, bi_t{-9}), std::invalid_argument);
+  EXPECT_THROW(bi_t::pow(sdmin, bi_t{"-90932093239"}), std::invalid_argument);
+
+  // Negative base, odd exponent (should keep negative)
+  EXPECT_EQ(bi_t::pow(mone, 1), -1);
+  EXPECT_EQ(bi_t::pow(mone, 3), -1);
+#if defined(BI_DIGIT_32_BIT)
+  EXPECT_EQ(bi_t::pow(sdmin, 23),
+            bi_t{"-155762789823805819489644210841387463844061115915499499458344"
+                 "5145898846278001462648694944985132025705960729951317997322375"
+                 "2880850475164269288340008276174542366683242849014366832921220"
+                 "1902149561345719251656394893099439238152225978695343860366892"
+                 "2855433927712300945575766753370369126991084298521781809546945"
+                 "4992653894994728712678545239681773161633112497585462598498727"
+                 "9633462629005911338101835943481319191828108807880410326670273"
+                 "13956749312"});
+#else
+  EXPECT_EQ(bi_t::pow(sdmin, 11),
+            bi_t{"-345862871284476501831149277335936051622902444958594924036764"
+                 "4166080576879632652362184119765613545163153674691520749911733"
+                 "4856931716223259006470787726815846167401342301538062679980223"
+                 "7019475639957997729415406269691677905502804565730165765306863"
+                 "3580937091736686607336729867002420861757015609953617850773500"
+                 "6954279854950959266887234288394055518341102523261959774677993"
+                 "72494786181018418826967585199690251403572745123158556672"});
+#endif
+
+  // Negative base, even exponent (should make positive)
+  EXPECT_EQ(bi_t::pow(mone, 2), 1);
+  EXPECT_EQ(bi_t::pow(mone, 4), 1);
+#if defined(BI_DIGIT_32_BIT)
+  EXPECT_EQ(bi_t::pow(sdmin, 28), bi_t{"103971031169538340124421817778820199111"
+                                       "80732225837567918598261456490667957"
+                                       "015521630261134407217646372387167989961"
+                                       "15356897447811088851009681763948496"
+                                       "343306415110762436966946115370052740363"
+                                       "23602361682111083622989307588713647"
+                                       "881955005902365403198712787692241264106"
+                                       "28252477896572557128589413489281176"
+                                       "975553284484518608538073046398294341654"
+                                       "39526506373257315741880485191194993"
+                                       "469873589860721480400028774502622633631"
+                                       "46478527498944936048377329839250155"
+                                       "330892874094061087045864641276073782007"
+                                       "83285961953855832464802521215743516"
+                                       "11841914863616"});
+#else
+  EXPECT_EQ(bi_t::pow(sdmin, 12),
+            bi_t{"5884551823537677218213175307686313752226790156117404666405456"
+                 "6383429135536909257828835083596370753165611542145529492304391"
+                 "1722895213612872307034420871771155140432944184967095891304218"
+                 "2416214598820423689300263232562493520160899900169583464653563"
+                 "2518676704483431208512637438314337930112998334818456244772225"
+                 "8390861598931052720472224612197939074726704000940161375418674"
+                 "8738956656814407995761242366638628565689079572358151137624542"
+                 "29942217871394772181885927817216"});
+#endif
+
+  // Test guard branch for bi_t ** bi_bitcount_t overload
+  EXPECT_EQ(bi_t::pow(zero, bi::max_bits), 0);
+  EXPECT_EQ(bi_t::pow(one, bi::max_bits), 1);
+  EXPECT_EQ(bi_t::pow(mone, bi::max_bits), 1);       // even
+  EXPECT_EQ(bi_t::pow(mone, bi::max_bits + 1), -1);  // odd
+  EXPECT_THROW(bi_t::pow(two, bi::max_bits), bi::overflow_error);
+  EXPECT_THROW(bi_t::pow(two, bi::max_bits + 1), bi::overflow_error);
+
+  // Test guard branch for bi_t ** bi_t overload
+  bi_t bi_max_bits = bi::max_bits;
+  EXPECT_EQ(bi_t::pow(zero, bi_max_bits), 0);
+  EXPECT_EQ(bi_t::pow(one, bi_max_bits), 1);
+  EXPECT_EQ(bi_t::pow(mone, bi_max_bits), 1);       // even
+  EXPECT_EQ(bi_t::pow(mone, bi_max_bits + 1), -1);  // odd
+  EXPECT_THROW(bi_t::pow(two, bi_max_bits), bi::overflow_error);
+  EXPECT_THROW(bi_t::pow(two, bi_max_bits + 1), bi::overflow_error);
+}
+
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
 }  // namespace

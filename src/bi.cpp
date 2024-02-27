@@ -959,6 +959,53 @@ bool bi_t::within() const noexcept {
 ///@}
 
 /**
+ *  @name Exponentiation
+ */
+///@{
+
+bi_t bi_t::pow(const bi_t& base, bi_bitcount_t exp) {
+  if (exp == 0) {
+    return 1;
+  }
+  // Guard against attempts to exponentiate when we know it will lead to
+  // bi::overflow_error. If base == 2 and exp > 0, the result of 2 ** exp will
+  // have a bit length of exp + 1 bits. Big integers are constrained such that
+  // their bit length is less than or equal to bi::max_bits. Thus, we require
+  // that (exp + 1 <= bi::max_bits) <==> (exp <= bi::max_bits - 1).
+  if (exp >= bi::max_bits) {
+    if (base == 0 || base == 1) {
+      return base;
+    }
+    if (base == -1) {
+      return exp % 2 == 0 ? 1 : -1;
+    }
+    throw overflow_error("");
+  }
+  return h_::expo_left_to_right(base, exp);
+}
+
+bi_t bi_t::pow(const bi_t& base, const bi_t& exp) {
+  if (exp < 0) {
+    throw std::invalid_argument("Negative exponents are not supported.");
+  }
+  if (exp == 0) {
+    return 1;
+  }
+  if (exp >= bi::max_bits) {
+    if (base == 0 || base == 1) {
+      return base;
+    }
+    if (base == -1) {
+      return exp.even() ? 1 : -1;
+    }
+    throw overflow_error("");
+  }
+  return h_::expo_left_to_right(base, static_cast<bi_bitcount_t>(exp));
+}
+
+///@}
+
+/**
  *  @brief Outputs the base-10 (decimal) representation of a `bi_t` object to
  *  a standard output stream.
  *

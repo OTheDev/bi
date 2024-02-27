@@ -63,6 +63,9 @@ constexpr int find_upper() {
 
 constexpr auto bi_cmp_dbl_size_upper = find_upper();
 
+constexpr auto max_size = dvector::max_size();
+constexpr bi_bitcount_t max_bits = max_size * bi_dwidth;
+
 }  // namespace bi
 
 #endif  // BI_SRC_CONSTANTS_HPP_

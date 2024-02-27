@@ -165,6 +165,11 @@ class BI_API bi_t {
   friend bool operator>(double lhs, const bi_t& rhs) noexcept;
   friend bool operator>=(double lhs, const bi_t& rhs) noexcept;
 
+  /* Static */
+  // Exponentiation
+  static bi_t pow(const bi_t& base, bi_bitcount_t exp);
+  static bi_t pow(const bi_t& base, const bi_t& exp);
+
  private:
   dvector vec_;
   bool negative_;

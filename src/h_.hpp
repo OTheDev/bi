@@ -81,6 +81,10 @@ struct h_ {
   static void assign_from_double(bi_t&, double);
   static int cmp_abs(const bi_t&, double) noexcept;
   static int cmp(const bi_t&, double) noexcept;
+
+  // exponentiation
+  template <std::unsigned_integral T>
+  static bi_t expo_left_to_right(const bi_t& base, T exp);
 };
 
 void h_::increment_abs(bi_t& x) {
@@ -1605,6 +1609,33 @@ int h_::cmp(const bi_t& z, double dbl) noexcept {
   }
 }
 
+/**
+ *  @name Exponentiation
+ */
+///@{
+
+template <std::unsigned_integral T>
+bi_t h_::expo_left_to_right(const bi_t& base, T exp) {
+  assert(exp > 0);
+
+  // (1)
+  bi_t ret{1};
+
+  // (2)
+  for (int j = uints::bit_length(exp); j-- > 0;) {
+    ret *= ret;
+    // Test if j-th bit of exp is set
+    if (exp & (static_cast<T>(1) << j)) {
+      ret *= base;
+    }
+  }
+
+  // (3)
+  return ret;
+}
+
 }  // namespace bi
+
+///@}
 
 #endif  // BI_SRC_H__HPP_

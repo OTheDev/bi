@@ -124,12 +124,12 @@ class digit_vector {
   size_t size() const noexcept { return size_; }
   size_t capacity() const noexcept { return capacity_; }
 
-  size_t max_size() const noexcept {
+  static constexpr size_t max_size() noexcept {
     constexpr size_t a = std::numeric_limits<size_t>::max() / sizeof(digit);
     constexpr bitcount b =
         std::numeric_limits<bitcount>::max() / (CHAR_BIT * sizeof(digit));
-
-    return a < b ? a : static_cast<size_t>(b);
+    constexpr auto ret = a < b ? a : static_cast<size_t>(b);
+    return ret;
   }
 
   digit& operator[](size_t index) { return digits_[index]; }
