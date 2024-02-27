@@ -39,6 +39,7 @@ struct h_ {
   // multiplicative
   static void imul1add1(bi_t& x, digit v, digit k);
   static void mul(bi_t& result, const bi_t& a, const bi_t& b);
+  static digit div_algo_digit(bi_t& q, const bi_t& u, digit v) noexcept;
   static void div_algo_single(bi_t& q, bi_t& r, const bi_t& n,
                               const bi_t& d) noexcept;
   static void div_algo_binary(bi_t& q, bi_t& r, const bi_t& n, const bi_t& d);
@@ -465,6 +466,19 @@ void h_::mul(bi_t& result, const bi_t& a, const bi_t& b) {
 /**
  *  NOTE: Assumes space and size have already been set for q and r.
  */
+digit h_::div_algo_digit(bi_t& q, const bi_t& u, digit v) noexcept {
+  ddigit rem{0};
+
+  for (size_t j = u.size() - 1; j < std::numeric_limits<size_t>::max(); --j) {
+    const ddigit temp = (rem << bi_dwidth) | u[j];  // rem * bi_base + u[j]
+    q[j] = temp / v;
+    rem = temp % v;
+  }
+
+  q.trim_trailing_zeros();
+  return static_cast<digit>(rem);
+}
+
 void h_::div_algo_single(bi_t& q, bi_t& r, const bi_t& u,
                          const bi_t& v) noexcept {
   ddigit rem{0};

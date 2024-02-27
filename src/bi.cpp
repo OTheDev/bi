@@ -893,12 +893,25 @@ std::string bi_t::to_string() const {
   const size_t estimate = h_::decimal_length(*this);
   bi_t copy = *this;
   std::string result;
-
   result.reserve(estimate);
 
+  constexpr digit divisor = powers_of_ten[max_batch_size];
+
   while (copy.size()) {
-    int digit = h_::idiv10(copy);
-    result.push_back(static_cast<char>('0' + digit));
+    digit remainder = h_::div_algo_digit(copy, copy, divisor);
+
+    for (size_t i = 0; i < max_batch_size; ++i) {
+      if (remainder == 0 && copy.size() == 0) {
+        break;
+      }
+
+      // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+      digit current_digit = remainder % 10;
+      remainder /= 10;
+      // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+
+      result.push_back(static_cast<char>('0' + current_digit));
+    }
   }
 
   if (negative_) {
