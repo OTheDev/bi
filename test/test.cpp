@@ -5,6 +5,8 @@ SPDX-License-Identifier: Apache-2.0
 
 #include <gtest/gtest.h>
 
+#include <array>
+#include <charconv>
 #include <cmath>
 #include <functional>
 #include <limits>
@@ -302,70 +304,90 @@ std::string bltin_int_to_string(T value) {
 #endif
 }
 
+template <std::integral T>
+std::string to_string_base(T number, int base) {
+  std::array<char, 129> buffer{};
+
+  // auto result = std::to_chars(buffer.begin(), buffer.end(), number, base);
+  auto result =
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      std::to_chars(&buffer[0], &buffer[0] + buffer.size(), number, base);
+  if (result.ec != std::errc()) {
+    throw std::runtime_error("Failed to convert number to string.");
+  }
+
+  // std::string str(buffer.begin(), result.ptr);
+  std::string str(&buffer[0], result.ptr);
+
+  return str;
+}
+
+void test_construct_from_string(int base) {
+  ASSERT_EQ(bi_t("0", base), 0);
+  ASSERT_EQ(bi_t(to_string_base(digit_max, base), base), digit_max);
+  ASSERT_EQ(bi_t(to_string_base(ddigit_max, base), base), ddigit_max);
+  ASSERT_EQ(bi_t(to_string_base(sdigit_min, base), base), sdigit_min);
+  ASSERT_EQ(bi_t(to_string_base(sdigit_max, base), base), sdigit_max);
+  ASSERT_EQ(bi_t(to_string_base(sddigit_min, base), base), sddigit_min);
+  ASSERT_EQ(bi_t(to_string_base(sddigit_max, base), base), sddigit_max);
+#if defined(__SIZEOF_INT128__) && defined(BI_DIGIT_32_BIT)
+  ASSERT_EQ(bi_t(to_string_base(qdigit_max, base), base), qdigit_max);
+  ASSERT_EQ(bi_t(to_string_base(sqdigit_min, base), base), sqdigit_min);
+  ASSERT_EQ(bi_t(to_string_base(sqdigit_max, base), base), sqdigit_max);
+#endif
+
+  std::random_device rdev;
+  std::mt19937 rng(rdev());
+  std::uniform_int_distribution<sddigit> udist(sddigit_min, sddigit_max);
+  std::uniform_int_distribution<int16_t> udist_16(INT16_MIN, INT16_MAX);
+  for (int16_t i = 0; i < INT16_MAX / 2; ++i) {
+    sddigit rv = udist(rng);
+    std::string s = to_string_base(rv, base);
+    ASSERT_EQ(bi_t(s, base), rv);
+
+    int16_t rv_16 = udist_16(rng);
+    s = to_string_base(rv_16, base);
+    ASSERT_EQ(bi_t(s, base), rv_16);
+  }
+}
+
 TEST_F(BITest, ConstructFromString) {
-  bi_t zero{"0"s};
-  EXPECT_EQ(zero, 0);
-
-  bi_t zeron{"-0"s};
-  EXPECT_EQ(zeron, 0);
-
-  bi_t zerop{"+0"s};
-  EXPECT_EQ(zerop, 0);
-
+  EXPECT_EQ(bi_t{"0"s}, 0);
+  EXPECT_EQ(bi_t{"-0"s}, 0);
+  EXPECT_EQ(bi_t{"+0"s}, 0);
   EXPECT_EQ(bi_t{"     0 "}, 0);
   EXPECT_EQ(bi_t{"      -0"}, 0);
 
-  bi_t x{"3239"s};
-  EXPECT_EQ(x, 3239);
-
-  bi_t xn{"-3239"s};
-  EXPECT_EQ(xn, -3239);
-
-  bi_t xp{"+3239"s};
-  EXPECT_EQ(xp, 3239);
-
-  EXPECT_EQ(bi_t{"98765"}, 98765);
-  EXPECT_EQ(bi_t{"-98765"}, -98765);
-  EXPECT_EQ(bi_t{"  -6789"}, -6789);
-  EXPECT_THROW(bi_t{""}, std::invalid_argument);
-  EXPECT_THROW(bi_t{nullptr}, std::invalid_argument);
-  EXPECT_THROW(bi_t{"  -"}, std::invalid_argument);
+  EXPECT_EQ(bi_t{"987"s}, 987);
+  EXPECT_EQ(bi_t{"-987"s}, -987);
+  EXPECT_EQ(bi_t{"+987"s}, 987);
+  EXPECT_EQ(bi_t{"  -987"}, -987);
 
   EXPECT_EQ(bi_t{"+00100"}, 100);
   EXPECT_EQ(bi_t{"+000000"}, 0);
+  EXPECT_EQ(bi_t{"    00009876"}, 9876);
 
   auto str = "999909090093232329302932309230930923230992094029424204"s;
   bi_t large{str};
   EXPECT_EQ(large.to_string(), str);
-
   auto strn = "-9999090900932323293029323092309309232309920940294242"s;
   bi_t large_n{strn};
   EXPECT_EQ(large_n.to_string(), strn);
 
-  bi_t leading_zero{"    00005679"};
-  EXPECT_EQ(leading_zero, 5679);
-
+  EXPECT_THROW(bi_t{""}, std::invalid_argument);
+  EXPECT_THROW(bi_t{nullptr}, std::invalid_argument);
+  EXPECT_THROW(bi_t{"  -"}, std::invalid_argument);
   EXPECT_THROW(bi_t invalid{"      -"}, std::invalid_argument);
   EXPECT_THROW(bi_t{"     "}, std::invalid_argument);
   EXPECT_THROW(bi_t{""}, std::invalid_argument);
 
-  std::random_device rdev;
-  std::mt19937 rng(rdev());
+  EXPECT_THROW(bi_t("0", -1), std::invalid_argument);
+  EXPECT_THROW(bi_t("0", 0), std::invalid_argument);
+  EXPECT_THROW(bi_t("0", 1), std::invalid_argument);
+  EXPECT_THROW(bi_t("0", 37), std::invalid_argument);
 
-  EXPECT_EQ(bi_t{bltin_int_to_string(sddigit_min)}, sddigit_min);
-  EXPECT_EQ(bi_t{bltin_int_to_string(ddigit_max)}, ddigit_max);
-
-  std::uniform_int_distribution<sddigit> udist(sddigit_min, sddigit_max);
-  std::uniform_int_distribution<int16_t> udist_16(
-      std::numeric_limits<int16_t>::min(), std::numeric_limits<int16_t>::max());
-  for (int16_t i = 0; i < INT16_MAX; ++i) {
-    sddigit rv = udist(rng);
-    std::string s = bltin_int_to_string(rv);
-    ASSERT_EQ(bi_t{s}, rv);
-
-    int16_t rv_16 = udist_16(rng);
-    s = bltin_int_to_string(rv_16);
-    ASSERT_EQ(bi_t{s}, rv_16);
+  for (int i = 2; i <= 36; ++i) {
+    test_construct_from_string(i);
   }
 }
 
@@ -1102,37 +1124,51 @@ TEST_F(BITest, SetBit) {
   }
 }
 
-TEST_F(BITest, ToString) {
-  bi_t positive(123);
-  bi_t negative(-456);
-  bi_t zero(0);
+void test_to_string_base(int b) {
+  ASSERT_EQ(bi_t{}.to_string(b), to_string_base(0, b));
+  ASSERT_EQ(bi_t{digit_max}.to_string(b), to_string_base(digit_max, b));
+  ASSERT_EQ(bi_t{ddigit_max}.to_string(b), to_string_base(ddigit_max, b));
+  ASSERT_EQ(bi_t{sdigit_min}.to_string(b), to_string_base(sdigit_min, b));
+  ASSERT_EQ(bi_t{sdigit_max}.to_string(b), to_string_base(sdigit_max, b));
+  ASSERT_EQ(bi_t{sddigit_min}.to_string(b), to_string_base(sddigit_min, b));
+  ASSERT_EQ(bi_t{sddigit_max}.to_string(b), to_string_base(sddigit_max, b));
 
-  EXPECT_EQ(positive.to_string(), "123");
-  EXPECT_EQ(negative.to_string(), "-456");
-  EXPECT_EQ(zero.to_string(), "0");
+  ASSERT_EQ(bi_t{-static_cast<sddigit>(digit_max)}.to_string(b),
+            to_string_base(-static_cast<sddigit>(digit_max), b));
+  ASSERT_EQ(bi_t{static_cast<ddigit>(digit_max) + 1}.to_string(b),
+            to_string_base(static_cast<ddigit>(digit_max) + 1, b));
 
-  auto test_to_string = [&](auto value) {
-    EXPECT_EQ(bi_t{value}.to_string(), bltin_int_to_string(value));
-  };
-
-  test_to_string(ddigit_max);
-  test_to_string(sddigit_min);
-  test_to_string(-static_cast<sddigit>(bi_dmax));
-  test_to_string(bi_dmax);
-  test_to_string(static_cast<ddigit>(bi_dmax) + 1);
+#if defined(__SIZEOF_INT128__) && defined(BI_DIGIT_32_BIT)
+  ASSERT_EQ(bi_t(qdigit_max).to_string(b), to_string_base(qdigit_max, b));
+  ASSERT_EQ(bi_t(sqdigit_min).to_string(b), to_string_base(sqdigit_min, b));
+  ASSERT_EQ(bi_t(sqdigit_max).to_string(b), to_string_base(sqdigit_max, b));
+#endif
 
   std::random_device rdev;
   std::mt19937_64 rng(rdev());
   std::uniform_int_distribution<sddigit> udist(sddigit_min, sddigit_max);
   std::uniform_int_distribution<digit> udist_digit(digit_min, digit_max);
-  for (int16_t i = INT16_MIN; i < INT16_MAX; ++i) {
+
+  const auto mn = INT16_MIN / 8;
+  const auto mx = INT16_MAX / 8;
+  for (int16_t i = mn; i < mx; ++i) {
     sddigit r = udist(rng);
-    test_to_string(r);
-
     digit r_digit = udist_digit(rng);
-    test_to_string(r_digit);
 
-    test_to_string(i);
+    ASSERT_EQ(bi_t{r}.to_string(b), to_string_base(r, b));
+    ASSERT_EQ(bi_t{r_digit}.to_string(b), to_string_base(r_digit, b));
+    ASSERT_EQ(bi_t{i}.to_string(b), to_string_base(i, b));
+  }
+}
+
+TEST_F(BITest, ToString) {
+  EXPECT_THROW(bi_t("0", -1), std::invalid_argument);
+  EXPECT_THROW(bi_t("0", 0), std::invalid_argument);
+  EXPECT_THROW(bi_t("0", 1), std::invalid_argument);
+  EXPECT_THROW(bi_t("0", 37), std::invalid_argument);
+
+  for (int i = 2; i <= 36; ++i) {
+    test_to_string_base(i);
   }
 }
 

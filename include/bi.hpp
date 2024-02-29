@@ -15,7 +15,8 @@ SPDX-License-Identifier: Apache-2.0
 
 #include "impl-bi_digit_vector.hpp"
 
-// NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+
 static_assert(sizeof(double) * CHAR_BIT == 64, "64-bit double is assumed.");
 static_assert(-1 == ~0, "Two's complement representation assumed.");
 
@@ -56,8 +57,8 @@ class BI_API bi_t {
   bi_t(T);  // NOLINT(runtime/explicit)
   bi_t(const bi_t&);
   bi_t(bi_t&& other) noexcept;
-  explicit bi_t(const std::string&);
-  explicit bi_t(const char*);
+  explicit bi_t(const std::string&, int base = 10);
+  explicit bi_t(const char*, int base = 10);
   bi_t(double);  // NOLINT(runtime/explicit)
 
   ~bi_t() = default;
@@ -147,7 +148,7 @@ class BI_API bi_t {
 
   // Other
   void swap(bi_t&) noexcept;
-  std::string to_string() const;
+  std::string to_string(int base = 10) const;
   void negate() noexcept;
   int sign() const noexcept;
   bool odd() const noexcept;
@@ -202,6 +203,8 @@ BI_API bi_t operator"" _bi(const char* str);
 BI_API bi_t abs(const bi_t& value);
 
 }  // namespace bi
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
 #endif  // BI_INCLUDE_BI_HPP_
 

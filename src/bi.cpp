@@ -109,12 +109,13 @@ bi_t::bi_t(bi_t&& other) noexcept
 
 /**
  *  @name Construct from a string
- *  @brief Construct an integer from a string representing a base-10 (decimal)
+ *  @brief Construct an integer from a string representing a base-`base`
  *  integer. These are `explicit` constructors.
- *  @throw std::invalid_argument Throws if a parsing error occurs or if a null
- *  pointer is provided.
+ *  @throw std::invalid_argument Throws if a parsing error occurs, if a null
+ *  pointer is provided, or if an invalid base is provided.
  *  @details Allows leading whitespace and/or a plus/minus sign before the first
- *  decimal digit.
+ *  base-`base` digit. `base` must be an integer in \f$ [2, 36] \f$ (by default,
+ *  it is `10`).
  *
  *  Examples:
  *  @code
@@ -132,16 +133,16 @@ bi_t::bi_t(bi_t&& other) noexcept
 // but init_string() does. We can ignore this warning.
 // NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
 
-bi_t::bi_t(const std::string& s) {
+bi_t::bi_t(const std::string& s, int base) {
   // vec_ implicitly default-initialized
-  h_::init_string(*this, s);
+  h_::init_string(*this, s, base);
 }
 
-bi_t::bi_t(const char* s) {
+bi_t::bi_t(const char* s, int base) {
   if (s == nullptr) {
     throw std::invalid_argument("Null string pointer provided.");
   }
-  h_::init_string(*this, std::string(s));
+  h_::init_string(*this, std::string(s), base);
 }
 
 bi_t::bi_t(double d) { h_::assign_from_double(*this, d); }
@@ -872,8 +873,9 @@ void bi_t::print_internal(std::ostream& os) const noexcept {
  */
 
 /**
- *  @brief Return a `string` containing the base-10 (decimal) representation of
- *  the integer.
+ *  @brief Return a `string` containing the base-`base` representation of the
+ *  integer, where `base` must be an integer in \f$ [2, 36] \f$ (by default,
+ *  `base` is `10`).
  *
  *  Examples:
  *  @code
@@ -885,32 +887,39 @@ void bi_t::print_internal(std::ostream& os) const noexcept {
  *  s = x.to_string();              // s == "-32768"
  *  @endcode
  */
-std::string bi_t::to_string() const {
+std::string bi_t::to_string(int base) const {
+  // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+  static constexpr auto base_digits = "0123456789abcdefghijklmnopqrstuvwxyz";
+
+  if (base <= 1 || base > 36) {
+    throw std::invalid_argument("base argument must be in [2, 36]");
+  }
+
   if (size() == 0) {
     return "0";
   }
 
-  const size_t estimate = h_::decimal_length(*this);
   bi_t copy = *this;
   std::string result;
-  result.reserve(estimate);
+  const size_t estimate = h_::base_length(*this, base);
+  result.reserve(estimate + negative_);
 
-  constexpr digit divisor = powers_of_ten[max_batch_size];
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)
+  const auto [max_batch_size, divisor] = base_mbs[base];
 
   while (copy.size()) {
     digit remainder = h_::div_algo_digit(copy, copy, divisor);
 
-    for (size_t i = 0; i < max_batch_size; ++i) {
+    for (unsigned i = 0; i < max_batch_size; ++i) {
       if (remainder == 0 && copy.size() == 0) {
         break;
       }
 
-      // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
-      digit current_digit = remainder % 10;
-      remainder /= 10;
-      // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+      digit current_digit = remainder % base;
+      remainder /= base;
 
-      result.push_back(static_cast<char>('0' + current_digit));
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+      result.push_back(base_digits[current_digit]);
     }
   }
 
@@ -919,7 +928,9 @@ std::string bi_t::to_string() const {
   }
 
   std::reverse(result.begin(), result.end());
+
   return result;
+  // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 }
 
 /**

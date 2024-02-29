@@ -65,14 +65,15 @@ struct h_ {
 
   // to_string()
   static uint8_t idiv10(bi_t& x) noexcept;
-  static size_t decimal_length(const bi_t& x);
+  static size_t base_length(const bi_t& x, int base);
 
   // initializing
   template <std::integral T>
   static void init_one_digit(bi_t& x, T value);
   template <std::integral T>
   static void init_atleast_one_digit(bi_t& x, T value);
-  static void init_string(bi_t& x, const std::string& str);
+  // NOLINTNEXTLINE
+  static void init_string(bi_t& x, const std::string& str, int base = 10);
 
   // misc.
   static dvector to_twos_complement(const dvector& vec);
@@ -1083,7 +1084,7 @@ uint8_t h_::idiv10(bi_t& x) noexcept {
 }
 
 /**
- *  @brief Return an estimate of the number of decimal digits required to
+ *  @brief Return an estimate of the number of base-`base` digits required to
  *  represent this integer.
  *
  *  Given an n-digit integer in base b, the largest integer representable is
@@ -1106,20 +1107,27 @@ uint8_t h_::idiv10(bi_t& x) noexcept {
  *    n = \left\lceil m \cdot \frac{\log(c)}{\log(b)} \right\rceil
  *  \f]
  *
- *  Thus, the minimum number of base 10 digits required to represent any m-digit
- *  base 2 integer is:
+ *  For example, the minimum number of base 10 digits required to represent any
+ *  m-digit base 2 integer is:
  *  \f[
  *    n = \left\lceil m * \log_{10}(2) \right\rceil
  *  \f]
  *
- *  @throw overflow_error Thrown when the estimated number of decimal digits is
- *  beyond the theoretical or practical limit for representation, indicating an
- *  unmanageable or impractical size for the corresponding decimal string.
+ *  @throw overflow_error Thrown when the estimated number of base-`base` digits
+ *  is beyond the theoretical or practical limit for representation, indicating
+ *  an unmanageable or impractical size for the corresponding base-`base`
+ *  string.
  */
-size_t h_::decimal_length(const bi_t& x) {
+// log_base_2[base] gives log_{base}(2) (with some rounding up)
+constexpr std::array<double, 37> log_base_2 = {
+    0,     0,     1.0,   0.631, 0.5,   0.431, 0.387, 0.357, 0.334, 0.316,
+    0.302, 0.290, 0.279, 0.271, 0.263, 0.256, 0.25,  0.245, 0.240, 0.236,
+    0.232, 0.228, 0.225, 0.222, 0.219, 0.216, 0.213, 0.211, 0.209, 0.206,
+    0.204, 0.202, 0.200, 0.199, 0.197, 0.195, 0.194};
+
+size_t h_::base_length(const bi_t& x, int base) {
   // TODO: a different exception is probably more appropriate in this func
-  constexpr const char* s = "Decimal digit estimation exceeds practical limit.";
-  constexpr double log10_2 = 0.30103;  // log10(2)
+  constexpr const char* s = "Digit estimation exceeds practical limit.";
 
   const bi_bitcount_t bitlen = x.bit_length();
   if (bitlen > dbl_max_int) {
@@ -1127,7 +1135,8 @@ size_t h_::decimal_length(const bi_t& x) {
   }
 
   const bi_bitcount_t r = static_cast<bi_bitcount_t>(
-      std::floor(static_cast<double>(bitlen) * log10_2) + 1);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)
+      std::floor(static_cast<double>(bitlen) * log_base_2[base]) + 1);
   if (r > std::numeric_limits<size_t>::max() - 2) {
     throw overflow_error(s);
   }
@@ -1374,8 +1383,8 @@ void h_::init_atleast_one_digit(bi_t& x, T value) {
  *  @endinternal
  */
 /**
- *  In the comment block above `decimal_length()`, it is shown how to calculate
- *  the minimum number of base-b digits, \f$ n \f$, required to represent any
+ *  In the comment block above `base_length()`, it is shown how to calculate the
+ *  minimum number of base-b digits, \f$ n \f$, required to represent any
  *  integer with \f$ m \f$ base-c digits.
  *
  *  We can find an upper bound another way as well.
@@ -1429,30 +1438,58 @@ constexpr uint8_t char_to_b36(char ch) {
   return char_to_int_map[static_cast<uint8_t>(ch)];
 }
 
-// Calculate 10 ** n
-constexpr digit pow10(size_t n) {
+// Calculate base ** n
+constexpr digit pow(int base, size_t n) {
   digit result = 1;
   for (size_t i = 0; i < n; ++i) {
-    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
-    result *= 10;
+    result *= base;
   }
   return result;
 }
 
-// Generate an array of powers of ten
-template <size_t... Indices>
-constexpr auto make_powers_of_ten(std::index_sequence<Indices...>) {
-  return std::array<digit, sizeof...(Indices)>{pow10(Indices)...};
+constexpr int calculate_max_batch_size(digit base) {
+  int n = 0;
+
+  ddigit b = base;
+  while (b < bi_dmax) {
+    b *= base;
+    ++n;
+  }
+
+  return n;
 }
 
-// If digit <==> uint32_t (uint64_t), 10^{9} (10^{19}) is the highest power of
-// 10 that fits in it.
-constexpr unsigned max_batch_size = (bi_dwidth == 64) ? 19 : 9;
+struct BaseMBS {
+  // max batch size
+  unsigned mbs;
+  // base ** mbs
+  digit base_pow_mbs;
+};
 
-constexpr auto powers_of_ten =
-    make_powers_of_ten(std::make_index_sequence<max_batch_size + 1>{});
+// For example, if digit <==> uint32_t (uint64_t), 10^{9} (10^{19}) is the
+// highest power of 10 that fits in it.
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+constexpr std::array<BaseMBS, 37> create_base_mbs_array() {
+  std::array<BaseMBS, 37> base_mbs{};
+  for (int base = 2; base <= 36; ++base) {
+    unsigned max_batch_size = calculate_max_batch_size(base);
+    base_mbs.at(base) = {max_batch_size, pow(base, max_batch_size)};
+  }
+  return base_mbs;
+}
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
-void h_::init_string(bi_t& x, const std::string& s) {
+constexpr auto base_mbs = create_base_mbs_array();
+
+void h_::init_string(bi_t& x, const std::string& s, int base) {
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
+  if (base <= 1 || base > 36) {
+    throw std::invalid_argument("base argument must be in [2, 36]");
+  }
+
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)
+  const auto [max_batch_size, base_pow_max_batch_size] = base_mbs[base];
+
   // std::stoi and company allow leading whitespace and a plus/minus sign. We
   // follow suit.
 
@@ -1460,7 +1497,7 @@ void h_::init_string(bi_t& x, const std::string& s) {
   auto it = std::find_if_not(s.begin(), s.end(),
                              [](char ch) { return std::isspace(ch); });
 
-  // Allow plus/minus sign to precede first decimal digit
+  // Allow plus/minus sign to precede first base-`base` digit
   x.negative_ = false;
   if (it != s.end()) {
     if (*it == '-') {
@@ -1472,39 +1509,44 @@ void h_::init_string(bi_t& x, const std::string& s) {
   }
 
   const auto start_digit = it;
+  // TODO: isalnum() is too broad!
   it = std::find_if_not(start_digit, s.end(),
-                        [](char ch) { return std::isdigit(ch); });
+                        [](char ch) { return std::isalnum(ch); });
 
   if (start_digit == it) {
     throw std::invalid_argument("Invalid string format.");
   }
 
-  size_t n_base10 = std::distance(start_digit, it);  // it - start_digit
-  const size_t n_digits = uints::div_ceil(n_base10, max_batch_size);
+  size_t n_base = std::distance(start_digit, it);  // it - start_digit
+  const size_t n_digits = uints::div_ceil(n_base, max_batch_size);
 
   x.reserve_(n_digits);
   x.resize_unsafe_(0);
 
-  for (auto dec_it = start_digit; dec_it < it;) {
-    /* We could replace all the code in the body of this loop with just
-     * `imul1add1(10, *dec_it++ - '0');` and the end result will be the same.
-     * However, it is more efficient to batch some base-10 digits together. */
-    // Initialize batch value
-    digit batch = 0;
+  auto dec_it = start_digit;
+  const size_t rem_batch_size = n_base % max_batch_size;
 
-    // Calculate how many base-10 digits we can process in this batch
-    const size_t remaining = std::distance(dec_it, it);
-    const size_t digits_in_batch =
-        std::min(remaining, static_cast<size_t>(max_batch_size));
-
-    // Convert batch substring to integer value
-    for (size_t j = 0; j < digits_in_batch; ++j, ++dec_it) {
-      // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
-      batch = (*dec_it - '0') + batch * 10;
-    }
-
+  // Initialize batch value
+  digit batch = 0;
+  // Convert batch substring to integer value
+  for (size_t j = 0; j < rem_batch_size; ++j, ++dec_it) {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)
-    h_::imul1add1(x, powers_of_ten[digits_in_batch], batch);
+    batch = char_to_int_map[*dec_it] + batch * base;
+  }
+  // x is initially zero, so multiplication is zero in h_::imul1add1()
+  if (batch) {
+    x.vec_.push_back(batch);
+  }
+
+  while (dec_it < it) {
+    // Initialize batch value
+    batch = 0;
+    // Convert batch substring to integer value
+    for (size_t j = 0; j < max_batch_size; ++j, ++dec_it) {
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)
+      batch = char_to_int_map[*dec_it] + batch * base;
+    }
+    h_::imul1add1(x, base_pow_max_batch_size, batch);
   }
 
   x.trim_trailing_zeros();
