@@ -6,7 +6,7 @@ var searchData=
   ['the_20packaged_20tt_20bi_20tt_20library_20in_20projects_3',['Using the Packaged &lt;tt&gt;bi&lt;/tt&gt; Library in Projects',['../index.html#using-the-packaged-bi-library-in-projects',1,'']]],
   ['to_20build_4',['Steps to Build',['../index.html#steps-to-build',1,'']]],
   ['to_20integer_5',['String to Integer',['../group__algorithms.html',1,'']]],
-  ['to_5fstring_6',['to_string',['../classbi_1_1bi__t.html#a58d5889bb5438a6f48b1cae282a0d7e5',1,'bi::bi_t']]],
+  ['to_5fstring_6',['to_string',['../classbi_1_1bi__t.html#a7b31f810b80d4026e810fb44b3914d12',1,'bi::bi_t']]],
   ['tt_20bi_20tt_20library_20in_20projects_7',['Using the Packaged &lt;tt&gt;bi&lt;/tt&gt; Library in Projects',['../index.html#using-the-packaged-bi-library-in-projects',1,'']]],
   ['tt_20find_5fpackage_20tt_8',['Finding and Linking Against the Library Using &lt;tt&gt;find_package()&lt;/tt&gt;',['../index.html#finding-and-linking-against-the-library-using-find_package',1,'']]]
 ];

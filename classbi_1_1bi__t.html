@@ -116,29 +116,29 @@ template&lt;std::integral T&gt; </td></tr>
 <tr class="memdesc:ac9831333b0d7d0a615a1ca59a053fd1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move constructor. After the move, <code>other</code> is left in a valid state representing the integer 0. <br /></td></tr>
 <tr class="separator:ac9831333b0d7d0a615a1ca59a053fd1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Construct from a string</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p>Construct an integer from a string representing a base-10 (decimal) integer. These are <code>explicit</code> constructors.</p>
+<tr><td colspan="2"><div class="groupText"><p>Construct an integer from a string representing a base-<code>base</code> integer. These are <code>explicit</code> constructors.</p>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">std::invalid_argument</td><td>Throws if a parsing error occurs or if a null pointer is provided.</td></tr>
+    <tr><td class="paramname">std::invalid_argument</td><td>Throws if a parsing error occurs, if a null pointer is provided, or if an invalid base is provided.</td></tr>
   </table>
   </dd>
 </dl>
-<p>Allows leading whitespace and/or a plus/minus sign before the first decimal digit.</p>
+<p>Allows leading whitespace and/or a plus/minus sign before the first base-<code>base</code> digit. <code>base</code> must be an integer in \( [2, 36] \) (by default, it is <code>10</code>).</p>
 <p>Examples: </p><div class="fragment"><div class="line"><a class="code hl_class" href="classbi_1_1bi__t.html">bi_t</a> a{<span class="stringliteral">&quot;98765&quot;</span>};      <span class="comment">// 98765</span></div>
 <div class="line"><a class="code hl_class" href="classbi_1_1bi__t.html">bi_t</a> b{<span class="stringliteral">&quot;-98765&quot;</span>};     <span class="comment">// -98765</span></div>
 <div class="line"><a class="code hl_function" href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi_t</a> c{<span class="stringliteral">&quot;  -6789&quot;</span>};    <span class="comment">// -6789</span></div>
 <div class="line"><a class="code hl_function" href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi_t</a> empty{<span class="stringliteral">&quot;&quot;</span>};       <span class="comment">// Throws std::invalid_argument</span></div>
 <div class="line"><a class="code hl_function" href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi_t</a> nll{<span class="keyword">nullptr</span>};    <span class="comment">// Throws std::invalid_argument</span></div>
 <div class="line"><a class="code hl_function" href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi_t</a> invalid{<span class="stringliteral">&quot;  -&quot;</span>};  <span class="comment">// Throws std::invalid_argument</span></div>
-<div class="ttc" id="aclassbi_1_1bi__t_html"><div class="ttname"><a href="classbi_1_1bi__t.html">bi::bi_t</a></div><div class="ttdoc">Arbitrary-precision integer type and related functions.</div><div class="ttdef"><b>Definition</b> bi.hpp:51</div></div>
+<div class="ttc" id="aclassbi_1_1bi__t_html"><div class="ttname"><a href="classbi_1_1bi__t.html">bi::bi_t</a></div><div class="ttdoc">Arbitrary-precision integer type and related functions.</div><div class="ttdef"><b>Definition</b> bi.hpp:52</div></div>
 <div class="ttc" id="aclassbi_1_1bi__t_html_a3897c3329c32d4f802f4af2f31a4fa8a"><div class="ttname"><a href="#a3897c3329c32d4f802f4af2f31a4fa8a">bi::bi_t::bi_t</a></div><div class="ttdeci">bi_t() noexcept</div><div class="ttdoc">Default constructor. The integer is initialized to zero and no memory allocation occurs.</div><div class="ttdef"><b>Definition</b> bi.cpp:76</div></div>
 </div><!-- fragment --> </div></td></tr>
-<tr class="memitem:ad359be5b108bce8306e67c11049312f0" id="r_ad359be5b108bce8306e67c11049312f0"><td class="memItemLeft" align="right" valign="top"><a id="ad359be5b108bce8306e67c11049312f0" name="ad359be5b108bce8306e67c11049312f0"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>bi_t</b> (const std::string &amp;)</td></tr>
-<tr class="separator:ad359be5b108bce8306e67c11049312f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46337fd6728b04f61369b149a7332471" id="r_a46337fd6728b04f61369b149a7332471"><td class="memItemLeft" align="right" valign="top"><a id="a46337fd6728b04f61369b149a7332471" name="a46337fd6728b04f61369b149a7332471"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>bi_t</b> (const char *)</td></tr>
-<tr class="separator:a46337fd6728b04f61369b149a7332471"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa521c210a3fd6caa4bcb5a698e19e1ff" id="r_aa521c210a3fd6caa4bcb5a698e19e1ff"><td class="memItemLeft" align="right" valign="top"><a id="aa521c210a3fd6caa4bcb5a698e19e1ff" name="aa521c210a3fd6caa4bcb5a698e19e1ff"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>bi_t</b> (const std::string &amp;, int base=10)</td></tr>
+<tr class="separator:aa521c210a3fd6caa4bcb5a698e19e1ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46dc76ac56459bdcef0b0449628d5393" id="r_a46dc76ac56459bdcef0b0449628d5393"><td class="memItemLeft" align="right" valign="top"><a id="a46dc76ac56459bdcef0b0449628d5393" name="a46dc76ac56459bdcef0b0449628d5393"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>bi_t</b> (const char *, int base=10)</td></tr>
+<tr class="separator:a46dc76ac56459bdcef0b0449628d5393"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97d3a1c5cfaa87101aae5ad0f7427678" id="r_a97d3a1c5cfaa87101aae5ad0f7427678"><td class="memItemLeft" align="right" valign="top"><a id="a97d3a1c5cfaa87101aae5ad0f7427678" name="a97d3a1c5cfaa87101aae5ad0f7427678"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>bi_t</b> (double)</td></tr>
 <tr class="separator:a97d3a1c5cfaa87101aae5ad0f7427678"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -349,9 +349,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>test_bit</b> (bi_bitc
 <tr class="memitem:a751f77e55a8d6794cb66ca3b0798ed13" id="r_a751f77e55a8d6794cb66ca3b0798ed13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a751f77e55a8d6794cb66ca3b0798ed13">swap</a> (<a class="el" href="classbi_1_1bi__t.html">bi_t</a> &amp;) noexcept</td></tr>
 <tr class="memdesc:a751f77e55a8d6794cb66ca3b0798ed13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swap the contents of this <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> object with another <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> object.  <br /></td></tr>
 <tr class="separator:a751f77e55a8d6794cb66ca3b0798ed13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58d5889bb5438a6f48b1cae282a0d7e5" id="r_a58d5889bb5438a6f48b1cae282a0d7e5"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58d5889bb5438a6f48b1cae282a0d7e5">to_string</a> () const</td></tr>
-<tr class="memdesc:a58d5889bb5438a6f48b1cae282a0d7e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a <code>string</code> containing the base-10 (decimal) representation of the integer.  <br /></td></tr>
-<tr class="separator:a58d5889bb5438a6f48b1cae282a0d7e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b31f810b80d4026e810fb44b3914d12" id="r_a7b31f810b80d4026e810fb44b3914d12"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b31f810b80d4026e810fb44b3914d12">to_string</a> (int base=10) const</td></tr>
+<tr class="memdesc:a7b31f810b80d4026e810fb44b3914d12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a <code>string</code> containing the base-<code>base</code> representation of the integer, where <code>base</code> must be an integer in \( [2, 36] \) (by default, <code>base</code> is <code>10</code>).  <br /></td></tr>
+<tr class="separator:a7b31f810b80d4026e810fb44b3914d12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7492ef9809a17935a4d8e7c0824844fe" id="r_a7492ef9809a17935a4d8e7c0824844fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7492ef9809a17935a4d8e7c0824844fe">negate</a> () noexcept</td></tr>
 <tr class="memdesc:a7492ef9809a17935a4d8e7c0824844fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Negates the integer in place.  <br /></td></tr>
 <tr class="separator:a7492ef9809a17935a4d8e7c0824844fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1302,8 +1302,8 @@ r_{i} \) such that  </p><p class="formulaDsp">
 
 </div>
 </div>
-<a id="a58d5889bb5438a6f48b1cae282a0d7e5" name="a58d5889bb5438a6f48b1cae282a0d7e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58d5889bb5438a6f48b1cae282a0d7e5">&#9670;&#160;</a></span>to_string()</h2>
+<a id="a7b31f810b80d4026e810fb44b3914d12" name="a7b31f810b80d4026e810fb44b3914d12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b31f810b80d4026e810fb44b3914d12">&#9670;&#160;</a></span>to_string()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1311,20 +1311,20 @@ r_{i} \) such that  </p><p class="formulaDsp">
         <tr>
           <td class="memname">std::string bi::bi_t::to_string </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>base</em><span class="paramdefsep"> = </span><span class="paramdefval">10</span></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Return a <code>string</code> containing the base-10 (decimal) representation of the integer. </p>
+<p>Return a <code>string</code> containing the base-<code>base</code> representation of the integer, where <code>base</code> must be an integer in \( [2, 36] \) (by default, <code>base</code> is <code>10</code>). </p>
 <p>Examples: </p><div class="fragment"><div class="line"><a class="code hl_class" href="classbi_1_1bi__t.html">bi_t</a> x;</div>
-<div class="line">std::string s = x.<a class="code hl_function" href="#a58d5889bb5438a6f48b1cae282a0d7e5">to_string</a>();  <span class="comment">// s == &quot;0&quot;</span></div>
+<div class="line">std::string s = x.<a class="code hl_function" href="#a7b31f810b80d4026e810fb44b3914d12">to_string</a>();  <span class="comment">// s == &quot;0&quot;</span></div>
 <div class="line">x = 65535;</div>
-<div class="line">s = x.<a class="code hl_function" href="#a58d5889bb5438a6f48b1cae282a0d7e5">to_string</a>();              <span class="comment">// s == &quot;65535&quot;</span></div>
+<div class="line">s = x.<a class="code hl_function" href="#a7b31f810b80d4026e810fb44b3914d12">to_string</a>();              <span class="comment">// s == &quot;65535&quot;</span></div>
 <div class="line">x = -32768;</div>
-<div class="line">s = x.<a class="code hl_function" href="#a58d5889bb5438a6f48b1cae282a0d7e5">to_string</a>();              <span class="comment">// s == &quot;-32768&quot;</span></div>
-<div class="ttc" id="aclassbi_1_1bi__t_html_a58d5889bb5438a6f48b1cae282a0d7e5"><div class="ttname"><a href="#a58d5889bb5438a6f48b1cae282a0d7e5">bi::bi_t::to_string</a></div><div class="ttdeci">std::string to_string() const</div><div class="ttdoc">Return a string containing the base-10 (decimal) representation of the integer.</div><div class="ttdef"><b>Definition</b> bi.cpp:888</div></div>
+<div class="line">s = x.<a class="code hl_function" href="#a7b31f810b80d4026e810fb44b3914d12">to_string</a>();              <span class="comment">// s == &quot;-32768&quot;</span></div>
+<div class="ttc" id="aclassbi_1_1bi__t_html_a7b31f810b80d4026e810fb44b3914d12"><div class="ttname"><a href="#a7b31f810b80d4026e810fb44b3914d12">bi::bi_t::to_string</a></div><div class="ttdeci">std::string to_string(int base=10) const</div><div class="ttdoc">Return a string containing the base-base representation of the integer, where base must be an integer...</div><div class="ttdef"><b>Definition</b> bi.cpp:890</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1358,7 +1358,7 @@ template&lt;std::integral T&gt; </div>
 </div><!-- fragment --><p>Example: </p><div class="fragment"><div class="line"><a class="code hl_class" href="classbi_1_1bi__t.html">bi_t</a> x = std::numeric_limits&lt;int32_t&gt;::max();</div>
 <div class="line"><span class="keywordtype">bool</span> fits_in_int32 = x.<a class="code hl_function" href="#a918156a5423a72112ed66aac1a6c6e12">within</a>&lt;int32_t&gt;();  <span class="comment">// true</span></div>
 <div class="line"><span class="keywordtype">bool</span> fits_in_int16 = x.<a class="code hl_function" href="#a918156a5423a72112ed66aac1a6c6e12">within</a>&lt;int16_t&gt;();  <span class="comment">// false</span></div>
-<div class="ttc" id="aclassbi_1_1bi__t_html_a918156a5423a72112ed66aac1a6c6e12"><div class="ttname"><a href="#a918156a5423a72112ed66aac1a6c6e12">bi::bi_t::within</a></div><div class="ttdeci">bool within() const noexcept</div><div class="ttdoc">Return true if this integer fits in an integral type T, false otherwise.</div><div class="ttdef"><b>Definition</b> bi.cpp:967</div></div>
+<div class="ttc" id="aclassbi_1_1bi__t_html_a918156a5423a72112ed66aac1a6c6e12"><div class="ttname"><a href="#a918156a5423a72112ed66aac1a6c6e12">bi::bi_t::within</a></div><div class="ttdeci">bool within() const noexcept</div><div class="ttdoc">Return true if this integer fits in an integral type T, false otherwise.</div><div class="ttdef"><b>Definition</b> bi.cpp:978</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1421,7 +1421,7 @@ template&lt;std::integral T&gt; </div>
 </div><div class="memdoc">
 
 <p>Outputs the base-10 (decimal) representation of a <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> object to a standard output stream. </p>
-<p>This overload of the stream insertion operator allows instances of <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> to be sent to standard output streams like <code>std::cout</code>. The <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> object is converted to a string via <code><a class="el" href="#a58d5889bb5438a6f48b1cae282a0d7e5" title="Return a string containing the base-10 (decimal) representation of the integer.">to_string()</a></code> before being output.</p>
+<p>This overload of the stream insertion operator allows instances of <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> to be sent to standard output streams like <code>std::cout</code>. The <code><a class="el" href="classbi_1_1bi__t.html" title="Arbitrary-precision integer type and related functions.">bi_t</a></code> object is converted to a string via <code><a class="el" href="#a7b31f810b80d4026e810fb44b3914d12" title="Return a string containing the base-base representation of the integer, where base must be an integer...">to_string()</a></code> before being output.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">os</td><td>The output stream to which the data is sent. </td></tr>
