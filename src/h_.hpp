@@ -38,6 +38,9 @@ struct h_ {
 
   // multiplicative
   static void imul1add1(bi_t& x, digit v, digit k);
+  static void mul_algo_square(bi_t& result, const bi_t& a, const size_t m);
+  static void mul_algo_knuth(bi_t& result, const bi_t& a, const bi_t& b,
+                             const size_t m, const size_t n);
   static void mul(bi_t& result, const bi_t& a, const bi_t& b);
   static digit div_algo_digit(bi_t& q, const bi_t& u, digit v) noexcept;
   static void div_algo_single(bi_t& q, bi_t& r, const bi_t& n,
@@ -388,6 +391,68 @@ inline void h_::imul1add1(bi_t& x, digit v, digit k = 0) {
 }
 
 /**
+ *  @internal
+ *  @page mul_square Multiplication - Multiple-Precision Squaring
+ *  @ingroup algorithms
+ *  Knuth Algorithm M can be used generally for multiplying two arbitrary
+ *  precision integers. However, if the two operands are equal, there are
+ *  algorithms that can improve the efficiency by about a factor of two. For
+ *  multiple-precision squaring, we follow **Algorithm 14.16** from the
+ *  **Handbook of Applied Cryptography** by A. Menezes, P. van Oorschot, and S.
+ *  Vanstone (pp. 596-597).
+ *  @endinternal
+ */
+void h_::mul_algo_square(bi_t& w, const bi_t& a, const size_t t) {
+  std::fill(w.begin(), w.end(), 0);
+
+  for (size_t i = 0; i < t; ++i) {
+    ddigit uv = w[2 * i] + static_cast<ddigit>(a[i]) * a[i];
+    w[2 * i] = static_cast<digit>(uv);  // set w[2 * i] <- v
+    ddigit c = uv >> bi_dwidth;         // set c <- u
+
+    for (size_t j = i + 1; j < t; ++j) {
+      // (hi, lo) represents a quadruple digit
+      ddigit hi{0};
+      ddigit lo = static_cast<ddigit>(a[j]) * a[i];
+
+      // Multiply product by two
+      hi = lo >> (std::numeric_limits<ddigit>::digits - 1);
+      lo <<= 1;
+
+      // Now add w[i + j] and c to (hi, lo)
+      hi += uints::uadd_overflow(lo, lo, static_cast<ddigit>(w[i + j]));
+      hi += uints::uadd_overflow(lo, lo, c);
+
+      w[i + j] = static_cast<digit>(lo);          // set w[i + j] <- v
+      c = (hi << bi_dwidth) | (lo >> bi_dwidth);  // set c <- u
+    }
+
+    for (size_t k = i + t; c > 0; ++k) {
+      c += w[k];
+      w[k] = static_cast<digit>(c);
+      c >>= bi_dwidth;
+    }
+  }
+}
+
+void h_::mul_algo_knuth(bi_t& w, const bi_t& a, const bi_t& b, const size_t m,
+                        const size_t n) {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+  std::fill(w.begin(), w.begin() + m, 0);
+
+  for (size_t j = 0; j < n; ++j) {
+    digit k = 0;
+    for (size_t i = 0; i < m; ++i) {
+      const ddigit t =
+          static_cast<ddigit>(a[i]) * b[j] + static_cast<ddigit>(w[i + j]) + k;
+      k = t >> bi_dwidth;                // floor(t / 2^{bi_dwidth})
+      w[i + j] = static_cast<digit>(t);  // t mod 2^{bi_dwidth}
+    }
+    w[j + m] = k;
+  }
+}
+
+/**
  *  @brief Performs `result = a * b`.
  *  @note mult_helpers.hpp proves that multiplying any two digits followed by
  *  adding any two digits to the multiplication result, never overflows double
@@ -415,18 +480,10 @@ void h_::mul(bi_t& result, const bi_t& a, const bi_t& b) {
 
   target.resize_(n_result_digits);
 
-  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-  std::fill(target.begin(), target.begin() + m, 0);
-
-  for (size_t j = 0; j < n; ++j) {
-    digit k = 0;
-    for (size_t i = 0; i < m; ++i) {
-      const ddigit t = static_cast<ddigit>(a[i]) * b[j] +
-                       static_cast<ddigit>(target[i + j]) + k;
-      k = t >> bi_dwidth;                     // floor(t / 2^{bi_dwidth})
-      target[i + j] = static_cast<digit>(t);  // t mod 2^{bi_dwidth}
-    }
-    target[j + m] = k;
+  if (&a != &b) {
+    h_::mul_algo_knuth(target, a, b, m, n);
+  } else {
+    h_::mul_algo_square(target, a, m);
   }
 
   target.trim_trailing_zeros();
