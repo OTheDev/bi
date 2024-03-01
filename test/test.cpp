@@ -751,6 +751,79 @@ TEST_F(BITest, Multiplication) {
   test_binop_overflow<ddigit, BinOp::Mul>();
 }
 
+TEST_F(BITest, Square) {
+  bi_t s;
+
+  EXPECT_EQ(s * s, 0);
+
+  for (auto x : {sdigit_min, sdigit_max}) {
+    s = x;
+    EXPECT_EQ(s * s, static_cast<sddigit>(x) * x);
+  }
+
+  s = digit_max;
+  EXPECT_EQ(s * s, static_cast<ddigit>(digit_max) * digit_max);
+
+#if defined(__SIZEOF_INT128__) && defined(BI_DIGIT_32_BIT)
+  s = ddigit_max;
+  EXPECT_EQ(s * s, static_cast<qdigit>(ddigit_max) * ddigit_max);
+
+  s = sddigit_min;
+  EXPECT_EQ(s * s, static_cast<sqdigit>(sddigit_min) * sddigit_min);
+
+  s = sddigit_max;
+  EXPECT_EQ(s * s, static_cast<sqdigit>(sddigit_max) * sddigit_max);
+#endif
+
+  struct res {
+    const char* p;
+    const char* r;
+  };
+
+  std::array<res, 13> pms = {
+      {{"174440041", "30429327904081681"},
+       {"3657500101", "13377306988815010201"},
+       {"88362852307", "7807993667828695222249"},
+       {"414507281407", "171816286339421887899649"},
+       {"2428095424619", "5895647391055721911295161"},
+       {"4952019383323", "24522495972806705210522329"},
+       {"12055296811267", "145330181207744298218145289"},
+       {"17461204521323", "304893663335470777561670329"},
+       {"28871271685163", "833550328718494773794336569"},
+       {"53982894593057", "2914152908645102685632605249"},
+       {"340282366920938463463374607431768211456",
+        "1157920892373161954235709850086879078532699846656405640394575840079131"
+        "29639936"},
+       {"340282366920938463463374607431768211457",
+        "1157920892373161954235709850086879078539505493994824409663843332227766"
+        "66062849"},
+       {"5789604461865809771178549250434395392663499233282028201972879200395656"
+        "4819968",
+        "3351951982485649274893506249551461531869841455148098344430890360930441"
+        "0075183867442004685745417258569225079645466215127134384707029866424866"
+        "08412251521024"}}};
+
+  for (auto& x : pms) {
+    bi_t p{x.p};
+    EXPECT_EQ(p * p, bi_t{x.r});
+  }
+
+  std::random_device rdev;
+  std::mt19937_64 rng(rdev());
+  std::uniform_int_distribution<sddigit> dist(sddigit_min, sddigit_max);
+  std::uniform_int_distribution<sdigit> dist_single(sdigit_min, sdigit_max);
+  for (int16_t i = 0; i < INT16_MAX; ++i) {
+    sdigit r_single = dist_single(rng);
+    bi_t y{r_single};
+    ASSERT_EQ(y * y, static_cast<sddigit>(r_single) * r_single) << y;
+#if defined(__SIZEOF_INT128__) && defined(BI_DIGIT_32_BIT)
+    sddigit r = dist(rng);
+    bi_t x{r};
+    ASSERT_EQ(x * x, static_cast<__int128>(r) * r) << x;
+#endif
+  }
+}
+
 TEST_F(BITest, Division) {
   bi_t a(10);
   bi_t b(-5);
