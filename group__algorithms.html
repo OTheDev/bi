@@ -157,6 +157,9 @@ w_{j + m} \leftarrow k \).</li>
 <p>Algorithm permits \( v_{j} \) to be in the same memory location as \( w_{j + n} \) (Exercise 30, p. 627) but, in general, special handling is needed for overlapping memory (e.g. through the use of temporaries). </p>
 </div>
 
+<h3><a id="mul_square" name="mul_square"></a>Multiplication - Multiple-Precision Squaring</h3><div class="textblock"><p>Knuth Algorithm M can be used generally for multiplying two arbitrary precision integers. However, if the two operands are equal, there are algorithms that can improve the efficiency by about a factor of two. For multiple-precision squaring, we follow <b>Algorithm 14.16</b> from the <b>Handbook of Applied Cryptography</b> by A. Menezes, P. van Oorschot, and S. Vanstone (pp. 596-597). </p>
+</div>
+
 <h3><a id="div" name="div"></a>Division by single-precision integer</h3><div class="textblock"><p>Knuth Exercise 16 (Vol. 2, 4.3.1, p. 282) </p><hr  />
 <p> <b>Input</b>: \( u = (u_{n-1} \ldots u_{0})_{b} \geq 0 \; \text{and} \;
                v \in (0, b-1] \)</p>
