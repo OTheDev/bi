@@ -66,6 +66,9 @@ constexpr auto bi_cmp_dbl_size_upper = find_upper();
 constexpr auto max_size = dvector::max_size();
 constexpr bi_bitcount_t max_bits = max_size * bi_dwidth;
 
+// If both operands of * have size() >= karatsuba_threshold, then use karatsuba
+constexpr auto karatsuba_threshold = 60;
+
 }  // namespace bi
 
 #endif  // BI_SRC_CONSTANTS_HPP_

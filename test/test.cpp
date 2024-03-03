@@ -10,6 +10,7 @@ SPDX-License-Identifier: Apache-2.0
 #include <cmath>
 #include <functional>
 #include <limits>
+#include <numeric>
 #include <random>
 #include <string>
 
@@ -18,6 +19,16 @@ SPDX-License-Identifier: Apache-2.0
 #include "constants.hpp"
 #include "int128.hpp"
 #include "uints.hpp"
+
+namespace bi {
+
+struct h_ {
+  static bi_t random_(bi_bitcount_t);
+  static void mul_karatsuba(bi_t&, const bi_t&, const bi_t&);
+  static void mul_standard(bi_t&, const bi_t&, const bi_t&);
+};
+
+}  // namespace bi
 
 namespace {
 
@@ -2243,6 +2254,82 @@ TEST_F(BITest, Exponentiation) {
   EXPECT_EQ(bi_t::pow(mone, bi_max_bits + 1), -1);  // odd
   EXPECT_THROW(bi_t::pow(two, bi_max_bits), bi::overflow_error);
   EXPECT_THROW(bi_t::pow(two, bi_max_bits + 1), bi::overflow_error);
+}
+
+TEST_F(BITest, Karatsuba) {
+  std::random_device rdev;
+  std::mt19937_64 rng(rdev());
+  std::uniform_int_distribution<int> dist(bi::karatsuba_threshold,
+                                          bi::karatsuba_threshold * 4);
+
+  const int num_iterations = 1000;
+  std::vector<double> karatsuba_times, normal_times;
+
+  for (int i = 0; i < num_iterations; ++i) {
+    std::clock_t start{};
+    std::clock_t end{};
+    bi_t x_k, x_n;
+
+    bi_t r_1 = bi::h_::random_(bi_dwidth * dist(rng));
+    bi_t r_2 = bi::h_::random_(bi_dwidth * dist(rng));
+
+    start = std::clock();
+
+    bi::h_::mul_karatsuba(x_k, r_1, r_2);
+
+    end = std::clock();
+    karatsuba_times.push_back(1000.0 * static_cast<double>(end - start) /
+                              CLOCKS_PER_SEC);
+
+    start = std::clock();
+
+    bi::h_::mul_standard(x_n, r_1, r_2);
+
+    end = std::clock();
+    normal_times.push_back(1000.0 * static_cast<double>(end - start) /
+                           CLOCKS_PER_SEC);
+
+    ASSERT_EQ(x_k, x_n);
+  }
+
+  double avg_karatsuba_time =
+      std::accumulate(karatsuba_times.begin(), karatsuba_times.end(), 0.0) /
+      num_iterations;
+  double avg_normal_time =
+      std::accumulate(normal_times.begin(), normal_times.end(), 0.0) /
+      num_iterations;
+
+  std::cout << "Average Mult-Karatsuba time: " << avg_karatsuba_time << " ms\n";
+  std::cout << "Average Mult-Pencil time: " << avg_normal_time << " ms\n";
+
+  std::bernoulli_distribution dist_neg(0.5);
+  for (int i = 0; i < num_iterations; ++i) {
+    bi_t r_1 = bi::h_::random_(bi_dwidth * dist(rng));
+    bi_t r_2 = bi::h_::random_(bi_dwidth * dist(rng));
+
+    if (r_1.size() == 0 || r_2.size() == 0) {
+      continue;
+    }
+
+    // Negate at random
+    if (dist_neg(rng)) {
+      r_1.negate();
+    }
+    if (dist_neg(rng)) {
+      r_2.negate();
+    }
+
+    const auto result_negative = r_1.negative() != r_2.negative();
+
+    bi_t x_karatsuba = r_1 * r_2;
+    bi_t x_standard;
+    bi::h_::mul_standard(x_standard, r_1, r_2);
+    if (result_negative) {
+      x_standard.negate();
+    }
+
+    ASSERT_EQ(x_karatsuba, x_standard);
+  }
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
