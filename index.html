@@ -141,10 +141,23 @@ Options</h2>
 <li><code>BUILD_SHARED_LIBS</code>: Build shared libraries (<code>ON</code>/<code>OFF</code>). Default is <code>OFF</code>.</li>
 <li><code>BUILD_TESTS</code>: Build the tests (<code>ON</code>/<code>OFF</code>). Default is <code>ON</code>.</li>
 </ul>
-<p>For a <b>release-optimized build</b>, set <code>CMAKE_BUILD_TYPE</code> to <code>Release</code>.</p>
-<p>For <b>development</b>, enabling the export of compile commands is useful for tools like linters or editors. To do this, set <code>CMAKE_EXPORT_COMPILE_COMMANDS</code> to <code>ON</code>. For example:</p>
+<p><b>Release-Optimized or Debug Build</b></p><ul>
+<li><p class="startli"><b>Single-configuration generators</b>. Set <code>CMAKE_BUILD_TYPE</code> to <code>Release</code> at configuration time:</p>
+<div class="fragment"><div class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</div>
+</div><!-- fragment --><p class="startli">For single-configuration generators, if <code>CMAKE_BUILD_TYPE</code> is not specified, this library will set <code>CMAKE_BUILD_TYPE</code> to <code>Release</code> by default. For a debug build, use <code>-DCMAKE_BUILD_TYPE=Debug</code>.</p>
+</li>
+<li><p class="startli"><b>Multi-configuration generators</b> (e.g. Visual Studio). The build type for these generators is selected at build time, not at configuration time. Use the <code>--config Release</code> option with the <code>cmake --build</code> command to specify a release build:</p>
+<div class="fragment"><div class="line">cmake --build . --config Release</div>
+</div><!-- fragment --><p class="startli">For a debug build, use the <code>--config Debug</code> option.</p>
+</li>
+</ul>
+<p><b>Development</b></p>
+<ul>
+<li><p class="startli">Enabling the export of compile commands is useful for tools like linters or editors. To do this, set <code>CMAKE_EXPORT_COMPILE_COMMANDS</code> to <code>ON</code>. For example:</p>
 <div class="fragment"><div class="line">cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON</div>
-</div><!-- fragment --><h1><a class="anchor" id="finding-and-linking-against-the-library-using-find_package"></a>
+</div><!-- fragment --></li>
+</ul>
+<h1><a class="anchor" id="finding-and-linking-against-the-library-using-find_package"></a>
 Finding and Linking Against the Library Using <code>find_package()</code></h1>
 <p>To integrate the <code>bi</code> library into a CMake project, locate and link against it using CMake's <code>find_package()</code> command.</p>
 <ol type="1">
