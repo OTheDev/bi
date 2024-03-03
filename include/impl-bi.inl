@@ -8,7 +8,6 @@ SPDX-License-Identifier: Apache-2.0
 
 #include "bi.hpp"
 
-#include <cassert>
 #include <utility>
 
 namespace bi {
@@ -58,41 +57,10 @@ inline int bi_t::sign() const noexcept {
 }
 
 inline bool bi_t::odd() const noexcept {
-  return size() == 0 ? false : (*this)[0] & 1;
+  return size() == 0 ? false : vec_[0] & 1;
 }
 
 inline bool bi_t::even() const noexcept { return !odd(); }
-
-///@}
-
-/**
- *  @name Internal modifiers for the digit vector
- */
-///@{
-
-inline void bi_t::reserve_(size_t new_capacity) { vec_.reserve(new_capacity); }
-
-inline void bi_t::resize_(size_t new_size) { vec_.resize(new_size); }
-
-inline digit& bi_t::operator[](size_t index) { return vec_[index]; }
-
-inline const digit& bi_t::operator[](size_t index) const { return vec_[index]; }
-
-inline void bi_t::resize_unsafe_(size_t new_size) {
-  assert(new_size <= vec_.capacity());
-  vec_.resize_unsafe(new_size);
-}
-
-inline void bi_t::trim_trailing_zeros() noexcept {
-  size_t new_size = vec_.size();
-  while (new_size > 0 && vec_[new_size - 1] == 0) {
-    --new_size;
-  }
-  vec_.resize(new_size);
-  if (new_size == 0) {
-    negative_ = false;
-  }
-}
 
 ///@}
 

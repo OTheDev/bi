@@ -5,14 +5,19 @@ SPDX-License-Identifier: Apache-2.0
 
 #include "bi.hpp"
 
+#include <algorithm>
 #include <compare>
 #include <iostream>
+#include <limits>
+#include <string>
+#include <utility>
 #include <version>
 #if defined(__cpp_lib_format)
 #include <format>
 #define HAS_STD_FORMAT
 #endif
 
+#include "bi.inl"
 #include "h_.hpp"
 #include "inst_integral.hpp"
 #include "uints.hpp"
