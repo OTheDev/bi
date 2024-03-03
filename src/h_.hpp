@@ -43,6 +43,7 @@ struct h_ {
   static void mul_algo_knuth(bi_t& result, const bi_t& a, const bi_t& b,
                              const size_t m, const size_t n);
   static void mul_karatsuba(bi_t& result, const bi_t& a, const bi_t& b);
+  static void mul_standard(bi_t& result, const bi_t& a, const bi_t& b);
   static void mul(bi_t& result, const bi_t& a, const bi_t& b);
   static digit div_algo_digit(bi_t& q, const bi_t& u, digit v) noexcept;
   static void div_algo_single(bi_t& q, bi_t& r, const bi_t& n,
@@ -503,11 +504,6 @@ void h_::bisect(const bi::bi_t& x, bi::bi_t& lower, bi::bi_t& upper, size_t n) {
 }
 
 void h_::mul_karatsuba(bi_t& w, const bi_t& u, const bi_t& v) {
-  if (u.size() < karatsuba_threshold || v.size() < karatsuba_threshold) {
-    h_::mul(w, u, v);
-    return;
-  }
-
   const size_t n = std::min(u.size(), v.size()) >> 1;
 
   bi_t u0, u1, v0, v1;
@@ -515,12 +511,12 @@ void h_::mul_karatsuba(bi_t& w, const bi_t& u, const bi_t& v) {
   bisect(v, v0, v1, n);
 
   bi_t a, b, c;
-  mul_karatsuba(a, u1, v1);  // a = u1 * v1
-  mul_karatsuba(b, u0, v0);  // b = u0 * v0
+  mul(a, u1, v1);  // a = u1 * v1
+  mul(b, u0, v0);  // b = u0 * v0
 
   u1 += u0;
   v1 += v0;
-  mul_karatsuba(c, u1, v1);
+  mul(c, u1, v1);
   c -= a + b;  // c = (u1 + u0)(v1 + v0) - (u0v0 + u1v1)
 
   a <<= (2 * n * bi_dbits);
@@ -529,12 +525,13 @@ void h_::mul_karatsuba(bi_t& w, const bi_t& u, const bi_t& v) {
 }
 
 /**
- *  @brief Performs `result = a * b`.
+ *  @brief Performs `result = |a| * |b|`.
  *  @note mult_helpers.hpp proves that multiplying any two digits followed by
  *  adding any two digits to the multiplication result, never overflows double
  *  the width of a digit.
  */
-void h_::mul(bi_t& result, const bi_t& a, const bi_t& b) {
+
+void h_::mul_standard(bi_t& result, const bi_t& a, const bi_t& b) {
   if (a.size() == 0 || b.size() == 0) {
     result.resize_(0);
     result.negative_ = false;
@@ -544,17 +541,12 @@ void h_::mul(bi_t& result, const bi_t& a, const bi_t& b) {
   const size_t m = a.size();
   const size_t n = b.size();
 
-  const auto [n_result_digits, overflow] = uints::uadd_overflow(m, n);
-  if (overflow) {
-    throw overflow_error("");
-  }
-
   const bool overlap = &result == &a || &result == &b;
 
   bi_t temp;
   bi_t& target = overlap ? temp : result;
 
-  target.resize_(n_result_digits);
+  target.resize_(m + n);
 
   if (&a != &b) {
     h_::mul_algo_knuth(target, a, b, m, n);
@@ -563,11 +555,20 @@ void h_::mul(bi_t& result, const bi_t& a, const bi_t& b) {
   }
 
   target.trim_trailing_zeros();
-  target.negative_ = a.negative() != b.negative();
 
   if (overlap) {
     result.swap(target);
   }
+}
+
+void h_::mul(bi_t& w, const bi_t& u, const bi_t& v) {
+  if (u.size() < karatsuba_threshold || v.size() < karatsuba_threshold) {
+    h_::mul_standard(w, u, v);
+  } else {
+    h_::mul_karatsuba(w, u, v);
+  }
+
+  w.negative_ = u.negative() != v.negative();
 }
 
 /**

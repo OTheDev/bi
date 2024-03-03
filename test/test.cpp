@@ -21,11 +21,13 @@ SPDX-License-Identifier: Apache-2.0
 #include "uints.hpp"
 
 namespace bi {
+
 struct h_ {
-  static bi_t random_(bi_bitcount_t z);
+  static bi_t random_(bi_bitcount_t);
   static void mul_karatsuba(bi_t&, const bi_t&, const bi_t&);
-  static void mul(bi_t& result, const bi_t& a, const bi_t& b);
+  static void mul_standard(bi_t&, const bi_t&, const bi_t&);
 };
+
 }  // namespace bi
 
 namespace {
@@ -2281,7 +2283,7 @@ TEST_F(BITest, Karatsuba) {
 
     start = std::clock();
 
-    bi::h_::mul(x_n, r_1, r_2);
+    bi::h_::mul_standard(x_n, r_1, r_2);
 
     end = std::clock();
     normal_times.push_back(1000.0 * static_cast<double>(end - start) /
@@ -2299,6 +2301,35 @@ TEST_F(BITest, Karatsuba) {
 
   std::cout << "Average Mult-Karatsuba time: " << avg_karatsuba_time << " ms\n";
   std::cout << "Average Mult-Pencil time: " << avg_normal_time << " ms\n";
+
+  std::bernoulli_distribution dist_neg(0.5);
+  for (int i = 0; i < num_iterations; ++i) {
+    bi_t r_1 = bi::h_::random_(bi_dwidth * dist(rng));
+    bi_t r_2 = bi::h_::random_(bi_dwidth * dist(rng));
+
+    if (r_1.size() == 0 || r_2.size() == 0) {
+      continue;
+    }
+
+    // Negate at random
+    if (dist_neg(rng)) {
+      r_1.negate();
+    }
+    if (dist_neg(rng)) {
+      r_2.negate();
+    }
+
+    const auto result_negative = r_1.negative() != r_2.negative();
+
+    bi_t x_karatsuba = r_1 * r_2;
+    bi_t x_standard;
+    bi::h_::mul_standard(x_standard, r_1, r_2);
+    if (result_negative) {
+      x_standard.negate();
+    }
+
+    ASSERT_EQ(x_karatsuba, x_standard);
+  }
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
