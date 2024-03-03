@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.15)
 
 project(bi VERSION 0.1)
 
+# For single-configuration generators, set the default build type to Release
+if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting 'CMAKE_BUILD_TYPE' to 'Release'. Use "
+                 "'-DCMAKE_BUILD_TYPE=Debug' for debug builds")
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
 # if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 #   message(STATUS "Clang detected")
 #   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld")
