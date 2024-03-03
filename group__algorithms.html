@@ -160,6 +160,28 @@ w_{j + m} \leftarrow k \).</li>
 <h3><a id="mul_square" name="mul_square"></a>Multiplication - Multiple-Precision Squaring</h3><div class="textblock"><p>Knuth Algorithm M can be used generally for multiplying two arbitrary precision integers. However, if the two operands are equal, there are algorithms that can improve the efficiency by about a factor of two. For multiple-precision squaring, we follow <b>Algorithm 14.16</b> from the <b>Handbook of Applied Cryptography</b> by A. Menezes, P. van Oorschot, and S. Vanstone (pp. 596-597). </p>
 </div>
 
+<h3><a id="mul_karatsuba" name="mul_karatsuba"></a>Multiplication - Karatsuba</h3><div class="textblock"><p>When both operands of multiplication require many base \( b \) digits, we can make use of the following observation to implement a recursive algorithm that is more efficient than the standard quadratic pencil-and-paper method.</p>
+<p>The following is adapted from Knuth Vol. 2, pp. 294-295.</p>
+<p>Consider two integers with \( 2n \) base-b digits and their product:  </p><p class="formulaDsp">
+\begin{align}
+  u &amp;= (u_{2n-1} \cdots u_{0})_{b} = b^{n}U_{1} + U_{0} \\
+  v &amp;= (v_{2n-1} \cdots v_{0})_{b} = b^{n}V_{1} + V_{0} \\
+  U_{1} &amp;\equiv (u_{2n-1} \cdots u_{n})_{b},
+    \; U_{0} \equiv (u_{n-1} \cdots u_{0})_{b} \\
+  V_{1} &amp;\equiv (v_{2n-1} \cdots v_{n})_{b},
+    \; V_{0} \equiv (v_{n-1} \cdots v_{0})_{b} \\
+  uv  &amp;= (b^{n}U_{1} + U_{0})(b^{n}V_{1} + V_{0})
+\end{align}
+</p>
+<p> It is simple to verify that the product is equivalent to  </p><p class="formulaDsp">
+\[
+  uv = b^{2n}U_{1}V_{1} + b^{n}\left[(U_{1}+U_{0})(V_{1}+V_{0}) -
+    (U_{0}V_{0} + U_{1}V_{1})\right] + U_{0}V_{0}
+\]
+</p>
+<p> The result of multiplying two \( 2n \) digit integers can be found via three multiplications of \( n \) digit integers (plus cheaper bit shifts and additions). </p>
+</div>
+
 <h3><a id="div" name="div"></a>Division by single-precision integer</h3><div class="textblock"><p>Knuth Exercise 16 (Vol. 2, 4.3.1, p. 282) </p><hr  />
 <p> <b>Input</b>: \( u = (u_{n-1} \ldots u_{0})_{b} \geq 0 \; \text{and} \;
                v \in (0, b-1] \)</p>
