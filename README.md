@@ -94,15 +94,37 @@ Configure the build by appending these options to the `cmake` command in step 3:
 - `BUILD_SHARED_LIBS`: Build shared libraries (`ON`/`OFF`). Default is `OFF`.
 - `BUILD_TESTS`: Build the tests (`ON`/`OFF`). Default is `ON`.
 
-For a **release-optimized build**, set `CMAKE_BUILD_TYPE` to `Release`.
+**Release-Optimized or Debug Build**
+-  **Single-configuration generators**. Set `CMAKE_BUILD_TYPE` to `Release` at
+   configuration time:
 
-For **development**, enabling the export of compile commands is useful for
-tools like linters or editors. To do this, set
-`CMAKE_EXPORT_COMPILE_COMMANDS` to `ON`. For example:
+   ```shell
+   cmake .. -DCMAKE_BUILD_TYPE=Release
+   ```
 
-```shell
-cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-```
+   For single-configuration generators, if `CMAKE_BUILD_TYPE` is not specified,
+   this library will set `CMAKE_BUILD_TYPE` to `Release` by default. For a debug
+   build, use `-DCMAKE_BUILD_TYPE=Debug`.
+
+- **Multi-configuration generators** (e.g. Visual Studio). The build type for
+  these generators is selected at build time, not at configuration time. Use
+  the `--config Release` option with the `cmake --build` command to specify a
+  release build:
+
+   ```shell
+   cmake --build . --config Release
+   ```
+
+  For a debug build, use the `--config Debug` option.
+
+**Development**
+
+- Enabling the export of compile commands is useful for tools like linters or
+editors. To do this, set `CMAKE_EXPORT_COMPILE_COMMANDS` to `ON`. For example:
+
+   ```shell
+   cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+   ```
 
 ## Finding and Linking Against the Library Using `find_package()`
 
