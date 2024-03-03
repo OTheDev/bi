@@ -305,7 +305,7 @@ bi_t bi_t::operator--(int) {
  */
 ///@{
 
-/// @complexity \f$ O(m \cdot n) \f$
+/// @complexity \f$ O(n^{\log_{2}(3)}) \approx O(n^{1.58}) \f$
 bi_t bi_t::operator*(const bi_t& other) const {
   bi_t ret;
   h_::mul(ret, *this, other);
@@ -326,7 +326,7 @@ bi_t bi_t::operator%(const bi_t& other) const {
   return rem;
 }
 
-/// @complexity \f$ O(m \cdot n) \f$
+/// @complexity \f$ O(n^{\log_{2}(3)}) \approx O(n^{1.58}) \f$
 bi_t& bi_t::operator*=(const bi_t& other) {
   h_::mul(*this, *this, other);
   return *this;
