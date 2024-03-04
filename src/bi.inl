@@ -30,7 +30,7 @@ inline void bi_t::resize_unsafe_(size_t new_size) {
   vec_.resize_unsafe(new_size);
 }
 
-inline void bi_t::trim_trailing_zeros() noexcept {
+inline void bi_t::trim() noexcept {
   size_t new_size = vec_.size();
   while (new_size > 0 && vec_[new_size - 1] == 0) {
     --new_size;
