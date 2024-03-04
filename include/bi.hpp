@@ -180,7 +180,7 @@ class BI_API bi_t {
   digit& operator[](size_t index);
   const digit& operator[](size_t index) const;
   void resize_unsafe_(size_t new_size);
-  void trim_trailing_zeros() noexcept;
+  void trim() noexcept;
 
   auto begin() noexcept { return vec_.begin(); }
   auto begin() const noexcept { return vec_.begin(); }

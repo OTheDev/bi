@@ -153,7 +153,7 @@ void h_::decrement_abs(bi_t& x) {
     ++i;
   }
 
-  x.trim_trailing_zeros();
+  x.trim();
 }
 
 /**
@@ -243,7 +243,7 @@ void h_::add_abs(bi_t& r, const bi_t& x, const bi_t& y) {
 
   r[i] = carry;
   r.resize_(large.size() + 1);
-  r.trim_trailing_zeros();
+  r.trim();
   r.negative_ = false;
 }
 
@@ -289,7 +289,7 @@ void h_::sub_abs_gt(bi_t& r, const bi_t& x, const bi_t& y) {
   }
 
   r.resize_(x.size());
-  r.trim_trailing_zeros();
+  r.trim();
   r.negative_ = false;
 }
 
@@ -499,8 +499,8 @@ void h_::bisect(const bi::bi_t& x, bi::bi_t& lower, bi::bi_t& upper, size_t n) {
   lower.vec_ = dvector(x.vec_.begin(), x.vec_.begin() + bisect_point);
   upper.vec_ = dvector(x.vec_.begin() + bisect_point, x.vec_.end());
 
-  lower.trim_trailing_zeros();
-  upper.trim_trailing_zeros();
+  lower.trim();
+  upper.trim();
 }
 
 void h_::mul_karatsuba(bi_t& w, const bi_t& u, const bi_t& v) {
@@ -554,7 +554,7 @@ void h_::mul_standard(bi_t& result, const bi_t& a, const bi_t& b) {
     h_::mul_algo_square(target, a, m);
   }
 
-  target.trim_trailing_zeros();
+  target.trim();
 
   if (overlap) {
     result.swap(target);
@@ -610,7 +610,7 @@ digit h_::div_algo_digit(bi_t& q, const bi_t& u, digit v) noexcept {
     rem = temp % v;
   }
 
-  q.trim_trailing_zeros();
+  q.trim();
   return static_cast<digit>(rem);
 }
 
@@ -626,8 +626,8 @@ void h_::div_algo_single(bi_t& q, bi_t& r, const bi_t& u,
 
   r[0] = static_cast<digit>(rem);
 
-  q.trim_trailing_zeros();
-  r.trim_trailing_zeros();
+  q.trim();
+  r.trim();
 }
 
 /**
@@ -838,8 +838,8 @@ void h_::div_algo_knuth(bi_t& q, bi_t& r, const bi_t& u, const bi_t& v) {
     r[i] = (static_cast<ddigit>(u_norm[i + 1]) << compl_e) | (u_norm[i] >> e);
   }
 
-  q.trim_trailing_zeros();
-  r.trim_trailing_zeros();
+  q.trim();
+  r.trim();
 }
 
 /**
@@ -953,7 +953,7 @@ void h_::left_shift(bi_t& result, const bi_t& x, bi_bitcount_t n_bits) {
     result.vec_ = std::move(temp_vec);
   }
 
-  result.trim_trailing_zeros();
+  result.trim();
   result.negative_ = x.negative();
 }
 
@@ -1003,7 +1003,7 @@ void h_::right_shift(bi_t& result, const bi_t& x, bi_bitcount_t n_bits) {
     }
   }
 
-  result.trim_trailing_zeros();
+  result.trim();
   result.negative_ = x.negative();
 
   // At this point, the result is trunc(x / 2^{n_bits}) for all x
@@ -1074,7 +1074,7 @@ void h_::bitwise_operation_impl(bi_t& result, const bi_t& x, const bi_t& y) {
     to_twos_complement_in_place(result.vec_);
   }
 
-  result.trim_trailing_zeros();
+  result.trim();
 }
 
 /// @private
@@ -1213,7 +1213,7 @@ uint8_t h_::idiv10(bi_t& x) noexcept {
   }
   // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
-  x.trim_trailing_zeros();
+  x.trim();
   return carry;
 }
 
@@ -1683,7 +1683,7 @@ void h_::init_string(bi_t& x, const std::string& s, int base) {
     h_::imul1add1(x, base_pow_max_batch_size, batch);
   }
 
-  x.trim_trailing_zeros();
+  x.trim();
 }
 
 ///@}
@@ -1753,7 +1753,7 @@ void h_::assign_from_double(bi_t& x, double d) {
   }
 
   x.negative_ = neg;
-  x.trim_trailing_zeros();
+  x.trim();
 }
 
 int h_::cmp_abs(const bi_t& z, double dbl) noexcept {
@@ -1855,7 +1855,7 @@ bi_t h_::random_(bi_bitcount_t z) {
     result[num_digits - 1] = dist(rng_);
   }
 
-  result.trim_trailing_zeros();
+  result.trim();
   return result;
 }
 
