@@ -43,6 +43,15 @@ inline void bi_t::trim() noexcept {
 
 ///@}
 
+inline auto bi_t::begin() noexcept { return vec_.begin(); }
+inline auto bi_t::begin() const noexcept { return vec_.begin(); }
+inline auto bi_t::end() noexcept { return vec_.end(); }
+inline auto bi_t::end() const noexcept { return vec_.end(); }
+inline auto bi_t::rbegin() noexcept { return vec_.rbegin(); }
+inline auto bi_t::rbegin() const noexcept { return vec_.rbegin(); }
+inline auto bi_t::rend() noexcept { return vec_.rend(); }
+inline auto bi_t::rend() const noexcept { return vec_.rend(); }
+
 }  // namespace bi
 
 #endif  // BI_SRC_BI_INL_
