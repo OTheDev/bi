@@ -182,14 +182,14 @@ class BI_API bi_t {
   void resize_unsafe_(size_t new_size);
   void trim() noexcept;
 
-  auto begin() noexcept { return vec_.begin(); }
-  auto begin() const noexcept { return vec_.begin(); }
-  auto end() noexcept { return vec_.end(); }
-  auto end() const noexcept { return vec_.end(); }
-  auto rbegin() noexcept { return vec_.rbegin(); }
-  auto rbegin() const noexcept { return vec_.rbegin(); }
-  auto rend() noexcept { return vec_.rend(); }
-  auto rend() const noexcept { return vec_.rend(); }
+  auto begin() noexcept;
+  auto begin() const noexcept;
+  auto end() noexcept;
+  auto end() const noexcept;
+  auto rbegin() noexcept;
+  auto rbegin() const noexcept;
+  auto rend() noexcept;
+  auto rend() const noexcept;
 
   /// @cond
   friend struct h_;
